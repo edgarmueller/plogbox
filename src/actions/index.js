@@ -21,7 +21,12 @@ import {
   ADD_BLOCK,
   ADD_BLOCK_FAILURE,
   REMOVE_BLOCK_FAILURE,
-  FETCH_BLOCKS_FAILURE, DELETE_POST_FAILURE, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE,
+  FETCH_BLOCKS_FAILURE,
+  DELETE_POST_FAILURE,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
+  MOVE_BLOCK_UP,
+  MOVE_BLOCK_DOWN,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -268,3 +273,12 @@ export const removeBlock = (postId, block) => dispatch =>
       },
     );
 
+export const moveBlockUp = block => ({
+  type: MOVE_BLOCK_UP,
+  block,
+});
+
+export const moveBlockDown = block => ({
+  type: MOVE_BLOCK_DOWN,
+  block,
+});

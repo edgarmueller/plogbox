@@ -3,7 +3,8 @@
   "rules": {
     "func-names": ["error", "never"],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/no-multi-comp": [1, { "ignoreStateless": true }]
+    "react/no-multi-comp": [1, { "ignoreStateless": true }],
+    "linebreak-style": "off"
   },
   "env": {
     "browser": true

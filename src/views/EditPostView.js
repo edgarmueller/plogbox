@@ -14,6 +14,8 @@ import {
 } from 'material-ui';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
+import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import UpArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import Dialog from 'material-ui/Dialog';
 import Latex from 'react-latex';
 import ReactMarkdown from 'react-markdown';
@@ -51,6 +53,8 @@ export class EditPostView extends React.Component {
       savePost,
       addBlock,
       removeBlock,
+      moveBlockUp,
+      moveBlockDown,
       selectedPost,
       updatePostTitle,
       updateBlockDialect,
@@ -84,10 +88,10 @@ export class EditPostView extends React.Component {
                   }}
                   backgroundColor="#913D88"
                   labelColor={fullWhite}
-                  onTouchTap={() => savePost(selectedPost, blocks, this.handleOpen)}
+                  onTouchTap={() => savePost(selectedPost, blocks)}
                 />
                 {
-                          blocks.map(block =>
+                          blocks.map((block, index) =>
                             (<div
                               key={block.id}
                               style={{
@@ -125,6 +129,28 @@ export class EditPostView extends React.Component {
                               >
                                 <ContentRemove />
                               </FloatingActionButton>
+                              {
+                                index > 0 ?
+                                  <FloatingActionButton
+                                    onClick={() => moveBlockUp(block)}
+                                    backgroundColor="#2c3e50"
+                                    mini
+                                  >
+                                    <UpArrow />
+                                  </FloatingActionButton> :
+                                  <div>&nbsp;</div>
+                              }
+                              {
+                                index < blocks.length - 1 ?
+                                  <FloatingActionButton
+                                    onClick={() => moveBlockDown(block)}
+                                    backgroundColor="#2c3e50"
+                                    mini
+                                  >
+                                    <DownArrow />
+                                  </FloatingActionButton> :
+                                  <div>&nbsp;</div>
+                              }
                             </div>),
                           )
                         }
@@ -181,6 +207,8 @@ EditPostView.propTypes = {
   savePost: PropTypes.func.isRequired,
   addBlock: PropTypes.func.isRequired,
   removeBlock: PropTypes.func.isRequired,
+  moveBlockUp: PropTypes.func.isRequired,
+  moveBlockDown: PropTypes.func.isRequired,
   selectedPost: PropTypes.shape({
     dialect: PropTypes.string,
     text: PropTypes.string,
@@ -238,6 +266,12 @@ export const mapDispatchToProps = dispatch => ({
       text,
     };
     return dispatch(action.addBlock(postId, block));
+  },
+  moveBlockDown(block) {
+    dispatch(action.moveBlockDown(block));
+  },
+  moveBlockUp(block) {
+    dispatch(action.moveBlockUp(block));
   },
   removeBlock(postId, block) {
     dispatch(action.removeBlock(postId, block));

@@ -28,6 +28,8 @@ export const FETCH_BLOCKS_FAILURE = 'FETCH_BLOCKS_FAILURE';
 export const UPDATE_BLOCK_TEXT = 'UPDATE_BLOCK_TEXT';
 export const UPDATE_BLOCK_DIALECT = 'UPDATE_BLOCK_DIALECT';
 export const FETCH_BLOCKS_SUCCESS = 'FETCH_BLOCKS_SUCCESS';
+export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
+export const MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
 
 // sign up
 export const FORGOT_PASSWORD_REQUEST = 'forgot_password_request';

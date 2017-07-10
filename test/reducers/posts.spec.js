@@ -1,10 +1,12 @@
 import test from 'ava';
-import React from 'react';
 import * as _ from 'lodash';
+import Immutable from 'immutable';
 
 import {
-    initPosts,
-    selectPost,
+  initPosts,
+  selectPost,
+  moveBlockUp,
+  moveBlockDown,
 } from '../../src/actions';
 import posts, { firstPost } from '../helpers/posts';
 import { postsReducer } from '../../src/reducers/posts';
@@ -17,8 +19,7 @@ test.beforeEach(async t => beforeEach(t));
 test.afterEach(t => afterEach(t));
 
 test.serial('initialize posts sources', (t) => {
-  const before = [];
-  const after = postsReducer(before, initPosts(posts));
+  const after = postsReducer(undefined, initPosts(posts));
   t.is(after.all.size, 1);
 });
 
@@ -31,7 +32,7 @@ test.serial('create post', (t) => {
     blocks: [],
   };
 
-  const before = postsReducer({}, initPosts(posts));
+  const before = postsReducer(undefined, initPosts(posts));
   const after = postsReducer(before, {
     type: CREATE_POST_SUCCESS,
     post: newPost,
@@ -40,16 +41,17 @@ test.serial('create post', (t) => {
 });
 
 test.serial('select a post', (t) => {
-  const before = postsReducer({}, initPosts(posts));
+  const before = postsReducer(undefined, initPosts(posts));
   const after = postsReducer(before, selectPost(_.head(posts)));
   t.is(_.head(posts), after.selectedPost);
 });
 
 test.serial('fetch blocks', (t) => {
-  const after = postsReducer({}, {
+  const after = postsReducer(undefined, {
     type: FETCH_BLOCKS_SUCCESS,
     post: firstPost,
     blocks: [{
+      id: 0,
       dialect: 'markdown',
       text: '# lowskilled',
     }],
@@ -59,7 +61,7 @@ test.serial('fetch blocks', (t) => {
 
 
 test.serial('delete a post', (t) => {
-  const before = postsReducer([], initPosts(posts));
+  const before = postsReducer(undefined, initPosts(posts));
   const after = postsReducer(before, {
     type: DELETE_POST_SUCCESS,
     post: firstPost,
@@ -75,4 +77,80 @@ test.serial('get post being edited', (t) => {
       },
     },
   }));
+});
+
+test.serial('move block up', (t) => {
+  const bob = {
+    id: 1,
+    prevId: 0, // first post in order
+    dialect: 'markdown',
+    text: 'Bob',
+  };
+  const alice = {
+    id: 2,
+    prevId: 1,
+    dialect: 'markdown',
+    text: 'Alice',
+  };
+  const john = {
+    id: 3,
+    prevId: 2,
+    dialect: 'latex',
+    text: 'John',
+  };
+  const before = postsReducer({
+    all: Immutable.Set.of(firstPost),
+    blocks: Immutable.List.of(
+      bob,
+      alice,
+      john,
+    ),
+  }, initPosts());
+  const after = postsReducer(before, moveBlockUp(alice));
+  // Alice must come first
+  t.is(after.blocks.first().id, 2);
+  t.is(after.blocks.first().prevId, 0);
+  // Bob is now at 2nd position and must point at Alice
+  t.is(after.blocks.rest().first().id, 1);
+  t.is(after.blocks.rest().first().prevId, 2);
+  // John must point at Bob
+  t.is(after.blocks.last().id, 3);
+  t.is(after.blocks.last().prevId, 1);
+});
+
+
+test.serial('move block down', (t) => {
+  const bob = {
+    id: 1,
+    prevId: 0, // first post in order
+    dialect: 'markdown',
+    text: 'Bob',
+  };
+  const alice = {
+    id: 2,
+    prevId: 1,
+    dialect: 'markdown',
+    text: 'Alice',
+  };
+  const john = {
+    id: 3,
+    prevId: 2,
+    dialect: 'latex',
+    text: 'John',
+  };
+  const before = postsReducer({
+    all: Immutable.Set.of(firstPost),
+    blocks: Immutable.List.of(
+      bob,
+      alice,
+      john,
+    ),
+  }, initPosts());
+  const after = postsReducer(before, moveBlockDown(alice));
+  // Alice must at last position
+  t.is(after.blocks.last().id, 2);
+  t.is(after.blocks.last().prevId, 3);
+  // John is now at 2nd position and must point at Bob
+  t.is(after.blocks.rest().first().id, 3);
+  t.is(after.blocks.rest().first().prevId, 1);
 });
