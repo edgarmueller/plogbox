@@ -150,8 +150,12 @@ export class SelectPost extends React.Component {
                                 hintText="Add tags..."
                                 dataSource={this.suggestedTags}
                                 autoFocus
-                                onNewRequest={(tagName) => {
-                                  addTag(post, tagName);
+                                onNewRequest={(tag) => {
+                                  if (typeof tag === 'string') {
+                                    addTag(post, tag);
+                                  } else {
+                                    addTag(post, tag.text);
+                                  }
                                   this.setState({
                                     selectedRow: -1,
                                     selectedCol: -1,
