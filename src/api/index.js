@@ -81,3 +81,28 @@ export const updateBlock = (postId, block) => {
     getHeaderToken(),
   );
 };
+
+export const addTag = (postId, tag) => {
+  const url = `${BASE_URL}/tags/${postId}`;
+  return Axios.post(
+    url,
+    tag,
+    getHeaderToken(),
+  );
+};
+
+export const removeTag = (postId, tagId) => {
+  const url = `${BASE_URL}/tags/${postId}/${tagId}`;
+  return Axios.delete(
+    url,
+    getHeaderToken(),
+  );
+};
+
+export const fetchTags = () => {
+  const url = `${BASE_URL}/tags`;
+  return Axios.get(
+    url,
+    getHeaderToken(),
+  );
+};

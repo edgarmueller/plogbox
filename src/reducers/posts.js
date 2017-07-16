@@ -20,6 +20,9 @@ import {
   UPDATE_BLOCK_TEXT,
   UPDATE_POST_FAILURE,
   UPDATE_POST_TITLE,
+  ADD_TAG_FAILURE,
+  ADD_TAG_SUCCESS,
+  DELETE_TAG_SUCCESS,
 } from '../constants';
 
 const isFetching = createFetchingProgressReducer(
@@ -113,7 +116,7 @@ const moveBlockDown = (blocks, block) => {
 };
 
 export const postsReducer = (state = {
-  all: Immutable.Set(),
+  all: Immutable.List(),
   blocks: Immutable.List(),
 }, action) => {
   switch (action.type) {
@@ -131,7 +134,7 @@ export const postsReducer = (state = {
     case FETCH_POSTS_SUCCESS:
       return {
         ...state,
-        all: Immutable.Set(action.posts),
+        all: Immutable.List(action.posts),
       };
 
     case SELECT_POST:
@@ -171,6 +174,38 @@ export const postsReducer = (state = {
         selectedPost: clonedEditPost,
       };
     }
+
+    // TODO: add test for duplicate tag
+    case ADD_TAG_SUCCESS:
+      return {
+        ...state,
+        all: state.all.map((post) => {
+          if (post.id === action.postId) {
+            const clone = _.clone(post);
+            if (clone.tags === undefined) {
+              clone.tags = [];
+            }
+            clone.tags.push(action.tag);
+            return clone;
+          }
+          return post;
+        }),
+      };
+
+    case DELETE_TAG_SUCCESS: {
+      const postIdx = state.all.findIndex(p => p.id === action.postId);
+      const tags = state.all.get(postIdx).tags;
+      return {
+        ...state,
+        all: state.all.update(postIdx, (post) => {
+          const clone = _.clone(post);
+          _.remove(tags, tag => tag.id === action.tagId);
+          clone.tags = tags;
+          return clone;
+        }),
+      };
+    }
+
     case ADD_BLOCK:
       return {
         ...state,
@@ -218,6 +253,7 @@ export const errorReducer = (state = null, action) => {
     case FETCH_POSTS_FAILURE:
     case DELETE_POST_FAILURE:
     case UPDATE_POST_FAILURE:
+    case ADD_TAG_FAILURE:
       return action.statusText;
     case RESET_ERROR_MESSAGE:
       return null;

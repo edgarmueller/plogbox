@@ -27,6 +27,10 @@ import {
   UPDATE_POST_FAILURE,
   MOVE_BLOCK_UP,
   MOVE_BLOCK_DOWN,
+  ADD_TAG_SUCCESS,
+  ADD_TAG_FAILURE,
+  DELETE_TAG_SUCCESS,
+  DELETE_TAG_FAILURE,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -71,10 +75,6 @@ export function errorHandler(dispatch, error, type) {
   }
 }
 
-
-//
-// Data source actions --
-//
 export const initPosts = posts => ({
   type: FETCH_POSTS_SUCCESS,
   posts,
@@ -282,3 +282,34 @@ export const moveBlockDown = block => ({
   type: MOVE_BLOCK_DOWN,
   block,
 });
+
+export const addTag = (postId, tag) => dispatch =>
+   api.addTag(postId, tag)
+    .then(
+      // TODO: response unused
+      (resp) => {
+        dispatch({
+          type: ADD_TAG_SUCCESS,
+          postId,
+          tag: resp.data.data.tag,
+        });
+      },
+      (error) => {
+        errorHandler(dispatch, error, ADD_TAG_FAILURE);
+      },
+    );
+
+export const removeTag = (postId, tagId) => dispatch =>
+  api.removeTag(postId, tagId)
+    .then(
+      () => {
+        dispatch({
+          type: DELETE_TAG_SUCCESS,
+          postId,
+          tagId,
+        });
+      },
+      (error) => {
+        errorHandler(dispatch, error, DELETE_TAG_FAILURE);
+      },
+    );
