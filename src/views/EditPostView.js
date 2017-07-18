@@ -22,6 +22,11 @@ import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
+import brace from 'brace';
+import AceEditor from 'react-ace';
+import 'brace/mode/markdown';
+import 'brace/theme/monokai';
+
 import { getBlocks, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
@@ -72,7 +77,11 @@ export class EditPostView extends React.Component {
               display: 'flex',
             }}
             >
-              <div style={{ width: '50%' }}>
+              <div style={{
+                width: '50%',
+                marginRight: '1em',
+              }}
+              >
                 <TextField
                   name="title"
                   type="text"
@@ -86,7 +95,7 @@ export class EditPostView extends React.Component {
                     marginLeft: '1em',
                     marginBottom: '1em',
                   }}
-                  backgroundColor="#913D88"
+                  backgroundColor="#913d88"
                   labelColor={fullWhite}
                   onTouchTap={() => savePost(selectedPost, blocks)}
                 />
@@ -94,67 +103,81 @@ export class EditPostView extends React.Component {
                           blocks.map((block, index) =>
                             (<div
                               key={block.id}
-                              style={{
-                                backgroundColor: '#f5f5f5',
-                                padding: '0.5em',
-                                margin: '0.5em',
-                                borderRadius: '0.5em',
-                              }}
                             >
-                              <SelectField
-                                floatingLabelText="Block Dialect"
-                                value={block.dialect}
-                                onChange={(ev, newValue, dialect) =>
+                              <div
+                                style={{
+                                  paddingBottom: '0.5em',
+                                }}
+                              >
+                                <SelectField
+                                  floatingLabelText="Block Dialect"
+                                  value={block.dialect}
+                                  onChange={(ev, newValue, dialect) =>
                                     updateBlockDialect(block, dialect)
                                   }
-                                autoWidth
-                              >
-                                <MenuItem value={'markdown'} primaryText="Markdown" />
-                                <MenuItem value={'latex'} primaryText="Latex" />
-                              </SelectField>
-                              <TextField
-                                hintText={'Add text'}
-                                floatingLabelText={'Add text'}
-                                multiLine
-                                rows={4}
-                                rowsMax={20}
-                                fullWidth
+                                >
+                                  <MenuItem value={'markdown'} primaryText="Markdown" />
+                                  <MenuItem value={'latex'} primaryText="Latex" />
+                                </SelectField>
+
+                                <span
+                                  style={{
+                                    marginLeft: '1em',
+                                  }}
+                                >
+                                  <FloatingActionButton
+                                    onClick={() => removeBlock(selectedPost.id, block)}
+                                    backgroundColor="#2c3e50"
+                                    mini
+                                  >
+                                    <ContentRemove />
+                                  </FloatingActionButton>
+                                  {
+                                    index > 0 ?
+                                      <FloatingActionButton
+                                        onClick={() => moveBlockUp(block)}
+                                        backgroundColor="#2c3e50"
+                                        mini
+                                      >
+                                        <UpArrow />
+                                      </FloatingActionButton> :
+                                      <span>&nbsp;</span>
+                                  }
+                                  {
+                                    index < blocks.length - 1 ?
+                                      <FloatingActionButton
+                                        onClick={() => moveBlockDown(block)}
+                                        backgroundColor="#2c3e50"
+                                        mini
+                                      >
+                                        <DownArrow />
+                                      </FloatingActionButton> :
+                                      <span>&nbsp;</span>
+                                  }
+                                </span>
+                              </div>
+
+                              <AceEditor
+                                mode="markdown"
+                                theme="monokai"
+                                onChange={text => updateBlockText(block, text)}
+                                name={`${block.id}_editor`}
+                                editorProps={{ $blockScrolling: true }}
+                                height={'50px'}
+                                width={'100%'}
                                 value={block.text}
-                                onChange={(ev, text) => updateBlockText(block, text)}
+                                minLines={2}
+                                maxLines={20}
                               />
-                              <FloatingActionButton
-                                onClick={() => removeBlock(selectedPost.id, block)}
-                                backgroundColor="#2c3e50"
-                                mini
-                              >
-                                <ContentRemove />
-                              </FloatingActionButton>
-                              {
-                                index > 0 ?
-                                  <FloatingActionButton
-                                    onClick={() => moveBlockUp(block)}
-                                    backgroundColor="#2c3e50"
-                                    mini
-                                  >
-                                    <UpArrow />
-                                  </FloatingActionButton> :
-                                  <div>&nbsp;</div>
-                              }
-                              {
-                                index < blocks.length - 1 ?
-                                  <FloatingActionButton
-                                    onClick={() => moveBlockDown(block)}
-                                    backgroundColor="#2c3e50"
-                                    mini
-                                  >
-                                    <DownArrow />
-                                  </FloatingActionButton> :
-                                  <div>&nbsp;</div>
-                              }
+
+
                             </div>),
                           )
                         }
-                <div>
+                <div style={{
+                  marginTop: '1em',
+                }}
+                >
                   <FloatingActionButton
                     onClick={() => addBlock(selectedPost.id, this.state.dialect, '')}
                     backgroundColor="#2c3e50"
