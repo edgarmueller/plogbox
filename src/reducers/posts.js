@@ -146,14 +146,20 @@ export const postsReducer = (state = {
     case CREATE_POST_SUCCESS:
       return {
         ...state,
-        all: state.all.add(action.post),
+        all: state.all.push(action.post),
       };
 
-    case DELETE_POST_SUCCESS:
-      return {
-        ...state,
-        all: state.all.delete(action.post),
-      };
+    case DELETE_POST_SUCCESS: {
+      const index = state.all.indexOf(action.post);
+      if (index === -1) {
+        return state;
+      } else {
+        return {
+          ...state,
+          all: state.all.delete(index),
+        };
+      }
+    }
 
     case FETCH_BLOCKS_SUCCESS: {
       const blocks = (_.isEmpty(action.blocks) || action.blocks === undefined) ?
