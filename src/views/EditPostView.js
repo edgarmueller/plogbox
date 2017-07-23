@@ -25,7 +25,9 @@ import PropTypes from 'prop-types';
 import brace from 'brace';
 import AceEditor from 'react-ace';
 import 'brace/mode/markdown';
-import 'brace/theme/monokai';
+import 'brace/theme/github';
+import 'brace/keybinding/emacs';
+
 
 import { getBlocks, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
@@ -159,7 +161,7 @@ export class EditPostView extends React.Component {
 
                               <AceEditor
                                 mode="markdown"
-                                theme="monokai"
+                                theme="github"
                                 onChange={text => updateBlockText(block, text)}
                                 name={`${block.id}_editor`}
                                 editorProps={{ $blockScrolling: true }}
@@ -168,6 +170,7 @@ export class EditPostView extends React.Component {
                                 value={block.text}
                                 minLines={2}
                                 maxLines={20}
+                                keyboardHandler={'emacs'}
                               />
 
 
