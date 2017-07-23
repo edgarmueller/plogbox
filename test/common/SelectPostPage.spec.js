@@ -13,7 +13,7 @@ import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-test.beforeEach(async t => await beforeEach(t));
+test.beforeEach(async t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
 
@@ -41,7 +41,7 @@ test('SelectPostContainer should render', (t) => {
 
   const resolved = new Promise(r => r({
     data: {
-      data: { posts },
+      data: posts,
     },
   }));
   t.context.sandbox.stub(Axios, 'get').returns(resolved);

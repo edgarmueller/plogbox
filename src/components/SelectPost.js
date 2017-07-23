@@ -162,7 +162,7 @@ export class SelectPost extends React.Component {
                                   });
                                 }}
                               /> :
-                              <div>
+                              <span>
                                 {
                                   (post.tags || []).map(tag =>
                                     (
@@ -183,7 +183,7 @@ export class SelectPost extends React.Component {
                                     ),
                                   )
                                 }
-                              </div>
+                              </span>
                           }
                         </TableRowColumn>
                       </TableRow>),

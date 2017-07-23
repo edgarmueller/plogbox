@@ -22,16 +22,27 @@ import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import brace from 'brace';
-import AceEditor from 'react-ace';
-import 'brace/mode/markdown';
-import 'brace/theme/github';
-import 'brace/keybinding/emacs';
 
 
 import { getBlocks, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
+
+const Editor = (props) => {
+  if (typeof window !== 'undefined') {
+    const AceEditor = require('react-ace');
+    require('brace');
+    // const Ace = require('react-ace').default;
+    require('brace/mode/markdown');
+    require('brace/theme/github');
+    require('brace/keybinding/emacs');
+
+
+    return <AceEditor {...props}/>
+  }
+
+  return null;
+}
 
 export class EditPostView extends React.Component {
 
@@ -159,7 +170,7 @@ export class EditPostView extends React.Component {
                                 </span>
                               </div>
 
-                              <AceEditor
+                              <Editor
                                 mode="markdown"
                                 theme="github"
                                 onChange={text => updateBlockText(block, text)}

@@ -5,39 +5,38 @@ import PropTypes from 'prop-types';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import TOKEN from './token';
-
 export function mountWithContext(t, Component) {
   return mount(
     Component,
     {
       context: {
-        muiTheme: getMuiTheme()
+        muiTheme: getMuiTheme(),
       },
       childContextTypes: {
-        muiTheme: PropTypes.object.isRequired
+        muiTheme: PropTypes.object.isRequired,
       },
-      attachTo: t.context.div
-    }
+      attachTo: t.context.div,
+    },
   );
 }
 
 function mockStorage() {
   const storage = {};
   return {
-    setItem: function(key, value) {
+    setItem(key, value) {
       storage[key] = value || '';
     },
-    getItem: function(key) {
+    getItem(key) {
       return storage[key];
     },
-    removeItem: function(key) {
+    removeItem(key) {
       delete storage[key];
     },
-    get length () {
+    get length() {
       return Object.keys(storage).length;
     },
-    key: function(i) {
-      var keys = Object.keys(storage);
+    key(i) {
+      const keys = Object.keys(storage);
       return keys[i] || null;
     },
   };
@@ -45,7 +44,7 @@ function mockStorage() {
 
 export async function beforeEach(t) {
   t.context.sandbox = sinon.sandbox.create();
-  if (typeof localStorage === "undefined" || localStorage === null) {
+  if (typeof localStorage === 'undefined' || localStorage === null) {
     global.localStorage = mockStorage();
     global.localStorage.setItem('token', TOKEN);
     global.sessionStorage = mockStorage();
@@ -57,18 +56,18 @@ export async function beforeEach(t) {
     promiseReject = reject;
   });
   setupDom(() => {
-    div = document.createElement("div");
-    div.setAttribute("id", "integration_test_div");
+    div = document.createElement('div');
+    div.setAttribute('id', 'integration_test_div');
     document.body.appendChild(div);
     t.context.div = div;
     promiseResolve();
-  });
+  })
   await promise;
 }
 
 export function afterEach(t) {
-  t.context.sandbox.restore()
-  let node = document.querySelector("#integration_test_div");
+  t.context.sandbox.restore();
+  const node = document.querySelector('#integration_test_div');
   if (node) {
     ReactDOM.unmountComponentAtNode(node);
   }
@@ -80,19 +79,19 @@ export function setupDom(cb) {
   //     return;
   // }
   const config = {
-    html: "<html><head></head><body><</body></html>",
-    features:{
-      FetchExternalResources: ["script"],
-      ProcessExternalResources: ["script"],
-      MutationEvents: '2.0'
+    html: '<html><head></head><body><</body></html>',
+    features: {
+      FetchExternalResources: ['script'],
+      ProcessExternalResources: ['script'],
+      MutationEvents: '2.0',
     },
-    scripts:[],
-    onload: function(err, window) {
+    scripts: [],
+    onload(err, window) {
     },
-    created: function(err, window) {
+    created(err, window) {
     },
-    done: function(err, window) {
-      if(err){
+    done(err, window) {
+      if (err) {
         callback(err);
       }
 
@@ -100,7 +99,7 @@ export function setupDom(cb) {
       global.document = window.document;
       global.navigator = window.navigator;
       cb();
-    }
+    },
   };
   jsdom.env(config);
 }
