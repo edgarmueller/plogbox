@@ -118,7 +118,6 @@
     "redux-form": "^6.8.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",
-    "reflexbox": "^3.0.0-0",
     "roboto-fontface": "^0.7.0",
     "typeface-roboto": "0.0.22"
   }

@@ -30,19 +30,19 @@ import { RESET_ERROR_MESSAGE } from '../constants/index';
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
-    const AceEditor = require('react-ace');
+    /* eslint-disable */
+    const AceEditor = require('react-ace').default;
     require('brace');
-    // const Ace = require('react-ace').default;
     require('brace/mode/markdown');
     require('brace/theme/github');
     require('brace/keybinding/emacs');
+    /* eslint-enable */
 
-
-    return <AceEditor {...props}/>
+    return <AceEditor {...props} />;
   }
 
   return null;
-}
+};
 
 export class EditPostView extends React.Component {
 
