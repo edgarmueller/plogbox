@@ -1,4 +1,5 @@
 import {
+  SIGN_UP_USER_FAILURE,
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
@@ -31,6 +32,16 @@ export const auth = (state = INITIAL_STATE, action) => {
         user: action.user,
         userId: action.userId,
       };
+    case SIGN_UP_USER_FAILURE:
+      return {
+        isAuthenticating: false,
+        isAuthenticated: false,
+        statusText: 'This email address already has been registered',
+        status: action.status,
+        token: null,
+        user: null,
+        userId: null,
+      };
     case USER_LOGIN_FAILURE:
       return {
         isAuthenticating: false,
@@ -55,6 +66,7 @@ export const auth = (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
 
 export const isAuthenticated = state => state.isAuthenticated;
 
