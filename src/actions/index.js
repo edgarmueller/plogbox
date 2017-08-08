@@ -31,6 +31,10 @@ import {
   ADD_TAG_FAILURE,
   DELETE_TAG_SUCCESS,
   DELETE_TAG_FAILURE,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_FAILURE,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_FAILURE, ERROR_PASSWORD_DONT_MATCH
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -141,6 +145,7 @@ export const logoutUser = () => (dispatch) => {
     .then(
       (resp) => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         dispatch({
           type: USER_LOGOUT_SUCCESS,
           statusText: 'You have logged out successfully.',
@@ -160,7 +165,7 @@ export const logoutUser = () => (dispatch) => {
 export const registerUser = signUpToken => dispatch =>
   api.registerUser(signUpToken)
     .then(
-      () => {
+      (data) => {
         dispatch({
           type: SIGN_UP_USER_SUCCESS,
         });
@@ -284,7 +289,7 @@ export const moveBlockDown = block => ({
 });
 
 export const addTag = (postId, tag) => dispatch =>
-   api.addTag(postId, tag)
+  api.addTag(postId, tag)
     .then(
       // TODO: response unused
       (resp) => {
@@ -313,3 +318,48 @@ export const removeTag = (postId, tagId) => dispatch =>
         errorHandler(dispatch, error, DELETE_TAG_FAILURE);
       },
     );
+
+export const forgotPassword = email => dispatch =>
+  api.changePassword(email)
+    .then(
+      () => {
+        dispatch({
+          type: FORGOT_PASSWORD_SUCCESS,
+        });
+      },
+      (error) => {
+        errorHandler(dispatch, error, FORGOT_PASSWORD_FAILURE);
+      },
+    );
+
+export const resetPassword = resetToken => dispatch =>
+  api.resetPassword(resetToken)
+    .then(
+      () => {
+        dispatch({
+          type: RESET_PASSWORD_SUCCESS,
+        });
+      },
+      error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
+    );
+
+export const changePassword = (oldPassword, newPassword) => dispatch => {
+
+  if (oldPassword === newPassword) {
+    dispatch({
+      type: ERROR_PASSWORD_DONT_MATCH,
+    });
+
+    return;
+  }
+
+  return api.changePassword()
+    .then(
+      () => {
+        dispatch({
+          type: RESET_PASSWORD_SUCCESS,
+        });
+      },
+      error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
+    );
+}

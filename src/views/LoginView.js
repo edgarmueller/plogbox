@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
-import { RaisedButton } from 'material-ui';
+import { FlatButton, RaisedButton } from 'material-ui';
 import { redA400 } from 'material-ui/styles/colors';
 
 import { loginUser } from '../actions/index';
 import { renderTextField, renderPasswordTextField } from '../utils/helpers';
 import '../common/tap';
+import { getStatusText } from '../reducers/auth';
 
 const form = reduxForm({
   form: 'login',
@@ -23,7 +24,7 @@ export const LoginForm = ({ handleSubmit, handleFormSubmit, renderAlert }) => (
       <Field name="password" component={renderPasswordTextField} label="Password" />
     </div>
     <div>
-      <RaisedButton type="submit" >Login</RaisedButton>
+      <RaisedButton type="submit" label="Login" />
     </div>
     <div>
       {renderAlert()}
@@ -80,13 +81,21 @@ class LoginFormContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, replace } = this.props;
     return (
-      <LoginForm
-        handleSubmit={handleSubmit}
-        handleFormSubmit={this.handleFormSubmit}
-        renderAlert={this.renderAlert}
-      />
+      <div>
+        <LoginForm
+          handleSubmit={handleSubmit}
+          handleFormSubmit={this.handleFormSubmit}
+          renderAlert={this.renderAlert}
+        />
+        <p>
+          <FlatButton
+            onClick={() => replace('/password/forgot')}
+            label="forgot password?"
+          />
+        </p>
+      </div>
     );
   }
 }
@@ -110,8 +119,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isAuthenticated,
     redirect,
-    errorMessage: state.auth.statusText,
-    message: state.auth.message,
+    errorMessage: getStatusText(state.auth),
   };
 };
 

@@ -46,7 +46,7 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         isAuthenticating: false,
         isAuthenticated: false,
-        statusText: `An authentication error occurred: ${action.statusText}`,
+        statusText: action.statusText ? `An authentication error occurred: ${action.statusText}` : '',
         status: action.status,
         token: null,
         user: null,
@@ -69,5 +69,6 @@ export const auth = (state = INITIAL_STATE, action) => {
 
 
 export const isAuthenticated = state => state.isAuthenticated;
+export const getStatusText = state => state.statusText;
 
 export default auth;

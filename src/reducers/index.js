@@ -24,4 +24,6 @@ export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts
 export const getAllPosts = state => fromPosts.getAllPosts(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
 
+// auth getters
 export const getIsAuthenticated = state => fromAuth.isAuthenticated(state.auth);
+export const getStatusText = state => fromAuth.getStatusText(state.auth);

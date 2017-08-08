@@ -43,4 +43,14 @@ export const RESET_PASSWORD_REQUEST = 'reset_password_request';
 export const SIGN_UP_USER_SUCCESS = 'SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_FAILURE = 'SIGN_UP_USER_FAILURE';
 
+// forgot password
+export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';
+export const FORGOT_PASSWORD_FAILURE = 'FORGOT_PASSWORD_FAILURE';
+
+// reset password
+export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
+export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE';
+
+export const ERROR_PASSWORD_DONT_MATCH = 'ERROR_PASSWORD_DONT_MATCH';
+
 export const BASE_URL = 'http://localhost:9000';

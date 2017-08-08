@@ -4,12 +4,14 @@ import { UserAuthWrapper } from 'redux-auth-wrapper';
 import { replace } from 'react-router-redux';
 
 import App from '../components/App';
-import SelectPostPage from '../components/SelectPost';
-import CreateOrEditPostPage from '../views/EditPostView';
+import SelectPostView from '../components/SelectPost';
+import CreateOrEditPostView from '../views/EditPostView';
 import NotFoundPage from '../views/NotFoundView';
 import SignUpView from '../views/SignUpView';
 import HomeView from '../views/HomeView';
 import Login from '../views/LoginView';
+import ForgotPasswordView from '../views/ForgotPasswordView';
+import ChangePasswordView from '../views/ChangePasswordView';
 
 // Redirects to /login by default
 const requireAuth = UserAuthWrapper({
@@ -24,8 +26,10 @@ export default
     <IndexRoute component={HomeView} />
     <Route path="sign-up" component={SignUpView} />
     <Route path="login" component={Login} />
-    <Route path="posts" component={requireAuth(SelectPostPage)} />
-    <Route path="posts/edit" component={requireAuth(CreateOrEditPostPage)} />
+    <Route path="posts" component={requireAuth(SelectPostView)} />
+    <Route path="posts/edit" component={requireAuth(CreateOrEditPostView)} />
+    <Route path="password/forgot" component={ForgotPasswordView} />
+    <Route path="password/change" component={ChangePasswordView} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 ;

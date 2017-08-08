@@ -106,3 +106,44 @@ export const fetchTags = () => {
     getHeaderToken(),
   );
 };
+
+export const testToken = (token) => {
+
+  return Axios
+    .get(
+      `${BASE_URL}/is-signed-in`,
+      { headers: { 'X-Auth-Token': token } },
+    );
+};
+
+export const forgotPassword = (email) => {
+  const url = `${BASE_URL}/password/forgot`;
+  return Axios.post(
+    url,
+    {
+      email,
+    },
+    getHeaderToken(),
+  );
+};
+
+export const resetPassword = (resetToken) => {
+  const url = `${BASE_URL}/password/reset`;
+  return Axios.post(
+    url,
+    resetToken,
+    getHeaderToken(),
+  );
+};
+
+export const changePassword = (oldPassword, newPassword) => {
+  const url = `${BASE_URL}/password/change`;
+  return Axios.post(
+    url,
+    {
+      oldPassword,
+      newPassword,
+    },
+    getHeaderToken(),
+  );
+};

@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-// import 'babel-polyfill';
+import * as _ from 'lodash';
 
 import configureStore from './components/configureStore';
 import Root from './components/Root';
 import { selectPost } from './actions';
-import { USER_LOGIN_SUCCESS } from './constants';
+import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
+import { testToken } from './api/index';
 
 require('roboto-fontface');
 
@@ -18,12 +19,29 @@ const store = configureStore();
 const loadTokenFromStorage = (dispatch) => {
   const token = localStorage.getItem('token');
   const user = localStorage.getItem(('user'));
+
   if (token) {
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      token,
-      user,
-    });
+    testToken(token)
+      .then(
+        (resp) => {
+          if (_.isEmpty(resp.data.data)) {
+            dispatch({
+              type: USER_LOGIN_FAILURE,
+            });
+          } else {
+            dispatch({
+              type: USER_LOGIN_SUCCESS,
+              token,
+              user,
+            });
+          }
+        },
+        () => {
+          dispatch({
+            type: USER_LOGIN_FAILURE,
+          });
+        },
+      );
   }
 };
 

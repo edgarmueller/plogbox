@@ -59,38 +59,36 @@ export class SignUpPage extends React.Component {
     const { handleSubmit } = this.props;
 
     return (
-      <div>
-        <form onSubmit={handleSubmit(this.handleFormSubmit)}>
-          <div>
-            <Field
-              name="email"
-              component={renderTextField}
-              type="text"
-              label="Mail"
-            />
-          </div>
-          <div>
-            <Field
-              name="password"
-              component={renderPasswordTextField}
-              type="password"
-              label="Password"
-            />
-          </div>
-          <div>
-            <Field
-              name="password-repeat"
-              component={renderPasswordTextField}
-              type="password"
-              label="Repeat Password"
-            />
-          </div>
-          <RaisedButton type="submit" >Register</RaisedButton>
-          <div>
-            {this.renderAlert()}
-          </div>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit(this.handleFormSubmit)}>
+        <div>
+          <Field
+            name="email"
+            component={renderTextField}
+            type="text"
+            label="Mail"
+          />
+        </div>
+        <div>
+          <Field
+            name="password"
+            component={renderPasswordTextField}
+            type="password"
+            label="Password"
+          />
+        </div>
+        <div>
+          <Field
+            name="password-repeat"
+            component={renderPasswordTextField}
+            type="password"
+            label="Repeat Password"
+          />
+        </div>
+        <RaisedButton type="submit" >Register</RaisedButton>
+        <div>
+          {this.renderAlert()}
+        </div>
+      </form>
     );
   }
 }

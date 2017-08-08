@@ -25,9 +25,7 @@ export const NavBar = ({
       <nav>
         <Toolbar style={{ backgroundColor: '#913D88' }}>
           <ToolbarGroup>
-            <span>
-              <h1>plog</h1>
-            </span>
+              <h1 onClick={() => navigateTo('/')}>plog</h1>
             <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/')} label="HOME" />
             <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/posts')} label="POSTS" />
           </ToolbarGroup>
@@ -51,9 +49,16 @@ export const NavBar = ({
     <nav>
       <Toolbar style={{ backgroundColor: '#913D88' }}>
         <ToolbarGroup>
-          <span>
-            <h1>plog</h1>
-          </span>
+          <FlatButton
+            labelStyle={{
+              color: '#fff',
+              fontWeight: 'bold',
+              fontFamily: 'monospace',
+              fontSize: '1.25em',
+            }}
+            onClick={() => navigateTo('/')}
+            label="plog_"
+          />
         </ToolbarGroup>
         <ToolbarGroup>
           <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/sign-up')} label="SIGN-UP" />
