@@ -2,7 +2,9 @@ import Axios from 'axios';
 import { BASE_URL } from '../constants';
 
 const getHeaderToken = () => ({
-  headers: { 'X-Auth-Token': localStorage.getItem('token') },
+  headers: {
+    'X-Auth-Token': localStorage.getItem('token'),
+  },
 });
 
 export const fetchPosts = () =>
@@ -117,7 +119,7 @@ export const testToken = (token) => {
 };
 
 export const forgotPassword = (email) => {
-  const url = `${BASE_URL}/password/forgot`;
+  const url = `${BASE_URL}/api/password/forgot`;
   return Axios.post(
     url,
     {
@@ -127,21 +129,23 @@ export const forgotPassword = (email) => {
   );
 };
 
-export const resetPassword = (resetToken) => {
-  const url = `${BASE_URL}/password/reset`;
+export const resetPassword = (token, newPassword) => {
+  const url = `${BASE_URL}/api/password/reset/${token}`;
   return Axios.post(
     url,
-    resetToken,
+    {
+      password: newPassword,
+    },
     getHeaderToken(),
   );
 };
 
-export const changePassword = (oldPassword, newPassword) => {
-  const url = `${BASE_URL}/password/change`;
+export const changePassword = (currentPassword, newPassword) => {
+  const url = `${BASE_URL}/api/password/change`;
   return Axios.post(
     url,
     {
-      oldPassword,
+      currentPassword,
       newPassword,
     },
     getHeaderToken(),
