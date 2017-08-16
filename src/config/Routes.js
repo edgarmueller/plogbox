@@ -10,8 +10,10 @@ import NotFoundPage from '../views/NotFoundView';
 import SignUpView from '../views/SignUpView';
 import HomeView from '../views/HomeView';
 import Login from '../views/LoginView';
+import ProfileView from '../views/ProfileView';
 import ForgotPasswordView from '../views/ForgotPasswordView';
 import ChangePasswordView from '../views/ChangePasswordView';
+import ResetPasswordView from '../views/ResetPasswordView';
 
 // Redirects to /login by default
 const requireAuth = UserAuthWrapper({
@@ -28,8 +30,10 @@ export default
     <Route path="login" component={Login} />
     <Route path="posts" component={requireAuth(SelectPostView)} />
     <Route path="posts/edit" component={requireAuth(CreateOrEditPostView)} />
+    <Route path="profile" component={requireAuth(ProfileView)} />
+    <Route path="password/reset/:token" component={ResetPasswordView} />
     <Route path="password/forgot" component={ForgotPasswordView} />
-    <Route path="password/change" component={ChangePasswordView} />
+    <Route path="password/change" component={requireAuth(ChangePasswordView)} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 ;

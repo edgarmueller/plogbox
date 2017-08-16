@@ -1,22 +1,21 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import { routerActions } from 'react-router-redux';
-import { RaisedButton } from 'material-ui';
-import { redA400 } from 'material-ui/styles/colors';
+import {Field, reduxForm} from 'redux-form';
+import {connect} from 'react-redux';
+import {RaisedButton} from 'material-ui';
+import {redA400} from 'material-ui/styles/colors';
 import PropTypes from 'prop-types';
-import { renderPasswordTextField } from '../utils/helpers';
+import {renderPasswordTextField} from '../utils/helpers';
 import * as actions from '../actions';
 
 const form = reduxForm({
-  form: 'change-pw',
+  form: 'change-password',
 });
 
-export const ChangePasswordForm = ({ handleSubmit, handleFormSubmit, renderAlert }) => (
-  <form onSubmit={handleSubmit(handleFormSubmit)}>
+export const ChangePasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
+  <form onSubmit={handleSubmit(onSubmit)}>
     <div>
       <Field
-        name="password"
+        name="currentPassword"
         component={renderPasswordTextField}
         type="password"
         label="Current Password"
@@ -24,13 +23,13 @@ export const ChangePasswordForm = ({ handleSubmit, handleFormSubmit, renderAlert
     </div>
     <div>
       <Field
-        name="password-repeat"
+        name="newPassword"
         component={renderPasswordTextField}
         type="password"
         label="New Password"
       />
     </div>
-    <RaisedButton type="submit" >Change password</RaisedButton>
+    <RaisedButton type="submit" label="Change password" />
     <div>
       {renderAlert()}
     </div>
@@ -39,7 +38,7 @@ export const ChangePasswordForm = ({ handleSubmit, handleFormSubmit, renderAlert
 
 ChangePasswordForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-  handleFormSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   renderAlert: PropTypes.func.isRequired,
 };
 
@@ -47,12 +46,7 @@ export class ChangePasswordFormContainer extends React.Component {
 
   constructor() {
     super();
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.renderAlert = this.renderAlert.bind(this);
-  }
-
-  handleFormSubmit(formProps) {
-    this.props.changePassword(formProps);
   }
 
   // TODO: dup code
@@ -71,11 +65,11 @@ export class ChangePasswordFormContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, changePassword } = this.props;
     return (
       <ChangePasswordForm
         handleSubmit={handleSubmit}
-        handleFormSubmit={this.handleFormSubmit}
+        onSubmit={changePassword}
         renderAlert={this.renderAlert}
       />
     );
@@ -98,8 +92,7 @@ ChangePasswordFormContainer.defaultProps = {
 
 const mapDispatchToProps = dispatch => ({
   changePassword(formProps) {
-    dispatch(actions.changePassword(formProps.email));
-    dispatch(routerActions.push('/'));
+    dispatch(actions.changePassword(formProps.currentPassword, formProps.newPassword));
   },
 });
 

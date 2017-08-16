@@ -1,42 +1,60 @@
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /**
  * This is the Webpack configuration file for production.
  */
 module.exports = {
-  entry: "./src/index",
+  entry: './src/index',
 
   output: {
-    path: __dirname + "/build/",
-    filename: "app.js"
+    path: `${__dirname}/build/`,
+    filename: 'app.js',
   },
-
+  // Necessary plugins for hot load
   plugins: [
-    new ExtractTextPlugin('style.css', { allChunks: true })
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new ExtractTextPlugin({ filename: 'style.css', disable: false, allChunks: true }),
   ],
 
   module: {
-    loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: "babel-loader" },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader') },
+    rules: [
       {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader:"url?limit=10000&mimetype=application/font-woff"
+        test: /\.jsx?$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+        ],
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react', 'stage-3'],
+          plugins: ['transform-runtime'],
+        },
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: "file"
-      }
-    ]
+        use: 'file-loader',
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+      },
+    ],
   },
 
   resolve: {
-    extensions: ['', '.js', '.jsx', '.css']
+    extensions: ['.js', '.jsx', '.css'],
   },
-
-  postcss: [
-    require('autoprefixer'),
-    require('postcss-nested')
-  ]
-}
+  //
+  // postcss: [
+  //   require('autoprefixer'),
+  //   require('postcss-nested'),
+  // ],
+};

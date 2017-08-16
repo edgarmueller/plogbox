@@ -12,8 +12,8 @@ const form = reduxForm({
   form: 'reset',
 });
 
-export const ResetForm = ({ handleSubmit }) => (
-  <form onSubmit={handleSubmit(this.handleFormSubmit)}>
+export const ResetForm = ({ handleSubmit, onSubmit, renderAlert }) => (
+  <form onSubmit={handleSubmit(onSubmit)}>
     <div>
       <Field
         name="password"
@@ -32,13 +32,15 @@ export const ResetForm = ({ handleSubmit }) => (
     </div>
     <RaisedButton type="submit" >Register</RaisedButton>
     <div>
-      {this.renderAlert()}
+      {renderAlert()}
     </div>
   </form>
 );
 
 ResetForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  renderAlert: PropTypes.func.isRequired,
 };
 
 export class ResetPasswordFormContainer extends React.Component {
@@ -49,8 +51,8 @@ export class ResetPasswordFormContainer extends React.Component {
     this.renderAlert = this.renderAlert.bind(this);
   }
 
-  handleFormSubmit(formProps) {
-    this.props.resetPassword(formProps);
+  handleFormSubmit(token) {
+    return formProps => this.props.resetPassword(token, formProps);
   }
 
   // TODO: dup code
@@ -69,11 +71,11 @@ export class ResetPasswordFormContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, params } = this.props;
     return (
       <ResetForm
         handleSubmit={handleSubmit}
-        handleFormSubmit={this.handleFormSubmit}
+        onSubmit={this.handleFormSubmit(params.token)}
         renderAlert={this.renderAlert}
       />
     );
@@ -95,8 +97,8 @@ ResetPasswordFormContainer.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  resetPassword(formProps) {
-    dispatch(actions.resetPassword(formProps.email));
+  resetPassword(token, formProps) {
+    dispatch(actions.resetPassword(token)(formProps.password));
     dispatch(routerActions.push('/'));
   },
 });

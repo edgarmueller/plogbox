@@ -41,7 +41,7 @@ export class ForgotPasswordFormContainer extends React.Component {
   }
 
   handleFormSubmit(formProps) {
-    this.props.changePassword(formProps);
+    this.props.forgotPassword(formProps);
   }
 
   // TODO: dup code
@@ -75,7 +75,7 @@ ForgotPasswordFormContainer.propTypes = {
   // isAuthenticated: PropTypes.bool.isRequired,
   // replace: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  changePassword: PropTypes.func.isRequired,
+  forgotPassword: PropTypes.func.isRequired,
   // redirect: PropTypes.string.isRequired,
   errorMessage: PropTypes.string,
 };
@@ -86,8 +86,8 @@ ForgotPasswordFormContainer.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  changePassword(formProps) {
-    dispatch(actions.changePassword(formProps.email));
+  forgotPassword(formProps) {
+    dispatch(actions.forgotPassword(formProps.email));
     dispatch(routerActions.push('/'));
   },
 });

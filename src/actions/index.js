@@ -34,7 +34,7 @@ import {
   FORGOT_PASSWORD_SUCCESS,
   FORGOT_PASSWORD_FAILURE,
   RESET_PASSWORD_SUCCESS,
-  RESET_PASSWORD_FAILURE, ERROR_PASSWORD_DONT_MATCH
+  RESET_PASSWORD_FAILURE, ERROR_PASSWORDS_DONT_DIFFER
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -320,7 +320,7 @@ export const removeTag = (postId, tagId) => dispatch =>
     );
 
 export const forgotPassword = email => dispatch =>
-  api.changePassword(email)
+  api.forgotPassword(email)
     .then(
       () => {
         dispatch({
@@ -332,8 +332,8 @@ export const forgotPassword = email => dispatch =>
       },
     );
 
-export const resetPassword = resetToken => dispatch =>
-  api.resetPassword(resetToken)
+export const resetPassword = token => newPassword => dispatch =>
+  api.resetPassword(token, newPassword)
     .then(
       () => {
         dispatch({
@@ -343,23 +343,25 @@ export const resetPassword = resetToken => dispatch =>
       error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
     );
 
-export const changePassword = (oldPassword, newPassword) => dispatch => {
+export const changePassword = (currentPassword, newPassword) => (dispatch) => {
 
-  if (oldPassword === newPassword) {
+  if (currentPassword === newPassword) {
     dispatch({
-      type: ERROR_PASSWORD_DONT_MATCH,
+      type: ERROR_PASSWORDS_DONT_DIFFER,
     });
 
+    // TODO
     return;
   }
 
-  return api.changePassword()
+  api.changePassword(currentPassword, newPassword)
     .then(
       () => {
         dispatch({
           type: RESET_PASSWORD_SUCCESS,
         });
+        dispatch(logoutUser());
       },
       error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
     );
-}
+};
