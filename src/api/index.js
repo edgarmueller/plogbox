@@ -1,9 +1,29 @@
 import Axios from 'axios';
 import { BASE_URL } from '../constants';
 
+// Axios.defaults.withCredentials = true;
+
+const readCookie = (cname) => {
+  const name = `${cname}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+
+  return '';
+};
+
 const getHeaderToken = () => ({
   headers: {
     'X-Auth-Token': localStorage.getItem('token'),
+    'Csrf-Token': readCookie('PLAY_CSRF_TOKEN'),
   },
 });
 
@@ -109,14 +129,11 @@ export const fetchTags = () => {
   );
 };
 
-export const testToken = (token) => {
-
-  return Axios
+export const testToken = token => Axios
     .get(
       `${BASE_URL}/is-signed-in`,
       { headers: { 'X-Auth-Token': token } },
     );
-};
 
 export const forgotPassword = (email) => {
   const url = `${BASE_URL}/api/password/forgot`;
