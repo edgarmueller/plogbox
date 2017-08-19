@@ -24,41 +24,42 @@ const getHeaderToken = () => ({
   headers: {
     'X-Auth-Token': localStorage.getItem('token'),
     'Csrf-Token': readCookie('PLAY_CSRF_TOKEN'),
+    'Content-Type': 'application/json',
   },
 });
 
 export const fetchPosts = () =>
   Axios.get(
-    `${BASE_URL}/posts`,
+    `${BASE_URL}/api/posts`,
     getHeaderToken(),
   );
 
 export const createPost = newPost =>
   Axios
     .put(
-      `${BASE_URL}/posts`,
+      `${BASE_URL}/api/posts`,
       newPost,
       getHeaderToken(),
     );
 
-export const updatePost = dataSource =>
+export const updatePost = postId =>
   Axios
     .post(
-      `${BASE_URL}/posts/${dataSource.id}`,
-      dataSource,
+      `${BASE_URL}/api/posts/${postId.id}`,
+      postId,
       getHeaderToken(),
     );
 
 export const fetchBlocks = postId =>
   Axios.get(
-    `${BASE_URL}/posts/${postId}/blocks`,
+    `${BASE_URL}/api/posts/${postId}/blocks`,
     getHeaderToken(),
   );
 
 export const deletePost = postId =>
   Axios
     .delete(
-      `${BASE_URL}/posts/${postId}`,
+      `${BASE_URL}/api/posts/${postId}`,
       getHeaderToken(),
     );
 
@@ -67,7 +68,7 @@ export const loginUser = (email, password, rememberMe) =>
     .post(
       `${BASE_URL}/sign-in`,
       { email, password, rememberMe },
-      { header: { 'Content-Type': 'application/json' } },
+      getHeaderToken(),
     );
 
 export const logoutUser = () => Axios
