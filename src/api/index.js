@@ -84,20 +84,20 @@ export const registerUser = signUpToken =>
 
 export const addBlock = (postId, block) =>
   Axios.put(
-    `${BASE_URL}/posts/${postId}/blocks`,
+    `${BASE_URL}/api/posts/${postId}/blocks`,
     block,
     getHeaderToken(),
   );
 
 export const removeBlock = (postId, block) =>
   Axios.delete(
-    `${BASE_URL}/posts/${postId}/blocks/${block.id}`,
+    `${BASE_URL}/api/posts/${postId}/blocks/${block.id}`,
     getHeaderToken(),
   );
 
 
 export const updateBlock = (postId, block) => {
-  const url = `${BASE_URL}/posts/${postId}/blocks/${block.id}`;
+  const url = `${BASE_URL}/api/posts/${postId}/blocks/${block.id}`;
   return Axios.post(
     url,
     block,
