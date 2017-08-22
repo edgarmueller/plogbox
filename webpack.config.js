@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 
@@ -12,7 +11,7 @@ module.exports = {
     // bundle client for webpack-dev-server and connect to given endpoint
     'webpack-dev-server/client?http://localhost:3000',
     // bundle the client for hot-reloading
-    // only- only reloads for successful updates
+    // only reloads for successful updates
     'webpack/hot/only-dev-server',
     // actual application entry point
     './src/index.js',
@@ -27,7 +26,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.css'],
   },
 
   // Necessary plugins for hot load
@@ -35,7 +34,6 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.NamedModulesPlugin(),
-    new ExtractTextPlugin({ filename: 'style.css', disable: false, allChunks: true }),
   ],
 
   module: {
@@ -54,7 +52,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,

@@ -1,7 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
 html {
     width: 100%;
     margin:0 auto;
@@ -16,6 +12,7 @@ nav h1 {
 }
 
 * {
+    box-sizing: border-box;
     font-family: Roboto, sans-serif;
 }
 

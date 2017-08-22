@@ -4,6 +4,7 @@ import 'typeface-roboto/index.css';
 import { AppContainer } from 'react-hot-loader';
 import * as _ from 'lodash';
 
+import './base.css';
 import configureStore from './components/configureStore';
 import Root from './components/Root';
 import { selectPost } from './actions';

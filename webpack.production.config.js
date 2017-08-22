@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /**
  * This is the Webpack configuration file for production.
@@ -17,7 +16,6 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.NamedModulesPlugin(),
-    new ExtractTextPlugin({ filename: 'style.css', disable: false, allChunks: true }),
   ],
 
   module: {
@@ -36,7 +34,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }),
+        loader: 'style-loader!css-loader',
       },
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
