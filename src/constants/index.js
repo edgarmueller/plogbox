@@ -53,4 +53,4 @@ export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE';
 
 export const ERROR_PASSWORDS_DONT_DIFFER = 'ERROR_PASSWORDS_DONT_DIFFER';
 
-export const BASE_URL = 'http://localhost:9000';
+export const BASE_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:9000';

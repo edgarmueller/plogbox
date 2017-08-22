@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "npm run build",
     "start": "webpack-dev-server",
-    "build": "webpack -p --progress --config webpack.production.config.js",
+    "build": "NODE_ENV=production && webpack -p --progress --config webpack.production.config.js",
     "test-only": "ava test/config/Routes.spec.js",
     "test": "ava",
     "test-with-coverage": "set BABEL_DISABLE_CACHE=1&&set NODE_ENV=AVA&&nyc ava",

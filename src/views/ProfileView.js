@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { routerActions } from 'react-router-redux';
 import PropTypes from 'prop-types';
 
-export const ProfileView = ({navigateTo}) => (
+export const ProfileView = ({ navigateTo }) => (
   <div>
     <p>
       You can change your password anytime. To do so, click the button below
