@@ -67,10 +67,19 @@ export function errorHandler(dispatch, error, type) {
 
 
   if (errorResponse !== undefined && errorResponse.status === 401) {
-    dispatch({
-      type: USER_LOGOUT_SUCCESS,
-      statusText: 'Your token timed out. Please login again.',
-    });
+    if (!_.isEmpty(localStorage.getItem('token'))) {
+      // we had previously had a valid token
+      dispatch({
+        type: USER_LOGOUT_SUCCESS,
+        statusText: 'Your token timed out. Please login again.',
+      });
+      localStorage.removeItem('token');
+    } else {
+      dispatch({
+        type: USER_LOGIN_FAILURE,
+        statusText: 'Your username or password is wrong.',
+      });
+    }
   } else {
     dispatch({
       type,
