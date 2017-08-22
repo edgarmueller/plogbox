@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'typeface-roboto/index.css';
 import { AppContainer } from 'react-hot-loader';
 import * as _ from 'lodash';
 
@@ -8,8 +9,6 @@ import Root from './components/Root';
 import { selectPost } from './actions';
 import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
 import { testToken } from './api/index';
-
-require('roboto-fontface');
 
 
 // ID of the DOM element to mount app on
