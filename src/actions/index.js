@@ -102,7 +102,7 @@ export const selectPost = (post) => {
 };
 
 export const createPost = post => (dispatch) => {
-  api.createPost(post)
+  return api.createPost(post)
     .then(
       (resp) => {
         dispatch({
@@ -116,6 +116,7 @@ export const createPost = post => (dispatch) => {
     );
 };
 
+// TODO: this should take post id as a parameter
 export const updatePost = (selectedPost, blocks) => (dispatch) => {
   // TODO: update only changed blocks
   blocks.forEach((block) => {
@@ -228,6 +229,7 @@ export const fetchPosts = () => (dispatch, getState) => {
     );
 };
 
+// TODO: should only get post id as parameter
 export const fetchBlocks = selectedPost => dispatch =>
   api.fetchBlocks(selectedPost.id)
     .then(
