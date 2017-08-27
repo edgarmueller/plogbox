@@ -105,6 +105,8 @@
     "react": "^15.5.4",
     "react-ace": "^5.1.0",
     "react-dom": "^15.5.4",
+    "react-file-download": "^0.3.4",
+    "react-file-input": "^0.2.5",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-latex": "^1.0.1",
     "react-markdown": "^2.5.0",

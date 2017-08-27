@@ -9,13 +9,16 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import ContentCreate from 'material-ui/svg-icons/content/create';
+import ContentArchive from 'material-ui/svg-icons/content/archive';
+import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
 import { blue300 } from 'material-ui/styles/colors';
 import { AutoComplete, Card, CardTitle, CardText, Dialog, FlatButton, MenuItem, Chip } from 'material-ui';
+import fileDownload from 'react-file-download';
 import * as actions from '../actions';
 import * as api from '../api';
 import { getAllPosts, getPostErrorMessage, getIsFetchingPosts } from '../reducers/index';
 import '../common/tap';
-import { RESET_ERROR_MESSAGE } from '../constants';
+import { CREATE_POST_SUCCESS, RESET_ERROR_MESSAGE } from '../constants';
 
 const floatingButtonStyle = {
   float: 'right',
@@ -83,6 +86,9 @@ export class SelectPost extends React.Component {
       resetErrorMessage,
       addTag,
       removeTag,
+      exportPosts,
+      importPosts,
+      importPostsFromFile,
     } = this.props;
 
     if (isFetchingPosts) {
@@ -92,7 +98,35 @@ export class SelectPost extends React.Component {
     return (
       <div>
         <Card>
-          <CardTitle>SELECT A POST</CardTitle>
+          <CardTitle>
+            <span><strong>SELECT A POST &nbsp;</strong></span>
+
+            <FloatingActionButton
+              onClick={() => exportPosts(posts)}
+              backgroundColor="#913d88"
+              mini
+            >
+              <ContentArchive />
+            </FloatingActionButton>
+
+            <FloatingActionButton
+              onClick={importPosts}
+              backgroundColor="#913d88"
+              mini
+            >
+              <ContentUnarchive />
+            </FloatingActionButton>
+
+            <input
+              id={'upload'}
+              type="file"
+              style={{ display: 'none' }}
+              onChange={
+                ev => importPostsFromFile(_.head(ev.target.files))
+              }
+            />
+          </CardTitle>
+
           <CardText>
             <div>
               <Table
@@ -224,6 +258,9 @@ export class SelectPost extends React.Component {
 
 SelectPost.propTypes = {
   addPost: PropTypes.func.isRequired,
+  exportPosts: PropTypes.func.isRequired,
+  importPosts: PropTypes.func.isRequired,
+  importPostsFromFile: PropTypes.func.isRequired,
   addTag: PropTypes.func.isRequired,
   removeTag: PropTypes.func.isRequired,
   selectedPost: PropTypes.func.isRequired,
@@ -292,6 +329,67 @@ export const mapDispatchToProps = dispatch => ({
   },
   removeTag(post, tag) {
     dispatch(actions.removeTag(post.id, tag.id));
+  },
+  exportPosts(posts) {
+    const postsWithBlocks = _.map(posts, post =>
+      api.fetchBlocks(post.id)
+        .then(
+          (resp) => {
+            console.log('response for post is', resp);
+            const clonedPost = _.clone(post);
+            clonedPost.blocks = resp.data.data;
+            return clonedPost;
+          },
+          () =>
+            console.error('An error occurred during post export'),
+        ),
+    );
+    Promise.all(postsWithBlocks)
+      .then(
+        (resolved) => {
+          console.log(resolved);
+          fileDownload(JSON.stringify(resolved), 'plog-posts-export.json');
+        },
+        () => console.error('An error occurred during post export'),
+      );
+  },
+  importPosts() {
+    document.getElementById('upload').click();
+  },
+  importPostsFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const readPosts = JSON.parse(ev.target.result);
+      _.each(readPosts, (postWithBlocks) => {
+        let postId;
+        const postPromise = api.createPost({
+          title: postWithBlocks.title,
+          isDraft: postWithBlocks.isDraft,
+          date: postWithBlocks.date,
+        }).then(
+          (resp) => {
+            dispatch({
+              type: CREATE_POST_SUCCESS,
+              post: resp.data.data,
+            });
+            postId = resp.data.data.id;
+          },
+          () => console.error('error during improt'),
+        );
+        postPromise.then(
+          () => {
+            _.each(postWithBlocks.blocks, block =>
+              api.addBlock(postId, {
+                dialect: block.dialect,
+                text: block.text,
+              }),
+            );
+          },
+          () => console.log('error during post import'),
+        );
+      });
+    };
+    reader.readAsText(file);
   },
 });
 

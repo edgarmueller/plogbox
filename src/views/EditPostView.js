@@ -1,6 +1,5 @@
 import React from 'react';
 import * as _ from 'lodash';
-import { fullWhite } from 'material-ui/styles/colors';
 import {
   Card,
   CardText,
@@ -8,10 +7,12 @@ import {
   FlatButton,
   FloatingActionButton,
   MenuItem,
-  RaisedButton,
   SelectField,
   TextField,
 } from 'material-ui';
+import ContentSave from 'material-ui/svg-icons/content/save';
+import ContentArchive from 'material-ui/svg-icons/content/archive';
+import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
@@ -22,7 +23,7 @@ import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-
+import fileDownload from 'react-file-download';
 
 import { getBlocks, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
@@ -69,6 +70,8 @@ export class EditPostView extends React.Component {
     const {
       blocks,
       savePost,
+      exportPost,
+      importPost,
       addBlock,
       removeBlock,
       moveBlockUp,
@@ -84,7 +87,60 @@ export class EditPostView extends React.Component {
     return (
       <div>
         <Card>
-          <CardTitle>EDIT POST</CardTitle>
+          <CardTitle>
+            <span><strong>EDIT &nbsp;</strong></span>
+            <TextField
+              name="title"
+              type="text"
+              label="Title"
+              value={selectedPost.title}
+              onChange={(ev, newValue) => updatePostTitle(newValue)}
+            />
+
+            <FloatingActionButton
+              onClick={() => savePost(selectedPost, blocks)}
+              backgroundColor="#913d88"
+              mini
+            >
+              <ContentSave />
+            </FloatingActionButton>
+
+            <FloatingActionButton
+              onClick={() => exportPost(blocks)}
+              backgroundColor="#913d88"
+              mini
+            >
+              <ContentArchive />
+            </FloatingActionButton>
+
+            <FloatingActionButton
+              onClick={() => importPost()}
+              backgroundColor="#913d88"
+              mini
+            >
+              <ContentUnarchive />
+            </FloatingActionButton>
+
+            <input
+              id={'upload'}
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(event) => {
+                // TODO: pull out
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                  const readBlocks = JSON.parse(ev.target.result)
+                  _.each(readBlocks, block => addBlock(
+                    selectedPost.id,
+                    block.dialect,
+                    block.text,
+                  ));
+                };
+                reader.readAsText(event.target.files[0]);
+              }}
+            />
+
+          </CardTitle>
           <CardText>
             <div style={{
               display: 'flex',
@@ -95,23 +151,6 @@ export class EditPostView extends React.Component {
                 marginRight: '1em',
               }}
               >
-                <TextField
-                  name="title"
-                  type="text"
-                  label="Title"
-                  value={selectedPost.title}
-                  onChange={(ev, newValue) => updatePostTitle(newValue)}
-                />
-                <RaisedButton
-                  label="Save"
-                  style={{
-                    marginLeft: '1em',
-                    marginBottom: '1em',
-                  }}
-                  backgroundColor="#913d88"
-                  labelColor={fullWhite}
-                  onTouchTap={() => savePost(selectedPost, blocks)}
-                />
                 {
                           blocks.map((block, index) =>
                             (<div
@@ -242,6 +281,8 @@ export class EditPostView extends React.Component {
 EditPostView.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),
   savePost: PropTypes.func.isRequired,
+  exportPost: PropTypes.func.isRequired,
+  importPost: PropTypes.func.isRequired,
   addBlock: PropTypes.func.isRequired,
   removeBlock: PropTypes.func.isRequired,
   moveBlockUp: PropTypes.func.isRequired,
@@ -324,6 +365,12 @@ export const mapDispatchToProps = dispatch => ({
   },
   savePost(selectedPost, blocks) {
     dispatch(action.updatePost(selectedPost, blocks));
+  },
+  exportPost(blocks) {
+    fileDownload(JSON.stringify(blocks), 'export.json');
+  },
+  importPost() {
+    document.getElementById('upload').click();
   },
   resetErrorMessage() {
     dispatch({
