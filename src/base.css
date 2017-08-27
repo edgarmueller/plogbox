@@ -4,7 +4,8 @@ html {
 }
 
 body {
-  margin: 0;
+    margin: 0;
+    font-family: Roboto, sans-serif;
 }
 
 nav h1 {
@@ -13,6 +14,5 @@ nav h1 {
 
 * {
     box-sizing: border-box;
-    font-family: Roboto, sans-serif;
-}
 
+}
