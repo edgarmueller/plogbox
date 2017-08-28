@@ -59,6 +59,7 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         isAuthenticating: false,
         isAuthenticated: false,
+        isAccountActivationSuccess: state.isAccountActivationSuccess,
         statusText: action.statusText ? `An authentication error occurred: ${action.statusText}` : '',
         status: action.status,
         token: null,
