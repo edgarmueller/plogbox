@@ -98,8 +98,10 @@ ResetPasswordFormContainer.defaultProps = {
 
 const mapDispatchToProps = dispatch => ({
   resetPassword(token, formProps) {
-    dispatch(actions.resetPassword(token)(formProps.password));
-    dispatch(routerActions.push('/'));
+    dispatch(actions.resetPassword(token)(formProps.password))
+      .then(
+        () => dispatch(routerActions.push('/')),
+      );
   },
 });
 
