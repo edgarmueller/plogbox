@@ -175,10 +175,11 @@ export const logoutUser = () => (dispatch) => {
 export const registerUser = signUpToken => dispatch =>
   api.registerUser(signUpToken)
     .then(
-      (data) => {
+      () => {
         dispatch({
           type: SIGN_UP_USER_SUCCESS,
         });
+        dispatch(routerActions.push('/'));
       },
       error => errorHandler(dispatch, error, SIGN_UP_USER_FAILURE),
     );
