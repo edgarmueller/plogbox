@@ -34,7 +34,10 @@ import {
   FORGOT_PASSWORD_SUCCESS,
   FORGOT_PASSWORD_FAILURE,
   RESET_PASSWORD_SUCCESS,
-  RESET_PASSWORD_FAILURE, ERROR_PASSWORDS_DONT_DIFFER
+  RESET_PASSWORD_FAILURE,
+  ERROR_PASSWORDS_DONT_DIFFER,
+  ACTIVATE_ACCOUNT_SUCCESS,
+  ACTIVATE_ACCOUNT_FAILURE,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -377,3 +380,13 @@ export const changePassword = (currentPassword, newPassword) => (dispatch) => {
       error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
     );
 };
+
+export const activateAccount = token => dispatch =>
+  api.activateAccount(token)
+    .then(
+      () => dispatch({
+        type: ACTIVATE_ACCOUNT_SUCCESS,
+      }),
+      error => errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE),
+    );
+

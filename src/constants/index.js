@@ -42,6 +42,9 @@ export const FORGOT_PASSWORD_REQUEST = 'forgot_password_request';
 export const RESET_PASSWORD_REQUEST = 'reset_password_request';
 export const SIGN_UP_USER_SUCCESS = 'SIGN_UP_USER_SUCCESS';
 export const SIGN_UP_USER_FAILURE = 'SIGN_UP_USER_FAILURE';
+export const IS_SIGNING_UP = 'IS_SIGNING_UP';
+export const ACTIVATE_ACCOUNT_SUCCESS = 'ACTIVATE_ACCOUNT_SUCCESS';
+export const ACTIVATE_ACCOUNT_FAILURE = 'ACTIVATE_ACCOUNT_FAILURE';
 
 // forgot password
 export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';

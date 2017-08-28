@@ -80,7 +80,11 @@ export const logoutUser = () => Axios
 
 export const registerUser = signUpToken =>
   Axios
-    .post(`${BASE_URL}/sign-up`, signUpToken);
+    .post(
+      `${BASE_URL}/sign-up`,
+      signUpToken,
+      getHeaderToken(),
+    );
 
 export const addBlock = (postId, block) =>
   Axios.put(
@@ -169,3 +173,8 @@ export const changePassword = (currentPassword, newPassword) => {
     getHeaderToken(),
   );
 };
+
+export const activateAccount = token =>
+  Axios.get(
+    `${BASE_URL}/api/account/activate/${token}`,
+  );

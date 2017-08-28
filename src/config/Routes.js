@@ -14,6 +14,7 @@ import ProfileView from '../views/ProfileView';
 import ForgotPasswordView from '../views/ForgotPasswordView';
 import ChangePasswordView from '../views/ChangePasswordView';
 import ResetPasswordView from '../views/ResetPasswordView';
+import ActivateAccountView from '../views/ActivateAccountView';
 
 // Redirects to /login by default
 const requireAuth = UserAuthWrapper({
@@ -34,6 +35,7 @@ export default
     <Route path="password/reset/:token" component={ResetPasswordView} />
     <Route path="password/forgot" component={ForgotPasswordView} />
     <Route path="password/change" component={requireAuth(ChangePasswordView)} />
+    <Route path="account/activate/:token" component={ActivateAccountView} />
     <Route path="*" component={NotFoundPage} />
   </Route>
 ;

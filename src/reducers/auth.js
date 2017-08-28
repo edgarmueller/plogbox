@@ -4,11 +4,14 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
   USER_IS_LOGGING_IN,
+  ACTIVATE_ACCOUNT_FAILURE,
+  ACTIVATE_ACCOUNT_SUCCESS,
 } from '../constants';
 
 const INITIAL_STATE = {
   isAuthenticating: false,
   isAuthenticated: false,
+  isAccountActivationSuccess: null,
   statusText: null,
   token: null,
   user: null,
@@ -32,11 +35,21 @@ export const auth = (state = INITIAL_STATE, action) => {
         user: action.user,
         userId: action.userId,
       };
+    case ACTIVATE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        isAccountActivationSuccess: true,
+      };
+    case ACTIVATE_ACCOUNT_FAILURE:
+      return {
+        ...state,
+        isAccountActivationSuccess: false,
+      };
     case SIGN_UP_USER_FAILURE:
       return {
         isAuthenticating: false,
         isAuthenticated: false,
-        statusText: 'This email address already has been registered',
+        statusText: action.statusText,
         status: action.status,
         token: null,
         user: null,
