@@ -335,7 +335,6 @@ export const mapDispatchToProps = dispatch => ({
       api.fetchBlocks(post.id)
         .then(
           (resp) => {
-            console.log('response for post is', resp);
             const clonedPost = _.clone(post);
             clonedPost.blocks = resp.data.data;
             return clonedPost;
@@ -347,7 +346,6 @@ export const mapDispatchToProps = dispatch => ({
     Promise.all(postsWithBlocks)
       .then(
         (resolved) => {
-          console.log(resolved);
           fileDownload(JSON.stringify(resolved), 'plog-posts-export.json');
         },
         () => console.error('An error occurred during post export'),
@@ -374,6 +372,7 @@ export const mapDispatchToProps = dispatch => ({
             });
             postId = resp.data.data.id;
           },
+          // TODO: fix error handling
           () => console.error('error during improt'),
         );
         postPromise.then(
@@ -385,7 +384,8 @@ export const mapDispatchToProps = dispatch => ({
               }),
             );
           },
-          () => console.log('error during post import'),
+          // TODO: fix error handling
+          () => console.error('error during post import'),
         );
       });
     };
