@@ -43,12 +43,13 @@ ActivateAccountView.defaultProps = {
 class ActivateAccountViewContainer extends React.Component {
 
   render() {
-    const { activateAccount, isAccountActivated, params } = this.props;
+    const { activateAccount, isAccountActivated, params, errorMessage } = this.props;
 
     return (
       <ActivateAccountView
         isAccountActivated={isAccountActivated}
         activateAccount={() => activateAccount(params.token)}
+        errorMessage={errorMessage}
       />
     );
   }
@@ -60,6 +61,7 @@ ActivateAccountViewContainer.propTypes = {
   params: PropTypes.shape({
     token: PropTypes.string.isRequired,
   }),
+  errorMessage: PropTypes.string,
 };
 
 ActivateAccountViewContainer.defaultProps = {
@@ -67,6 +69,7 @@ ActivateAccountViewContainer.defaultProps = {
   params: {
     token: undefined,
   },
+  errorMessage: null,
 };
 
 const mapStateToProps = state => ({
@@ -78,6 +81,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(routerActions.push(destination));
   },
   activateAccount(token) {
+    console.info('Activating account with token ', token);
     dispatch(actions.activateAccount(token));
   },
 });

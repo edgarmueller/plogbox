@@ -104,8 +104,7 @@ export const selectPost = (post) => {
   };
 };
 
-export const createPost = post => (dispatch) => {
-  return api.createPost(post)
+export const createPost = post => dispatch => api.createPost(post)
     .then(
       (resp) => {
         dispatch({
@@ -117,7 +116,6 @@ export const createPost = post => (dispatch) => {
         errorHandler(dispatch, error, CREATE_POST_FAILURE);
       },
     );
-};
 
 // TODO: this should take post id as a parameter
 export const updatePost = (selectedPost, blocks) => (dispatch) => {
@@ -359,7 +357,6 @@ export const resetPassword = token => newPassword => dispatch =>
     );
 
 export const changePassword = (currentPassword, newPassword) => (dispatch) => {
-
   if (currentPassword === newPassword) {
     dispatch({
       type: ERROR_PASSWORDS_DONT_DIFFER,
@@ -387,6 +384,9 @@ export const activateAccount = token => dispatch =>
       () => dispatch({
         type: ACTIVATE_ACCOUNT_SUCCESS,
       }),
-      error => errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE),
+      (error) => {
+        console.error('An error occurred while activating the account');
+        errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE);
+      },
     );
 
