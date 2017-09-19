@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import {
   Card,
@@ -6,6 +7,8 @@ import {
   CardTitle,
   FlatButton,
   FloatingActionButton,
+  List,
+  ListItem,
   MenuItem,
   SelectField,
   TextField,
@@ -24,10 +27,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import fileDownload from 'react-file-download';
+import Dropzone from 'react-dropzone';
 
 import { getBlocks, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
+// TODO: remove
+import * as api from '../api/index';
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
@@ -43,6 +49,47 @@ const Editor = (props) => {
   }
 
   return null;
+};
+
+const renderFileControl = (postId, block, onDrop, onChange) => {
+  if (block.dialect === 'image') {
+    return _.isEmpty(block.text) ?
+      <Dropzone onDrop={onDrop(postId)(block)} /> :
+      <List>
+        <ListItem primaryText={block.text} />
+      </List>;
+  }
+
+  return (
+    <Editor
+      mode="markdown"
+      theme="github"
+      onChange={text => onChange(block, text)}
+      name={`${block.id}_editor`}
+      editorProps={{ $blockScrolling: true }}
+      width={'100%'}
+      value={block.text}
+      minLines={1}
+      maxLines={Infinity}
+      keyboardHandler={'emacs'}
+    />
+  );
+};
+
+const renderBlock = (postId, downloadFile) => (block) => {
+  if (block.dialect === 'latex') {
+    return <Latex>{block.text}</Latex>;
+  } else if (block.dialect === 'image') {
+    return (
+      <div id={block.text}>
+        {
+          downloadFile(postId, block.text)
+        }
+      </div>
+    );
+  }
+
+  return <ReactMarkdown source={block.text} />;
 };
 
 export class EditPostView extends React.Component {
@@ -82,6 +129,8 @@ export class EditPostView extends React.Component {
       updateBlockText,
       errorMessage,
       resetErrorMessage,
+      onDrop,
+      downloadFile,
     } = this.props;
 
     return (
@@ -129,7 +178,7 @@ export class EditPostView extends React.Component {
                 // TODO: pull out
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                  const readBlocks = JSON.parse(ev.target.result)
+                  const readBlocks = JSON.parse(ev.target.result);
                   _.each(readBlocks, block => addBlock(
                     selectedPost.id,
                     block.dialect,
@@ -170,6 +219,7 @@ export class EditPostView extends React.Component {
                                 >
                                   <MenuItem value={'markdown'} primaryText="Markdown" />
                                   <MenuItem value={'latex'} primaryText="Latex" />
+                                  <MenuItem value={'image'} primaryText="Image" />
                                 </SelectField>
 
                                 <span
@@ -208,22 +258,9 @@ export class EditPostView extends React.Component {
                                   }
                                 </span>
                               </div>
-
-                              <Editor
-                                mode="markdown"
-                                theme="github"
-                                onChange={text => updateBlockText(block, text)}
-                                name={`${block.id}_editor`}
-                                editorProps={{ $blockScrolling: true }}
-                                height={'50px'}
-                                width={'100%'}
-                                value={block.text}
-                                minLines={2}
-                                maxLines={20}
-                                keyboardHandler={'emacs'}
-                              />
-
-
+                              {
+                                renderFileControl(selectedPost.id, block, onDrop, updateBlockText)
+                              }
                             </div>),
                           )
                         }
@@ -241,18 +278,8 @@ export class EditPostView extends React.Component {
               </div>
               <div style={{ width: '50%' }}>
                 {
-                          blocks.map(block =>
-                            (
-                              <div key={block.id}>
-                                {
-                                  block.dialect === 'markdown' ?
-                                    <ReactMarkdown source={block.text} /> :
-                                    <Latex>{block.text}</Latex>
-                                }
-                              </div>
-                            ),
-                          )
-                        }
+                  blocks.map(renderBlock(selectedPost.id, downloadFile))
+                }
               </div>
             </div>
           </CardText>
@@ -296,6 +323,8 @@ EditPostView.propTypes = {
   updateBlockText: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   resetErrorMessage: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  downloadFile: PropTypes.func.isRequired,
 };
 
 EditPostView.defaultProps = {
@@ -365,6 +394,32 @@ export const mapDispatchToProps = dispatch => ({
   },
   savePost(selectedPost, blocks) {
     dispatch(action.updatePost(selectedPost, blocks));
+  },
+  downloadFile(postId, file) {
+    api.download(postId, file)
+      .then(
+        (resp) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            ReactDOM.render(
+              <img src={reader.result} alt={`file.name: ${file}`} />,
+              document.getElementById(file),
+            );
+          };
+          reader.readAsDataURL(resp.data);
+        },
+        // TODO: error handling
+        () => console.log('error'), //(<p>File {file} not found</p>),
+      );
+  },
+  onDrop: postId => block => (acceptedFiles) => {
+    // TODO: show loading indicator
+    api.upload(postId, _.head(acceptedFiles))
+      .then(
+        () => {
+          dispatch(action.updateBlockText(block, _.head(acceptedFiles).name));
+        },
+      );
   },
   exportPost(blocks) {
     fileDownload(JSON.stringify(blocks), 'export.json');
