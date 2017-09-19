@@ -1,8 +1,6 @@
 import Axios from 'axios';
 import { BASE_URL } from '../constants';
 
-// Axios.defaults.withCredentials = true;
-
 const readCookie = (cname) => {
   const name = `${cname}=`;
   const decodedCookie = decodeURIComponent(document.cookie);
@@ -99,6 +97,32 @@ export const removeBlock = (postId, block) =>
     getHeaderToken(),
   );
 
+export const upload = (postId, file) => {
+  const url = `${BASE_URL}/api/posts/${postId}/blocks/upload/${file.name}`;
+
+  const data = new FormData();
+  data.append(file.name, file);
+
+  return Axios.post(url,
+    data,
+    getHeaderToken(),
+  );
+};
+
+export const download = (postId, file) => {
+  const url = `${BASE_URL}/api/posts/${postId}/blocks/file/${file}`;
+
+  return Axios.get(
+    url,
+    {
+      headers: {
+        'X-Auth-Token': localStorage.getItem('token'),
+        'Csrf-Token': readCookie('PLAY_CSRF_TOKEN'),
+      },
+      responseType: 'blob',
+    },
+  );
+};
 
 export const updateBlock = (postId, block) => {
   const url = `${BASE_URL}/api/posts/${postId}/blocks/${block.id}`;
