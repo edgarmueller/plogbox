@@ -27,7 +27,7 @@ test('NavBar should render for unauthenticated user', (t) => {
     <NavBar {...props} />,
     );
 
-  // sign-up and login buttons for unauthenticated users
+  // home, sign-up and login buttons for unauthenticated users
   const flatButtons = enzymeWrapper.find(FlatButton);
-  t.deepEqual(flatButtons.length, 2);
+  t.deepEqual(flatButtons.length, 3);
 });
