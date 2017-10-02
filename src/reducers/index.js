@@ -21,6 +21,7 @@ export default app;
 export const getSelectedPost = state => fromPosts.getPostBeingEdited(state.posts);
 export const getBlocks = state => fromPosts.getBlocks(state.posts);
 export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts);
+export const getIsFetchingBlock = state => fromPosts.isFetchingBlock(state.posts);
 export const getAllPosts = state => fromPosts.getAllPosts(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
 

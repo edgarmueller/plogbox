@@ -23,6 +23,9 @@ import {
   ADD_TAG_FAILURE,
   ADD_TAG_SUCCESS,
   DELETE_TAG_SUCCESS,
+  FETCH_BLOCK_FAILURE,
+  FETCH_BLOCK_REQUEST,
+  FETCH_BLOCK_SUCCESS,
 } from '../constants';
 
 const isFetching = createFetchingProgressReducer(
@@ -153,12 +156,11 @@ export const postsReducer = (state = {
       const index = state.all.indexOf(action.post);
       if (index === -1) {
         return state;
-      } else {
-        return {
-          ...state,
-          all: state.all.delete(index),
-        };
       }
+      return {
+        ...state,
+        all: state.all.delete(index),
+      };
     }
 
     case FETCH_BLOCKS_SUCCESS: {
@@ -268,14 +270,20 @@ export const errorReducer = (state = null, action) => {
   }
 };
 
-
 export default combineReducers({
   posts: postsReducer,
   isFetching,
   errorMessage: errorReducer,
+  isFetchingBlock: createFetchingProgressReducer(
+    FETCH_BLOCK_REQUEST,
+    FETCH_BLOCK_SUCCESS,
+    FETCH_BLOCK_FAILURE,
+  ),
 });
+
 export const getPostBeingEdited = state => state.posts.selectedPost;
 export const isFetchingPosts = state => state.isFetching;
+export const isFetchingBlock = state => state.isFetchingBlock;
 export const getAllPosts = state => state.posts.all.toArray();
 export const getPostErrorMessage = state => state.errorMessage;
 export const getBlocks = (state) => {

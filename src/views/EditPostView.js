@@ -7,8 +7,6 @@ import {
   CardTitle,
   FlatButton,
   FloatingActionButton,
-  List,
-  ListItem,
   MenuItem,
   SelectField,
   TextField,
@@ -29,11 +27,9 @@ import PropTypes from 'prop-types';
 import fileDownload from 'react-file-download';
 import Dropzone from 'react-dropzone';
 
-import { getBlocks, getSelectedPost } from '../reducers/index';
+import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
-import { RESET_ERROR_MESSAGE } from '../constants/index';
-// TODO: remove
-import * as api from '../api/index';
+import { RESET_ERROR_MESSAGE, UPDATE_BLOCK_FAILURE } from '../constants/index';
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
@@ -51,13 +47,13 @@ const Editor = (props) => {
   return null;
 };
 
-const renderFileControl = (postId, block, onDrop, onChange) => {
+const renderUploadControl = (postId, block, onDrop, onChange) => {
   if (block.dialect === 'image') {
-    return _.isEmpty(block.text) ?
-      <Dropzone onDrop={onDrop(postId)(block)} /> :
-      <List>
-        <ListItem primaryText={block.text} />
-      </List>;
+    return (
+      <Dropzone onDrop={onDrop(postId)(block)}>
+        {block.text}
+      </Dropzone>
+    );
   }
 
   return (
@@ -76,20 +72,43 @@ const renderFileControl = (postId, block, onDrop, onChange) => {
   );
 };
 
-const renderBlock = (postId, downloadFile) => (block) => {
-  if (block.dialect === 'latex') {
-    return <Latex>{block.text}</Latex>;
-  } else if (block.dialect === 'image') {
-    return (
-      <div id={block.text}>
-        {
-          downloadFile(postId, block.text)
-        }
-      </div>
-    );
+class Block extends React.Component {
+
+  componentDidMount() {
+    const { postId, block, downloadFile } = this.props;
+    downloadFile(postId, block);
   }
 
-  return <ReactMarkdown source={block.text} />;
+  render() {
+    const { block } = this.props;
+    if (block.dialect === 'latex') {
+      return (<div id={block.text}>
+        <Latex>{block.text}</Latex>
+      </div>);
+    } else if (block.dialect === 'image') {
+      if (block.text) {
+        if (block.imagePath) {
+          return (<img src={block.imagePath} />);
+        }
+
+        return (<div id={block.text}>Loading...</div>);
+      }
+
+      return (<div>No image selected yet</div>);
+    }
+
+    return <ReactMarkdown id={block.id} source={block.text} />;
+  }
+}
+
+Block.propTypes = {
+  postId: PropTypes.number.isRequired,
+  block: PropTypes.shape({
+    dialect: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    imagePath: PropTypes.string,
+  }).isRequired,
+  downloadFile: PropTypes.func.isRequired,
 };
 
 export class EditPostView extends React.Component {
@@ -131,6 +150,7 @@ export class EditPostView extends React.Component {
       resetErrorMessage,
       onDrop,
       downloadFile,
+      isFetchingBlock,
     } = this.props;
 
     return (
@@ -213,13 +233,20 @@ export class EditPostView extends React.Component {
                                 <SelectField
                                   floatingLabelText="Block Dialect"
                                   value={block.dialect}
-                                  onChange={(ev, newValue, dialect) =>
-                                    updateBlockDialect(block, dialect)
-                                  }
+                                  onChange={(ev, newValue, dialect) => {
+                                    updateBlockDialect(block, dialect);
+                                  }}
                                 >
                                   <MenuItem value={'markdown'} primaryText="Markdown" />
-                                  <MenuItem value={'latex'} primaryText="Latex" />
-                                  <MenuItem value={'image'} primaryText="Image" />
+                                  <MenuItem
+                                    value={'latex'}
+                                    primaryText="Latex"
+                                  />
+                                  <MenuItem
+                                    value={'image'}
+                                    primaryText="Image"
+                                    onClick={() => updateBlockText(block, '')}
+                                  />
                                 </SelectField>
 
                                 <span
@@ -259,7 +286,7 @@ export class EditPostView extends React.Component {
                                 </span>
                               </div>
                               {
-                                renderFileControl(selectedPost.id, block, onDrop, updateBlockText)
+                                renderUploadControl(selectedPost.id, block, onDrop, updateBlockText)
                               }
                             </div>),
                           )
@@ -278,16 +305,23 @@ export class EditPostView extends React.Component {
               </div>
               <div style={{ width: '50%' }}>
                 {
-                  blocks.map(renderBlock(selectedPost.id, downloadFile))
+                  blocks.map(block =>
+                    (<Block
+                      key={block.id}
+                      postId={selectedPost.id}
+                      isFetchingBlock={isFetchingBlock}
+                      downloadFile={downloadFile}
+                      block={block}
+                    />),
+                  )
                 }
               </div>
             </div>
           </CardText>
         </Card>
 
-
         <Dialog
-          title="Could not update post"
+          title={'Error occurred'}
           actions={[
             <FlatButton
               label="OK"
@@ -325,11 +359,13 @@ EditPostView.propTypes = {
   resetErrorMessage: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
   downloadFile: PropTypes.func.isRequired,
+  isFetchingBlock: PropTypes.bool,
 };
 
 EditPostView.defaultProps = {
   blocks: [],
   errorMessage: undefined,
+  isFetchingBlock: false,
 };
 
 export class EditPostPageContainer extends React.Component {
@@ -361,6 +397,7 @@ const mapStateToProps = state => ({
   selectedPost: getSelectedPost(state),
   userId: state.auth.userId,
   blocks: getBlocks(state),
+  isFetchingBlock: getIsFetchingBlock(state),
 });
 
 export const mapDispatchToProps = dispatch => ({
@@ -395,30 +432,27 @@ export const mapDispatchToProps = dispatch => ({
   savePost(selectedPost, blocks) {
     dispatch(action.updatePost(selectedPost, blocks));
   },
-  downloadFile(postId, file) {
-    api.download(postId, file)
-      .then(
-        (resp) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            ReactDOM.render(
-              <img src={reader.result} alt={`file.name: ${file}`} />,
-              document.getElementById(file),
-            );
-          };
-          reader.readAsDataURL(resp.data);
+  downloadFile(postId, block) {
+    const file = block.text;
+    dispatch(
+      action.downloadFile(postId, file)(
+        (downloadedFile) => {
+          // TODO: rather use local storage with ID?
+          block.imagePath = downloadedFile;
+          ReactDOM.render(
+            <img src={downloadedFile} alt={`file.name: ${file}`} />,
+            document.getElementById(file),
+          );
         },
-        // TODO: error handling
-        () => console.log('error'), //(<p>File {file} not found</p>),
-      );
+        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
+      ));
   },
   onDrop: postId => block => (acceptedFiles) => {
     // TODO: show loading indicator
-    api.upload(postId, _.head(acceptedFiles))
+    action.uploadFile(postId, _.head(acceptedFiles))
       .then(
-        () => {
-          dispatch(action.updateBlockText(block, _.head(acceptedFiles).name));
-        },
+        resp => dispatch(action.updateBlockText(block, resp.data.data.fileId)),
+        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
       );
   },
   exportPost(blocks) {

@@ -38,6 +38,8 @@ import {
   ERROR_PASSWORDS_DONT_DIFFER,
   ACTIVATE_ACCOUNT_SUCCESS,
   ACTIVATE_ACCOUNT_FAILURE,
+  FETCH_BLOCK_REQUEST,
+  FETCH_BLOCK_SUCCESS,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -381,12 +383,29 @@ export const changePassword = (currentPassword, newPassword) => (dispatch) => {
 export const activateAccount = token => dispatch =>
   api.activateAccount(token)
     .then(
-      () => dispatch({
-        type: ACTIVATE_ACCOUNT_SUCCESS,
-      }),
-      (error) => {
-        console.error('An error occurred while activating the account');
-        errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE);
-      },
+      () => dispatch({ type: ACTIVATE_ACCOUNT_SUCCESS }),
+      error => errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE),
     );
+
+export const downloadFile = (postId, fileId) => (onSuccess, onRejected) => (dispatch) => {
+  dispatch({
+    type: FETCH_BLOCK_REQUEST,
+  });
+  api.download(postId, fileId)
+    .then(
+      (resp) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          dispatch({
+            type: FETCH_BLOCK_SUCCESS,
+          });
+          onSuccess(reader.result);
+        };
+        reader.readAsDataURL(resp.data);
+      },
+      error => onRejected(error),
+    );
+};
+
+export const uploadFile = (postId, file) => api.upload(postId, file);
 
