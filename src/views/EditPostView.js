@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import * as _ from 'lodash';
 import {
   Card,
@@ -19,8 +18,6 @@ import ContentRemove from 'material-ui/svg-icons/content/remove';
 import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
 import UpArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
 import Dialog from 'material-ui/Dialog';
-import Latex from 'react-latex';
-import ReactMarkdown from 'react-markdown';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
@@ -30,6 +27,7 @@ import Dropzone from 'react-dropzone';
 import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE, UPDATE_BLOCK_FAILURE } from '../constants/index';
+import Block from '../components/Block';
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
@@ -51,7 +49,7 @@ const renderUploadControl = (postId, block, onDrop, onChange) => {
   if (block.dialect === 'image') {
     return (
       <Dropzone onDrop={onDrop(postId)(block)}>
-        {block.text}
+        {block.name}
       </Dropzone>
     );
   }
@@ -70,45 +68,6 @@ const renderUploadControl = (postId, block, onDrop, onChange) => {
       keyboardHandler={'emacs'}
     />
   );
-};
-
-class Block extends React.Component {
-
-  componentDidMount() {
-    const { postId, block, downloadFile } = this.props;
-    downloadFile(postId, block);
-  }
-
-  render() {
-    const { block } = this.props;
-    if (block.dialect === 'latex') {
-      return (<div id={block.text}>
-        <Latex>{block.text}</Latex>
-      </div>);
-    } else if (block.dialect === 'image') {
-      if (block.text) {
-        if (block.imagePath) {
-          return (<img src={block.imagePath} />);
-        }
-
-        return (<div id={block.text}>Loading...</div>);
-      }
-
-      return (<div>No image selected yet</div>);
-    }
-
-    return <ReactMarkdown id={block.id} source={block.text} />;
-  }
-}
-
-Block.propTypes = {
-  postId: PropTypes.number.isRequired,
-  block: PropTypes.shape({
-    dialect: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-    imagePath: PropTypes.string,
-  }).isRequired,
-  downloadFile: PropTypes.func.isRequired,
 };
 
 export class EditPostView extends React.Component {
@@ -149,7 +108,6 @@ export class EditPostView extends React.Component {
       errorMessage,
       resetErrorMessage,
       onDrop,
-      downloadFile,
       isFetchingBlock,
     } = this.props;
 
@@ -310,7 +268,6 @@ export class EditPostView extends React.Component {
                       key={block.id}
                       postId={selectedPost.id}
                       isFetchingBlock={isFetchingBlock}
-                      downloadFile={downloadFile}
                       block={block}
                     />),
                   )
@@ -358,7 +315,6 @@ EditPostView.propTypes = {
   errorMessage: PropTypes.string,
   resetErrorMessage: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
-  downloadFile: PropTypes.func.isRequired,
   isFetchingBlock: PropTypes.bool,
 };
 
@@ -430,28 +386,17 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(action.updatePostTitle(title));
   },
   savePost(selectedPost, blocks) {
+    console.log('SAVING post', blocks);
     dispatch(action.updatePost(selectedPost, blocks));
   },
-  downloadFile(postId, block) {
-    const file = block.text;
-    dispatch(
-      action.downloadFile(postId, file)(
-        (downloadedFile) => {
-          // TODO: rather use local storage with ID?
-          block.imagePath = downloadedFile;
-          ReactDOM.render(
-            <img src={downloadedFile} alt={`file.name: ${file}`} />,
-            document.getElementById(file),
-          );
-        },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-      ));
-  },
   onDrop: postId => block => (acceptedFiles) => {
-    // TODO: show loading indicator
-    action.uploadFile(postId, _.head(acceptedFiles))
+    console.log('uploading file to block', block);
+    action.uploadFile(postId, block.id, _.head(acceptedFiles))
       .then(
-        resp => dispatch(action.updateBlockText(block, resp.data.data.fileId)),
+        resp => {
+          dispatch(action.updateBlockName(block, resp.data.data.name));
+          dispatch(action.updateBlockText(block, resp.data.data.text));
+        },
         error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
       );
   },

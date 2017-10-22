@@ -97,13 +97,14 @@ export const removeBlock = (postId, block) =>
     getHeaderToken(),
   );
 
-export const upload = (postId, file) => {
-  const url = `${BASE_URL}/api/posts/${postId}/blocks/upload/${file.name}`;
+export const upload = (postId, blockId, file) => {
+  const url = `${BASE_URL}/api/posts/${postId}/blocks/${blockId}/upload/${file.name}`;
 
   const data = new FormData();
   data.append(file.name, file);
 
-  return Axios.post(url,
+  return Axios.post(
+    url,
     data,
     getHeaderToken(),
   );

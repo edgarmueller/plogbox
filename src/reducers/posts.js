@@ -27,6 +27,7 @@ import {
   FETCH_BLOCK_REQUEST,
   FETCH_BLOCK_SUCCESS,
 } from '../constants';
+import {UPDATE_BLOCK_NAME} from "../constants/index";
 
 const isFetching = createFetchingProgressReducer(
   FETCH_POSTS_REQUEST,
@@ -251,6 +252,19 @@ export const postsReducer = (state = {
         }),
       };
     }
+
+    case UPDATE_BLOCK_NAME: {
+      const index = state.blocks.indexOf(action.block);
+      return {
+        ...state,
+        blocks: state.blocks.update(index, (block) => {
+          const clonedBlock = _.clone(block);
+          clonedBlock.name = action.name;
+          return clonedBlock;
+        }),
+      };
+    }
+
     default:
       return state;
   }

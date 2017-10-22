@@ -39,7 +39,7 @@ import {
   ACTIVATE_ACCOUNT_SUCCESS,
   ACTIVATE_ACCOUNT_FAILURE,
   FETCH_BLOCK_REQUEST,
-  FETCH_BLOCK_SUCCESS,
+  FETCH_BLOCK_SUCCESS, UPDATE_BLOCK_NAME,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -253,6 +253,12 @@ export const updateBlockText = (block, text) => ({
   text,
 });
 
+export const updateBlockName = (block, name) => ({
+  type: UPDATE_BLOCK_NAME,
+  block,
+  name,
+});
+
 export const updateBlockDialect = (block, dialect) => ({
   type: UPDATE_BLOCK_DIALECT,
   block,
@@ -407,5 +413,5 @@ export const downloadFile = (postId, fileId) => (onSuccess, onRejected) => (disp
     );
 };
 
-export const uploadFile = (postId, file) => api.upload(postId, file);
+export const uploadFile = (postId, blockId, file) => api.upload(postId, blockId, file);
 
