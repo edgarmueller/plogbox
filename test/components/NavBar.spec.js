@@ -11,6 +11,8 @@ test('NavBar should render', (t) => {
     isAuthenticated: true,
     isAdmin: false,
     user: 'foo',
+    navigateTo: () => {},
+    logout: () => {}
   };
   const enzymeWrapper = shallow(
     <NavBar {...props} />,
@@ -22,6 +24,8 @@ test('NavBar should render', (t) => {
 test('NavBar should render for unauthenticated user', (t) => {
   const props = {
     isAuthenticated: false,
+    navigateTo: () => {},
+    logout: () => {},
   };
   const enzymeWrapper = shallow(
     <NavBar {...props} />,

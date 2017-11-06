@@ -386,14 +386,12 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(action.updatePostTitle(title));
   },
   savePost(selectedPost, blocks) {
-    console.log('SAVING post', blocks);
     dispatch(action.updatePost(selectedPost, blocks));
   },
   onDrop: postId => block => (acceptedFiles) => {
-    console.log('uploading file to block', block);
     action.uploadFile(postId, block.id, _.head(acceptedFiles))
       .then(
-        resp => {
+        (resp) => {
           dispatch(action.updateBlockName(block, resp.data.data.name));
           dispatch(action.updateBlockText(block, resp.data.data.text));
         },
