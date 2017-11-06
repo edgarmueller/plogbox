@@ -18,7 +18,7 @@ const ButtonBarContainer = ({ exportPosts, importPosts, importPostsFromFile }) =
   );
 };
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
   exportPosts(posts) {
     const postsWithBlocks = _.map(posts, post =>
       api.fetchBlocks(post.id)
@@ -32,7 +32,7 @@ const mapDispatchToProps = dispatch => ({
             console.error('An error occurred during post export'),
         ),
     );
-    Promise.all(postsWithBlocks)
+    return Promise.all(postsWithBlocks)
       .then(
         (resolved) => {
           fileDownload(JSON.stringify(resolved), 'plog-posts-export.json');
