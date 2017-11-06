@@ -1,5 +1,6 @@
 export const posts = [
   {
+    id: 0,
     title: "Let's test!",
     date: new Date().getTime(),
     isDraft: true,

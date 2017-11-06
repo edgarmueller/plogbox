@@ -5,18 +5,17 @@ import * as Immutable from 'immutable';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
-test.beforeEach(async t => beforeEach(t));
-
-test.afterEach(t => afterEach(t));
-
 import Routes from '../../src/config/Routes';
-import SelectPostPage from '../../src/components/SelectPost';
+import { PostList } from '../../src/components/PostList';
+import { posts } from '../helpers/posts';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+test.beforeEach(async t => beforeEach(t));
+
+test.afterEach(t => afterEach(t));
 
 test.serial('renders SelectPostPage page', (t) => {
   const store = mockStore(
@@ -26,9 +25,7 @@ test.serial('renders SelectPostPage page', (t) => {
       },
       posts: {
         posts: {
-          all: Immutable.Set([{
-            title: 'Test post',
-          }]),
+          all: Immutable.Set(posts),
         },
       },
     },
@@ -43,5 +40,5 @@ test.serial('renders SelectPostPage page', (t) => {
     </Provider>,
   );
 
-  t.is(1, wrapper.find(SelectPostPage).length);
+  t.is(1, wrapper.find(PostList).length);
 });

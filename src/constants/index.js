@@ -19,11 +19,13 @@ export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
 export const SELECT_POST = 'SELECT_POST';
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
+// tags
 export const ADD_TAG_SUCCESS = 'ADD_TAG_SUCCESS';
 export const ADD_TAG_FAILURE = 'ADD_TAG_FAILURE';
 export const DELETE_TAG_SUCCESS = 'DELETE_TAG_SUCCESS';
 export const DELETE_TAG_FAILURE = 'DELETE_TAG_FAILURE';
 export const FETCH_TAGS_FAILURE = 'FETCH_TAGS_FAILURE';
+export const SET_TAGS = 'SET_TAGS';
 
 // blocks
 export const ADD_BLOCK = 'ADD_BLOCK';

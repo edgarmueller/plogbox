@@ -4,7 +4,7 @@ import { UserAuthWrapper } from 'redux-auth-wrapper';
 import { replace } from 'react-router-redux';
 
 import App from '../components/App';
-import SelectPostView from '../components/SelectPost';
+import PostList from '../components/PostListContainer';
 import CreateOrEditPostView from '../views/EditPostView';
 import NotFoundPage from '../views/NotFoundView';
 import SignUpView from '../views/SignUpView';
@@ -29,7 +29,7 @@ export default
     <IndexRoute component={HomeView} />
     <Route path="sign-up" component={SignUpView} />
     <Route path="login" component={Login} />
-    <Route path="posts" component={requireAuth(SelectPostView)} />
+    <Route path="posts" component={requireAuth(PostList)} />
     <Route path="posts/edit" component={requireAuth(CreateOrEditPostView)} />
     <Route path="profile" component={requireAuth(ProfileView)} />
     <Route path="password/reset/:token" component={ResetPasswordView} />

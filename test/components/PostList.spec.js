@@ -6,8 +6,8 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { TableBody } from 'material-ui/Table';
-import SelectPostContainer, { SelectPost } from '../../src/components/SelectPost';
-import posts from '../helpers/posts';
+import PostListContainer from '../../src/components/PostListContainer';
+import { posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 
 const middlewares = [thunk];
@@ -17,23 +17,7 @@ test.beforeEach(async t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
 
-test.serial('SelectPostPage should render', (t) => {
-  const props = {
-    posts,
-    onAddButtonClicked() {},
-    onUseButtonClicked() {},
-    selectedPost() {},
-    deletePost() {},
-  };
-  const enzymeWrapper = mountWithContext(
-        t,
-    <SelectPost {...props} />,
-    );
-  const tableBody = enzymeWrapper.find(TableBody);
-  t.is(tableBody.length, 1);
-});
-
-test('SelectPostContainer should render', (t) => {
+test('PostListContainer should render', (t) => {
   const props = {
     posts,
     deletePost() {},
@@ -54,11 +38,11 @@ test('SelectPostContainer should render', (t) => {
   });
 
   const enzymeWrapper = mountWithContext(
-        t,
+    t,
     <Provider store={store}>
-      <SelectPostContainer {...props} />
+      <PostListContainer {...props} />
     </Provider>,
-    );
+  );
   const tableBody = enzymeWrapper.find(TableBody);
 
   t.is(tableBody.length, 1);
