@@ -15,6 +15,14 @@ export const posts = [
             `,
       },
     ],
+    tags: [
+      {
+        name: 'woohoo',
+      },
+      {
+        name: 'another one',
+      },
+    ],
   },
 ];
 

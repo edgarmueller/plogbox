@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { AutoComplete } from 'material-ui';
+import { AutoComplete, Chip } from 'material-ui';
 import Tag, { mapDispatchToProps } from '../../src/components/TagContainer';
 import { posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
@@ -17,7 +17,7 @@ test.beforeEach(async t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
 
-test('TagContainer should render', (t) => {
+test('TagContainer should render tags', (t) => {
   const store = mockStore({
     posts: {
       posts: {
@@ -29,13 +29,61 @@ test('TagContainer should render', (t) => {
   const enzymeWrapper = mountWithContext(
     t,
     <Provider store={store}>
-      <Tag post={_.head(posts)} isEditingTags setSelection={() => {}} />
+      <Tag
+        post={_.head(posts)}
+        setSelection={() => { }}
+      />
     </Provider>,
   );
+  const chips = enzymeWrapper.find(Chip);
+  t.is(chips.length, 2);
+});
 
+test('add tag', (t) => {
+  const store = mockStore({
+    posts: {
+      posts: {
+        all: Immutable.Set(posts),
+      },
+    },
+  });
+  const enzymeWrapper = mountWithContext(
+    t,
+    <Provider store={store}>
+      <Tag
+        post={_.head(posts)}
+        isEditingTags
+        setSelection={() => {}}
+      />
+    </Provider>,
+  );
   const autoComplete = enzymeWrapper.find(AutoComplete);
-
+  autoComplete.props().onNewRequest({
+    text: 'woohoo',
+  });
   t.is(autoComplete.length, 1);
+});
+
+test('delete a tag', (t) => {
+  const store = mockStore({
+    posts: {
+      posts: {
+        all: Immutable.Set(posts),
+      },
+    },
+  });
+  const enzymeWrapper = mountWithContext(
+    t,
+    <Provider store={store}>
+      <Tag
+        post={_.head(posts)}
+        setSelection={() => {}}
+      />
+    </Provider>,
+  );
+  const chips = enzymeWrapper.find(Chip);
+  chips.first().props().onRequestDelete();
+  t.is(store.getState().posts.posts.all.size, 1);
 });
 
 test('mapDispatchToProps', async (t) => {

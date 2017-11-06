@@ -59,7 +59,11 @@ Tag.propTypes = {
   isEditingTags: PropTypes.bool,
   post: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+    ),
   }).isRequired,
   addTag: PropTypes.func.isRequired,
   removeTag: PropTypes.func.isRequired,

@@ -37,7 +37,11 @@ export class TagContainer extends React.Component {
 TagContainer.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string),
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+      }),
+    ),
   }).isRequired,
   isEditingTags: PropTypes.bool,
   suggestedTags: PropTypes.arrayOf(PropTypes.string),
