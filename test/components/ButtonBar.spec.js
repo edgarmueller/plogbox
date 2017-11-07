@@ -1,19 +1,19 @@
 import test from 'ava';
 import React from 'react';
 import Axios from 'axios';
-import 'blob';
 import * as Immutable from 'immutable';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import { Blob } from 'jsdom/lib/jsdom/living';
+import 'jsdom/lib/jsdom';
 import ButtonBar, { mapDispatchToProps } from '../../src/components/ButtonBarContainer';
 import { posts } from '../helpers/posts';
-import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
+import {afterEach, beforeEach, mountWithContext, setupDom} from '../helpers/setup';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-
 test.beforeEach(async t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
@@ -45,7 +45,7 @@ test('ButtonBar should render', (t) => {
   t.is(buttons.length, 2);
 });
 
-test('mapDispatchToProps', async (t) => {
+test.cb('mapDispatchToProps', (t) => {
   const store = mockStore({
     posts: {
       posts: {
@@ -53,8 +53,10 @@ test('mapDispatchToProps', async (t) => {
       },
     },
   });
-  const props = mapDispatchToProps(store.dispatch);
-  await props.exportPosts(posts);
-  // should not fail
-  t.pass();
+  const blob = new Blob(["TEST"]);
+  setupDom(async () => {
+    const props = mapDispatchToProps(store.dispatch);
+    await props.exportPosts(posts);
+    t.end();
+  });
 });

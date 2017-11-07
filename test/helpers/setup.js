@@ -2,6 +2,8 @@ import jsdom from 'jsdom';
 import ReactDOM from 'react-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import PropTypes from 'prop-types';
+import { Blob } from 'jsdom/lib/jsdom/living';
+import { URL } from 'jsdom/lib/jsdom/living';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import TOKEN from './token';
@@ -98,6 +100,15 @@ export function setupDom(cb) {
       global.window = window;
       global.document = window.document;
       global.navigator = window.navigator;
+      global.Blob = Blob;
+      global.URL = URL;
+      global.URL.createObjectURL = (_blob) => {
+        var url = `TEST`;
+        return url;
+      };
+      global.URL.revokeObjectURL = (_blob) => {
+
+      }
       cb();
     },
   };
