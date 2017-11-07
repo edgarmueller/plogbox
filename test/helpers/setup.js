@@ -7,6 +7,8 @@ import { URL } from 'jsdom/lib/jsdom/living';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 import TOKEN from './token';
+import FileReader from 'filereader';
+
 export function mountWithContext(t, Component) {
   return mount(
     Component,
@@ -107,8 +109,8 @@ export function setupDom(cb) {
         return url;
       };
       global.URL.revokeObjectURL = (_blob) => {
-
-      }
+      };
+      global.FileReader = FileReader;
       cb();
     },
   };

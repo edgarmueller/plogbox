@@ -1,0 +1,23 @@
+[
+  {
+    "id": 0,
+    "title": "Let's test!",
+    "date": 1510060571924,
+    "isDraft": true,
+    "blocks": [
+      {
+        "id": 0,
+        "dialect": "markdown",
+        "text": "This is a test"
+      }
+    ],
+    "tags": [
+      {
+        "name": "woohoo"
+      },
+      {
+        "name": "another one"
+      }
+    ]
+  }
+]
