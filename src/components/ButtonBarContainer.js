@@ -79,7 +79,6 @@ export const mapDispatchToProps = dispatch => ({
         );
       });
     };
-    console.log("FILE IS", file);
     reader.readAsText(file);
   },
 });

@@ -63,16 +63,16 @@ BlockContainer.propTypes = {
   downloadFile: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
   downloadFile(postId, block, fun) {
     const file = block.text;
     dispatch(
       action.downloadFile(postId, file)(
-        (downloadedFile) => {
-          localStorage.setItem(`block_${block.id}_image`, downloadedFile);
+        (fileData) => {
+          localStorage.setItem(`block_${block.id}_image`, fileData);
           fun();
         },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
+        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE)
       ));
   },
 });

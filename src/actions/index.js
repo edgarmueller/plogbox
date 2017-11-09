@@ -401,12 +401,17 @@ export const downloadFile = (postId, fileId) => (onSuccess, onRejected) => (disp
     .then(
       (resp) => {
         const reader = new FileReader();
-        reader.onloadend = () => {
+        const loadEnd = () => {
           dispatch({
             type: FETCH_BLOCK_SUCCESS,
           });
           onSuccess(reader.result);
         };
+        if (process.env.NODE_ENV === 'test') {
+          reader.on('loadend', loadEnd);
+        } else {
+          reader.onloadend = loadEnd;
+        }
         reader.readAsDataURL(resp.data);
       },
       error => onRejected(error),
