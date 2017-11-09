@@ -49,7 +49,8 @@ export class ChangePasswordFormContainer extends React.Component {
     this.renderAlert = this.renderAlert.bind(this);
   }
 
-  // TODO: dup code
+  // TODO: dup code (where?)
+  // how is error message set?
   renderAlert() {
     if (this.props.errorMessage) {
       return (
@@ -76,19 +77,7 @@ export class ChangePasswordFormContainer extends React.Component {
   }
 }
 
-ChangePasswordFormContainer.propTypes = {
-  // isAuthenticated: PropTypes.bool.isRequired,
-  // replace: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  changePassword: PropTypes.func.isRequired,
-  // redirect: PropTypes.string.isRequired,
-  errorMessage: PropTypes.string,
-};
-
-
-ChangePasswordFormContainer.defaultProps = {
-  errorMessage: undefined,
-};
+ChangePasswordFormContainer.propTypes = ChangePasswordForm.propTypes;
 
 const mapDispatchToProps = dispatch => ({
   changePassword(formProps) {

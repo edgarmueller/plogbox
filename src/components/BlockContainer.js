@@ -18,11 +18,15 @@ export class BlockContainer extends React.Component {
 
   componentDidUpdate() {
     const { postId, block, downloadFile } = this.props;
+
     if (block.dialect === 'image' &&
       block.text &&
       !this.state.isDownloading &&
       _.isEmpty(this.state.imagePath)) {
-      this.setIsDownloading();
+
+      this.setState({
+        isDownloading: true,
+      });
       downloadFile(
         postId,
         block,
@@ -34,12 +38,6 @@ export class BlockContainer extends React.Component {
         },
       );
     }
-  }
-
-  setIsDownloading() {
-    this.setState({
-      isDownloading: true,
-    });
   }
 
   render() {

@@ -11,7 +11,7 @@ import '../common/tap';
 import { RESET_ERROR_MESSAGE } from '../constants';
 import { PostList } from './PostList';
 
-export class SelectPostContainer extends React.Component {
+export class PostListContainer extends React.Component {
 
   constructor() {
     super();
@@ -84,7 +84,7 @@ export class SelectPostContainer extends React.Component {
   }
 }
 
-SelectPostContainer.propTypes = {
+PostListContainer.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object),
   isFetchingPosts: PropTypes.bool,
   errorMessage: PropTypes.string,
@@ -95,7 +95,7 @@ SelectPostContainer.propTypes = {
   deletePost: PropTypes.func.isRequired,
 };
 
-SelectPostContainer.defaultProps = {
+PostListContainer.defaultProps = {
   posts: [],
   isFetchingPosts: false,
   errorMessage: undefined,
@@ -109,7 +109,7 @@ const mapStateToProps = state => ({
 
 export const mapDispatchToProps = dispatch => ({
   addPost() {
-    dispatch(actions.createPost({
+    return dispatch(actions.createPost({
       title: 'New post',
       isDraft: true,
       date: new Date(),
@@ -129,12 +129,12 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(routerActions.push('posts/edit'));
   },
   deletePost(post) {
-    dispatch(actions.deletePost(post));
+    return dispatch(actions.deletePost(post));
   },
 });
 
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SelectPostContainer));
+)(PostListContainer));
 

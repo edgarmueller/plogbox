@@ -1,4 +1,5 @@
 import React from 'react';
+import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import { routerActions } from 'react-router-redux';
 import PropTypes from 'prop-types';
@@ -13,18 +14,20 @@ export class ActivateAccountView extends React.Component {
   render() {
     const { isAccountActivated, errorMessage } = this.props;
 
-    if (isAccountActivated === null) {
+    if (!_.isEmpty(errorMessage)) {
       return (
-        <p>Please wait...</p>
+        <p>{errorMessage}</p>
       );
-    } else if (isAccountActivated) {
+    }
+
+    if (isAccountActivated) {
       return (
         <p>Your account has been activated</p>
       );
     }
 
     return (
-      <p>{errorMessage}</p>
+      <p>Please wait...</p>
     );
   }
 }
@@ -40,20 +43,15 @@ ActivateAccountView.defaultProps = {
   errorMessage: undefined,
 };
 
-class ActivateAccountViewContainer extends React.Component {
-
-  render() {
-    const { activateAccount, isAccountActivated, params, errorMessage } = this.props;
-
-    return (
+export const ActivateAccountViewContainer =
+  ({ activateAccount, isAccountActivated, params, errorMessage } ) =>
+    (
       <ActivateAccountView
         isAccountActivated={isAccountActivated}
         activateAccount={() => activateAccount(params.token)}
         errorMessage={errorMessage}
       />
     );
-  }
-}
 
 ActivateAccountViewContainer.propTypes = {
   isAccountActivated: PropTypes.bool,
@@ -81,7 +79,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(routerActions.push(destination));
   },
   activateAccount(token) {
-    console.info('Activating account with token ', token);
     dispatch(actions.activateAccount(token));
   },
 });

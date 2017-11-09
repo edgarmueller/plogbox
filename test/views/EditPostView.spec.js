@@ -1,7 +1,7 @@
 import test from 'ava';
 import React from 'react';
 import Axios from 'axios';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 import { shallow } from 'enzyme';
 import * as _ from 'lodash';
 import thunk from 'redux-thunk';
@@ -11,10 +11,10 @@ import { firstPost } from '../helpers/posts';
 import { afterEach, beforeEach } from '../helpers/setup';
 import {
   FETCH_BLOCKS_SUCCESS,
-  UPDATE_BLOCK_DIALECT,
-  UPDATE_BLOCK_TEXT,
   UPDATE_POST_FAILURE,
   UPDATE_POST_TITLE,
+  UPDATE_BLOCK_DIALECT,
+  UPDATE_BLOCK_TEXT,
 } from '../../src/constants';
 
 const middlewares = [thunk];
@@ -44,8 +44,8 @@ test.serial('create post via save', (t) => {
 test.serial('update post via save', async (t) => {
   const resolved = new Promise(r => r({
     data: {
-      data: { }
-    }
+      data: { },
+    },
   }));
   let didPost = false;
   t.context.sandbox.stub(Axios, 'post', () => {
@@ -89,71 +89,6 @@ test.serial('addBlock', async (t) => {
   await props.addBlock(1, 'markdown', '# some markdown text');
   const actions = store.getActions();
   t.is(actions.length, 1);
-});
-
-test.serial('removeBlock', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
-  const resolved = new Promise(r => r({
-    data: {
-      data: b,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'delete').returns(resolved);
-  const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([b]),
-      },
-    },
-  });
-  const props = mapDispatchToProps(store.dispatch);
-  await props.removeBlock(1, 1);
-  const actions = store.getActions();
-  t.is(actions.length, 1);
-});
-
-test.serial('update text of a block', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
-  const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([b]),
-      },
-    },
-  });
-  const props = mapDispatchToProps(store.dispatch);
-  props.updateBlockText(b, 'new, shiny text');
-  const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(UPDATE_BLOCK_TEXT, _.head(actions).type);
-});
-
-test.serial('update dialect of a block', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
-  const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([b]),
-      },
-    },
-  });
-  const props = mapDispatchToProps(store.dispatch);
-  props.updateBlockDialect(b, 'latex');
-  const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(UPDATE_BLOCK_DIALECT, _.head(actions).type);
 });
 
 test.serial('update title of a post', async (t) => {
@@ -219,7 +154,7 @@ test.serial('create post via save may fail', async (t) => {
   );
 });
 
-test('EditPostPageContainer should render', (t) => {
+test('should render', (t) => {
   const props = {
     fetchBlocks() { return []; },
   };

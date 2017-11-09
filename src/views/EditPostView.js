@@ -6,69 +6,24 @@ import {
   CardTitle,
   FlatButton,
   FloatingActionButton,
-  MenuItem,
-  SelectField,
   TextField,
 } from 'material-ui';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import ContentArchive from 'material-ui/svg-icons/content/archive';
 import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
-import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import UpArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+
 import Dialog from 'material-ui/Dialog';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import fileDownload from 'react-file-download';
-import Dropzone from 'react-dropzone';
 
 import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
-import { RESET_ERROR_MESSAGE, UPDATE_BLOCK_FAILURE } from '../constants/index';
-import Block from '../components/Block';
+import { RESET_ERROR_MESSAGE } from '../constants/index';
+import BlockControl from '../components/BlockControlContainer';
 
-const Editor = (props) => {
-  if (typeof window !== 'undefined') {
-    /* eslint-disable */
-    const AceEditor = require('react-ace').default;
-    require('brace');
-    require('brace/mode/markdown');
-    require('brace/theme/github');
-    require('brace/keybinding/emacs');
-    /* eslint-enable */
-
-    return <AceEditor {...props} />;
-  }
-
-  return null;
-};
-
-const renderUploadControl = (postId, block, onDrop, onChange) => {
-  if (block.dialect === 'image') {
-    return (
-      <Dropzone onDrop={onDrop(postId)(block)}>
-        {block.name}
-      </Dropzone>
-    );
-  }
-
-  return (
-    <Editor
-      mode="markdown"
-      theme="github"
-      onChange={text => onChange(block, text)}
-      name={`${block.id}_editor`}
-      editorProps={{ $blockScrolling: true }}
-      width={'100%'}
-      value={block.text}
-      minLines={1}
-      maxLines={Infinity}
-      keyboardHandler={'emacs'}
-    />
-  );
-};
 
 export class EditPostView extends React.Component {
 
@@ -98,16 +53,10 @@ export class EditPostView extends React.Component {
       exportPost,
       importPost,
       addBlock,
-      removeBlock,
-      moveBlockUp,
-      moveBlockDown,
       selectedPost,
       updatePostTitle,
-      updateBlockDialect,
-      updateBlockText,
       errorMessage,
       resetErrorMessage,
-      onDrop,
       isFetchingBlock,
     } = this.props;
 
@@ -179,76 +128,17 @@ export class EditPostView extends React.Component {
               }}
               >
                 {
-                          blocks.map((block, index) =>
-                            (<div
-                              key={block.id}
-                            >
-                              <div
-                                style={{
-                                  paddingBottom: '0.5em',
-                                }}
-                              >
-                                <SelectField
-                                  floatingLabelText="Block Dialect"
-                                  value={block.dialect}
-                                  onChange={(ev, newValue, dialect) => {
-                                    updateBlockDialect(block, dialect);
-                                  }}
-                                >
-                                  <MenuItem value={'markdown'} primaryText="Markdown" />
-                                  <MenuItem
-                                    value={'latex'}
-                                    primaryText="Latex"
-                                  />
-                                  <MenuItem
-                                    value={'image'}
-                                    primaryText="Image"
-                                    onClick={() => updateBlockText(block, '')}
-                                  />
-                                </SelectField>
-
-                                <span
-                                  style={{
-                                    marginLeft: '1em',
-                                  }}
-                                >
-                                  <FloatingActionButton
-                                    onClick={() => removeBlock(selectedPost.id, block)}
-                                    backgroundColor="#2c3e50"
-                                    mini
-                                  >
-                                    <ContentRemove />
-                                  </FloatingActionButton>
-                                  {
-                                    index > 0 ?
-                                      <FloatingActionButton
-                                        onClick={() => moveBlockUp(block)}
-                                        backgroundColor="#2c3e50"
-                                        mini
-                                      >
-                                        <UpArrow />
-                                      </FloatingActionButton> :
-                                      <span>&nbsp;</span>
-                                  }
-                                  {
-                                    index < blocks.length - 1 ?
-                                      <FloatingActionButton
-                                        onClick={() => moveBlockDown(block)}
-                                        backgroundColor="#2c3e50"
-                                        mini
-                                      >
-                                        <DownArrow />
-                                      </FloatingActionButton> :
-                                      <span>&nbsp;</span>
-                                  }
-                                </span>
-                              </div>
-                              {
-                                renderUploadControl(selectedPost.id, block, onDrop, updateBlockText)
-                              }
-                            </div>),
-                          )
-                        }
+                  blocks.map((block, index) =>
+                      (
+                        <BlockControl
+                          postId={selectedPost.id}
+                          block={block}
+                          isFirstBlock={index === 0}
+                          isLastBlock={index === blocks.length - 1}
+                        />
+                      ),
+                  )
+                }
                 <div style={{
                   marginTop: '1em',
                 }}
@@ -264,12 +154,14 @@ export class EditPostView extends React.Component {
               <div style={{ width: '50%' }}>
                 {
                   blocks.map(block =>
-                    (<Block
-                      key={block.id}
-                      postId={selectedPost.id}
-                      isFetchingBlock={isFetchingBlock}
-                      block={block}
-                    />),
+                    (
+                      <BlockControl
+                        key={block.id}
+                        postId={selectedPost.id}
+                        isFetchingBlock={isFetchingBlock}
+                        block={block}
+                      />
+                    ),
                   )
                 }
               </div>
@@ -302,20 +194,14 @@ EditPostView.propTypes = {
   exportPost: PropTypes.func.isRequired,
   importPost: PropTypes.func.isRequired,
   addBlock: PropTypes.func.isRequired,
-  removeBlock: PropTypes.func.isRequired,
-  moveBlockUp: PropTypes.func.isRequired,
-  moveBlockDown: PropTypes.func.isRequired,
   selectedPost: PropTypes.shape({
     dialect: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
-  updatePostTitle: PropTypes.func.isRequired,
-  updateBlockDialect: PropTypes.func.isRequired,
-  updateBlockText: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   resetErrorMessage: PropTypes.func.isRequired,
-  onDrop: PropTypes.func.isRequired,
   isFetchingBlock: PropTypes.bool,
+  updatePostTitle: PropTypes.func.isRequired,
 };
 
 EditPostView.defaultProps = {
@@ -367,36 +253,11 @@ export const mapDispatchToProps = dispatch => ({
     };
     return dispatch(action.addBlock(postId, block));
   },
-  moveBlockDown(block) {
-    dispatch(action.moveBlockDown(block));
-  },
-  moveBlockUp(block) {
-    dispatch(action.moveBlockUp(block));
-  },
-  removeBlock(postId, block) {
-    dispatch(action.removeBlock(postId, block));
-  },
-  updateBlockText(block, text) {
-    dispatch(action.updateBlockText(block, text));
-  },
-  updateBlockDialect(block, dialect) {
-    dispatch(action.updateBlockDialect(block, dialect));
-  },
   updatePostTitle(title) {
     dispatch(action.updatePostTitle(title));
   },
   savePost(selectedPost, blocks) {
     dispatch(action.updatePost(selectedPost, blocks));
-  },
-  onDrop: postId => block => (acceptedFiles) => {
-    action.uploadFile(postId, block.id, _.head(acceptedFiles))
-      .then(
-        (resp) => {
-          dispatch(action.updateBlockName(block, resp.data.data.name));
-          dispatch(action.updateBlockText(block, resp.data.data.text));
-        },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-      );
   },
   exportPost(blocks) {
     fileDownload(JSON.stringify(blocks), 'export.json');

@@ -12,7 +12,7 @@ const form = reduxForm({
   form: 'reset',
 });
 
-export const ResetForm = ({ handleSubmit, onSubmit, renderAlert }) => (
+export const ResetPasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
   <form onSubmit={handleSubmit(onSubmit)}>
     <div>
       <Field
@@ -37,7 +37,7 @@ export const ResetForm = ({ handleSubmit, onSubmit, renderAlert }) => (
   </form>
 );
 
-ResetForm.propTypes = {
+ResetPasswordForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   renderAlert: PropTypes.func.isRequired,
@@ -71,11 +71,11 @@ export class ResetPasswordFormContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit, params } = this.props;
+    const { handleSubmit, token } = this.props;
     return (
-      <ResetForm
+      <ResetPasswordForm
         handleSubmit={handleSubmit}
-        onSubmit={this.handleFormSubmit(params.token)}
+        onSubmit={this.handleFormSubmit(token)}
         renderAlert={this.renderAlert}
       />
     );
@@ -83,18 +83,19 @@ export class ResetPasswordFormContainer extends React.Component {
 }
 
 ResetPasswordFormContainer.propTypes = {
-  // isAuthenticated: PropTypes.bool.isRequired,
-  // replace: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   resetPassword: PropTypes.func.isRequired,
-  // redirect: PropTypes.string.isRequired,
   errorMessage: PropTypes.string,
+  token: PropTypes.string.isRequired,
 };
-
 
 ResetPasswordFormContainer.defaultProps = {
   errorMessage: undefined,
 };
+
+const mapStateToProps = (state, ownProps) => ({
+  token: ownProps.params,
+});
 
 const mapDispatchToProps = dispatch => ({
   resetPassword(token, formProps) {
@@ -106,6 +107,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(form(ResetPasswordFormContainer));
