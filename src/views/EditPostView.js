@@ -8,9 +8,6 @@ import {
   FloatingActionButton,
   TextField,
 } from 'material-ui';
-import ContentSave from 'material-ui/svg-icons/content/save';
-import ContentArchive from 'material-ui/svg-icons/content/archive';
-import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import Dialog from 'material-ui/Dialog';
@@ -23,7 +20,8 @@ import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/inde
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
 import BlockControl from '../components/BlockControlContainer';
-
+import EditPostButtonBar from '../components/EditPostButtonBar';
+import Block from '../components/Block';
 
 export class EditPostView extends React.Component {
 
@@ -49,9 +47,6 @@ export class EditPostView extends React.Component {
   render() {
     const {
       blocks,
-      savePost,
-      exportPost,
-      importPost,
       addBlock,
       selectedPost,
       updatePostTitle,
@@ -73,48 +68,7 @@ export class EditPostView extends React.Component {
               onChange={(ev, newValue) => updatePostTitle(newValue)}
             />
 
-            <FloatingActionButton
-              onClick={() => savePost(selectedPost, blocks)}
-              backgroundColor="#913d88"
-              mini
-            >
-              <ContentSave />
-            </FloatingActionButton>
-
-            <FloatingActionButton
-              onClick={() => exportPost(blocks)}
-              backgroundColor="#913d88"
-              mini
-            >
-              <ContentArchive />
-            </FloatingActionButton>
-
-            <FloatingActionButton
-              onClick={() => importPost()}
-              backgroundColor="#913d88"
-              mini
-            >
-              <ContentUnarchive />
-            </FloatingActionButton>
-
-            <input
-              id={'upload'}
-              type="file"
-              style={{ display: 'none' }}
-              onChange={(event) => {
-                // TODO: pull out
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                  const readBlocks = JSON.parse(ev.target.result);
-                  _.each(readBlocks, block => addBlock(
-                    selectedPost.id,
-                    block.dialect,
-                    block.text,
-                  ));
-                };
-                reader.readAsText(event.target.files[0]);
-              }}
-            />
+            <EditPostButtonBar />
 
           </CardTitle>
           <CardText>
@@ -155,7 +109,7 @@ export class EditPostView extends React.Component {
                 {
                   blocks.map(block =>
                     (
-                      <BlockControl
+                      <Block
                         key={block.id}
                         postId={selectedPost.id}
                         isFetchingBlock={isFetchingBlock}
@@ -190,9 +144,6 @@ export class EditPostView extends React.Component {
 
 EditPostView.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),
-  savePost: PropTypes.func.isRequired,
-  exportPost: PropTypes.func.isRequired,
-  importPost: PropTypes.func.isRequired,
   addBlock: PropTypes.func.isRequired,
   selectedPost: PropTypes.shape({
     dialect: PropTypes.string,

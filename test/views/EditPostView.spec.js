@@ -1,7 +1,6 @@
 import test from 'ava';
 import React from 'react';
 import Axios from 'axios';
-import * as Immutable from 'immutable';
 import { shallow } from 'enzyme';
 import * as _ from 'lodash';
 import thunk from 'redux-thunk';
@@ -13,8 +12,6 @@ import {
   FETCH_BLOCKS_SUCCESS,
   UPDATE_POST_FAILURE,
   UPDATE_POST_TITLE,
-  UPDATE_BLOCK_DIALECT,
-  UPDATE_BLOCK_TEXT,
 } from '../../src/constants';
 
 const middlewares = [thunk];
