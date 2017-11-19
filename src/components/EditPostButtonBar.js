@@ -9,62 +9,87 @@ import ContentArchive from 'material-ui/svg-icons/content/archive';
 import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
 import ContentSave from 'material-ui/svg-icons/content/save';
 import fileDownload from 'react-file-download';
+import * as Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
 import { getBlocks, getSelectedPost } from '../reducers/index';
 
 
-const EditPostButtonBar =
-  ({ post, blocks, addBlock, exportPost, importPost, savePost, savePostAndExit }) => (
-    <span>
+class EditPostButtonBar extends React.Component {
 
-      <IconButton
-        onClick={() => savePost(post, blocks)}
-        tooltip={'Save this post'}
-      >
-        <ContentSave />
-      </IconButton>
+  componentDidMount() {
+    const {
+      savePostAndExit,
+      blocks,
+      post,
+    } = this.props;
 
-      <IconButton
-        onClick={() => savePostAndExit(post, blocks)}
-        tooltip={'Save and go back to post list'}
-      >
-        <NavigationCheck />
-      </IconButton>
+    Mousetrap.bind(['ctrl+x'], () => savePostAndExit(post, blocks));
+  }
 
-      <IconButton
-        onClick={() => exportPost(blocks)}
-        tooltip={'Export thist post as a JSON file'}
-      >
-        <ContentArchive />
-      </IconButton>
+  render() {
+    const {
+      post,
+      blocks,
+      addBlock,
+      exportPost,
+      importPost,
+      savePost,
+      savePostAndExit,
+    } = this.props;
 
-      <IconButton
-        onClick={() => importPost()}
-        tooltip={'Import the blocks of an exported post'}
-      >
-        <ContentUnarchive />
-      </IconButton>
+    return (
+      <span>
 
-      <input
-        id={'upload'}
-        type="file"
-        style={{ display: 'none' }}
-        onChange={(event) => {
-          // TODO: pull out
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            const readBlocks = JSON.parse(ev.target.result);
-            _.each(readBlocks, block => addBlock(
-              post.id,
-              block.dialect,
-              block.text,
-            ));
-          };
-          reader.readAsText(event.target.files[0]);
-        }}
-      />
-    </span>
-  );
+        <IconButton
+          onClick={() => savePost(post, blocks)}
+          tooltip={'Save this post'}
+        >
+          <ContentSave />
+        </IconButton>
+
+        <IconButton
+          onClick={() => savePostAndExit(post, blocks)}
+          tooltip={'Save and go back to post list'}
+        >
+          <NavigationCheck />
+        </IconButton>
+
+        <IconButton
+          onClick={() => exportPost(blocks)}
+          tooltip={'Export thist post as a JSON file'}
+        >
+          <ContentArchive />
+        </IconButton>
+
+        <IconButton
+          onClick={() => importPost()}
+          tooltip={'Import the blocks of an exported post'}
+        >
+          <ContentUnarchive />
+        </IconButton>
+
+        <input
+          id={'upload'}
+          type="file"
+          style={{ display: 'none' }}
+          onChange={(event) => {
+            // TODO: pull out
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              const readBlocks = JSON.parse(ev.target.result);
+              _.each(readBlocks, block => addBlock(
+                post.id,
+                block.dialect,
+                block.text,
+              ));
+            };
+            reader.readAsText(event.target.files[0]);
+          }}
+        />
+      </span>
+    );
+  }
+}
 
 EditPostButtonBar.propTypes = {
   blocks: PropTypes.arrayOf(PropTypes.object),

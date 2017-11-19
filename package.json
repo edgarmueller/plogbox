@@ -105,6 +105,7 @@
     "jwt-decode": "^2.1.0",
     "lodash": "^4.15.0",
     "material-ui": "^0.18.2",
+    "mousetrap": "^1.6.1",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-ace": "^5.1.0",
