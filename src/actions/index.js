@@ -133,7 +133,6 @@ export const updatePost = (selectedPost, blocks) => (dispatch) => {
           type: UPDATE_POST_SUCCESS,
           post: resp.data.data,
         });
-        dispatch(routerActions.push('/posts'));
       },
       (error) => {
         errorHandler(dispatch, error, UPDATE_POST_FAILURE);

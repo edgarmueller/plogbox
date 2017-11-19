@@ -14,7 +14,6 @@ import Dialog from 'material-ui/Dialog';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import fileDownload from 'react-file-download';
 
 import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
@@ -59,17 +58,18 @@ export class EditPostView extends React.Component {
       <div>
         <Card>
           <CardTitle>
-            <span><strong>EDIT &nbsp;</strong></span>
-            <TextField
-              name="title"
-              type="text"
-              label="Title"
-              value={selectedPost.title}
-              onChange={(ev, newValue) => updatePostTitle(newValue)}
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span><strong>EDIT &nbsp;</strong></span>
+              <TextField
+                name="title"
+                type="text"
+                label="Title"
+                value={selectedPost.title}
+                onChange={(ev, newValue) => updatePostTitle(newValue)}
+              />
 
-            <EditPostButtonBar />
-
+              <EditPostButtonBar />
+            </div>
           </CardTitle>
           <CardText>
             <div style={{
@@ -85,6 +85,7 @@ export class EditPostView extends React.Component {
                   blocks.map((block, index) =>
                       (
                         <BlockControl
+                          key={block.id}
                           postId={selectedPost.id}
                           block={block}
                           isFirstBlock={index === 0}
@@ -206,15 +207,6 @@ export const mapDispatchToProps = dispatch => ({
   },
   updatePostTitle(title) {
     dispatch(action.updatePostTitle(title));
-  },
-  savePost(selectedPost, blocks) {
-    dispatch(action.updatePost(selectedPost, blocks));
-  },
-  exportPost(blocks) {
-    fileDownload(JSON.stringify(blocks), 'export.json');
-  },
-  importPost() {
-    document.getElementById('upload').click();
   },
   resetErrorMessage() {
     dispatch({
