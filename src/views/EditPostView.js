@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 
-import { getBlocks, getIsFetchingBlock, getSelectedPost } from '../reducers/index';
+import { getBlocks, getIsFetchingBlock, getPostErrorMessage, getSelectedPost } from '../reducers/index';
 import * as action from '../actions/index';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
 import BlockControl from '../components/BlockControlContainer';
@@ -192,6 +192,7 @@ const mapStateToProps = state => ({
   userId: state.auth.userId,
   blocks: getBlocks(state),
   isFetchingBlock: getIsFetchingBlock(state),
+  errorMessage: getPostErrorMessage(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

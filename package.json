@@ -7,7 +7,7 @@
     "postinstall": "npm run build",
     "start": "webpack-dev-server",
     "build": "cross-env NODE_ENV=production && webpack -p --progress --config webpack.production.config.js",
-    "test-only": "NODE_ENV=AVA nyc ava test/config/Routes.spec.js",
+    "test-only": "nyc ava test/views/EditPostButtonBar.spec.js",
     "test": "cross-env NODE_ENV=test ava",
     "test-with-coverage": "cross-env NODE_ENV=test nyc ava",
     "report": "nyc report --reporter=html",

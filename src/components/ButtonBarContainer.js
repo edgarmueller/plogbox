@@ -6,17 +6,19 @@ import PropTypes from 'prop-types';
 import * as api from '../api';
 import ButtonBar from './ButtonBar';
 
-import { CREATE_POST_SUCCESS } from '../constants';
+import {
+  CREATE_POST_SUCCESS,
+  EXPORT_POSTS_FAILURE,
+} from '../constants';
+import { errorHandler } from '../actions/index';
 
-const ButtonBarContainer = ({ exportPosts, importPosts, importPostsFromFile }) => {
-  return (
-    <ButtonBar
-      exportPosts={exportPosts}
-      importPosts={importPosts}
-      importPostsFromFile={importPostsFromFile}
-    />
+const ButtonBarContainer = ({ exportPosts, importPosts, importPostsFromFile }) => (
+  <ButtonBar
+    exportPosts={exportPosts}
+    importPosts={importPosts}
+    importPostsFromFile={importPostsFromFile}
+  />
   );
-};
 
 export const mapDispatchToProps = dispatch => ({
   exportPosts(posts) {
@@ -28,18 +30,15 @@ export const mapDispatchToProps = dispatch => ({
             clonedPost.blocks = resp.data.data;
             return clonedPost;
           },
-          () =>
-            console.error('An error occurred during post export'),
         ),
     );
     return Promise.all(postsWithBlocks)
       .then(
         (resolved) => {
           fileDownload(JSON.stringify(resolved), 'plog-posts-export.json');
+          return resolved;
         },
-        // TODO: proper error handling
-        () => console.error('An error occurred during post export'),
-      );
+      ).catch(error => errorHandler(dispatch, error, EXPORT_POSTS_FAILURE));
   },
   importPosts() {
     document.getElementById('upload').click();
