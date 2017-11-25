@@ -10,9 +10,9 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { File } from 'file-api';
 import 'jsdom/lib/jsdom';
 import ButtonBar, { mapDispatchToProps } from '../../src/components/ButtonBarContainer';
-import { posts } from '../helpers/posts';
+import { firstPost, posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
-import { EXPORT_POSTS_FAILURE } from '../../src/constants';
+import { CREATE_POST_SUCCESS, EXPORT_POSTS_FAILURE } from '../../src/constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -99,10 +99,19 @@ test.serial.cb('importPosts via mapDispatchToProps', (t) => {
       },
     },
   });
+  const resolved = new Promise(r => r({
+    data: {
+      data: firstPost,
+    },
+  }));
+  t.context.sandbox.stub(Axios, 'put').returns(resolved);
   const f = new File('test/exported-posts.json');
   setupDom(async () => {
     const props = mapDispatchToProps(store.dispatch);
-    await props.importPostsFromFile(f);
-    t.end();
+    props.importPostsFromFile(f)
+      .then(() => {
+        t.is(_.head(store.getActions()).type, CREATE_POST_SUCCESS);
+        t.end();
+      });
   });
 });

@@ -45,42 +45,44 @@ export const mapDispatchToProps = dispatch => ({
   },
   importPostsFromFile(file) {
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      const readPosts = JSON.parse(ev.target.result);
-      _.each(readPosts, (postWithBlocks) => {
-        let postId;
-        const postPromise = api.createPost({
-          title: postWithBlocks.title,
-          isDraft: postWithBlocks.isDraft,
-          date: postWithBlocks.date,
-        }).then(
-          (resp) => {
-            dispatch({
-              type: CREATE_POST_SUCCESS,
-              post: resp.data.data,
-            });
-            postId = resp.data.data.id;
-          },
-          // TODO: fix error handling
-          () => console.error('error during improt'),
-        );
-        postPromise.then(
-          () => {
-            _.each(postWithBlocks.blocks, block =>
-              api.addBlock(postId, {
-                dialect: block.dialect,
-                text: block.text,
-              }),
-            );
-          },
-          // TODO: fix error handling
-          () => console.error('error during post import'),
-        );
-      });
-    };
-    reader.readAsText(file);
+    return new Promise((resolve, reject) => {
+      reader.onload = (ev) => {
+        const readPosts = JSON.parse(ev.target.result);
+        return resolve(Promise.all(_.map(readPosts, (postWithBlocks) => {
+          const p = api.createPost({
+            title: postWithBlocks.title,
+            isDraft: postWithBlocks.isDraft,
+            date: postWithBlocks.date,
+          });
+          p.then(
+            (resp) => {
+              dispatch({
+                type: CREATE_POST_SUCCESS,
+                post: resp.data.data,
+              });
+              return resp.data.data;
+            },
+            // TODO: fix error handling
+            error => console.error('error during improt', error),
+          ).then(
+            post =>
+              // TODO: provide API to add mutliple blocks at once
+              Promise.all(_.map(postWithBlocks.blocks, block =>
+                api.addBlock(post.id, {
+                  dialect: block.dialect,
+                  text: block.text,
+                }),
+              )),
+            // TODO: fix error handling
+            () => console.error('error during post import'),
+          );
+        })));
+      };
+      reader.readAsText(file);
+    });
   },
 });
+
 
 ButtonBarContainer.propTypes = {
   exportPosts: PropTypes.func.isRequired,
