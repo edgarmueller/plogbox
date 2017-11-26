@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import { File } from 'file-api';
 import Block, { BlockContainer, mapDispatchToProps } from '../../src/components/BlockContainer';
 import { firstPost, posts } from '../helpers/posts';
-import {afterEach, beforeEach, mountWithContext, setupDom} from '../helpers/setup';
+import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -138,7 +138,6 @@ test.serial('trigger download during mount', (t) => {
   enzymeWrapper.setProps({
     block: block2,
   });
-  console.log(store.getActions());
   t.true(didDownload);
 });
 

@@ -19,7 +19,14 @@ const App = ({ children }) => (
 );
 
 App.propTypes = {
-  children: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
+
+App.defaultProps = {
+  children: [],
 };
 
 export default App;

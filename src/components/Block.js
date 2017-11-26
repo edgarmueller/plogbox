@@ -3,7 +3,7 @@ import Latex from 'react-latex';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
 
-export const Block = ({ block, isDownloading, imagePath }) => {
+const Block = ({ block, isDownloading, imagePath }) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {

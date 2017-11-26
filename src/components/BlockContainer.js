@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';
 import { UPDATE_BLOCK_FAILURE } from '../constants/index';
-import { Block } from './Block';
+import Block from './Block';
 
 export class BlockContainer extends React.Component {
 

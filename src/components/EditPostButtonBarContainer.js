@@ -8,8 +8,7 @@ import * as action from '../actions/index';
 import EditPostButtonBar from './EditPostButtonBar';
 import { getBlocks, getSelectedPost } from '../reducers/index';
 
-
-class EditPostButtonBarContainer extends React.Component {
+export class EditPostButtonBarContainer extends React.Component {
 
   componentDidMount() {
     const {

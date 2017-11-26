@@ -5,19 +5,18 @@ import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import { routerActions } from 'react-router-redux';
 
-import { USER_LOGGED_OUT } from '../../src/actions';
-import auth from '../../src/reducers/auth';
+import authReducer from '../../src/reducers/auth';
 import LoginFormContainer, { LoginForm } from '../../src/views/LoginView';
 
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 import { USER_LOGOUT_SUCCESS } from '../../src/constants/index';
 
-test.beforeEach(async t => await beforeEach(t));
+test.beforeEach(t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
 
 test.serial('login form should render', async (t) => {
-  const store = createStore(combineReducers({ form: formReducer, auth }));
+  const store = createStore(combineReducers({ form: formReducer, auth: authReducer }));
   const props = {
     handleSubmit() {
     },
@@ -41,7 +40,7 @@ test.serial('login form should render', async (t) => {
 test.serial('login form should redirect', async (t) => {
   let didReplace = false;
 
-  const store = createStore(combineReducers({ form: formReducer, auth }), {
+  const store = createStore(combineReducers({ form: formReducer, auth: authReducer }), {
     auth: {
       isAuthenticated: true,
     },
@@ -69,7 +68,7 @@ test.serial('login form should redirect', async (t) => {
 test.serial('login form should redirect via UNAUTH', async (t) => {
   let didReplace = false;
 
-  const store = createStore(combineReducers({ form: formReducer, auth }), {
+  const store = createStore(combineReducers({ form: formReducer, auth: authReducer }), {
     auth: {
       isAuthenticated: true,
     },

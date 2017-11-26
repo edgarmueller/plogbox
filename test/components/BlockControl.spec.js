@@ -129,6 +129,8 @@ test.cb('should render Editor', (t) => {
         <BlockControl
           postId={0}
           block={block}
+          isLastBlock
+          isFirstBlock
         />
       </Provider>,
     );

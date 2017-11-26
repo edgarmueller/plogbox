@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { TableBody } from 'material-ui/Table';
-import PostListContainer, { mapDispatchToProps } from '../../src/components/PostListContainer';
+import PostList, { mapDispatchToProps } from '../../src/components/PostListContainer';
 import { firstPost, posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 import { CREATE_POST_SUCCESS, DELETE_POST_SUCCESS, RESET_ERROR_MESSAGE, SELECT_POST } from '../../src/constants/index';
@@ -42,7 +42,7 @@ test('PostListContainer should render', (t) => {
   const enzymeWrapper = mountWithContext(
     t,
     <Provider store={store}>
-      <PostListContainer {...props} />
+      <PostList {...props} />
     </Provider>,
   );
   const tableBody = enzymeWrapper.find(TableBody);

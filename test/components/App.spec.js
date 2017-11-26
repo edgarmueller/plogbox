@@ -5,22 +5,19 @@ import { createStore, combineReducers } from 'redux';
 import * as router from 'react-router';
 import { routerReducer } from 'react-router-redux';
 
-import auth from '../../src/reducers/auth';
+import authReducer from '../../src/reducers/auth';
 import App from '../../src/components/App';
 import Root from '../../src/components/Root';
-import NavBar from '../../src/components/NavBar';
+import NavigationBar from '../../src/components/NavBar';
 import { afterEach, beforeEach } from '../helpers/setup';
 
 test.beforeEach(async t => beforeEach(t));
 
 test.afterEach(t => afterEach(t));
 
-
-test.serial('App should render', (t) => {
-  const enzymeWrapper = shallow(
-    <App />,
-    );
-  const navBar = enzymeWrapper.find(NavBar);
+test.serial('should render', (t) => {
+  const enzymeWrapper = shallow(<App />);
+  const navBar = enzymeWrapper.find(NavigationBar);
   t.is(navBar.length, 1);
 });
 
@@ -30,7 +27,7 @@ test.serial('Root should render', (t) => {
     listen: () => { },
   };
   const store = createStore(combineReducers({
-    auth,
+    auth: authReducer,
     routing: routerReducer,
   }));
   const enzymeWrapper = shallow(

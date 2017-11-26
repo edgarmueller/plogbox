@@ -1,21 +1,23 @@
 import test from 'ava';
 import React from 'react';
 import Axios from 'axios';
-import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
-import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { IconButton } from 'material-ui';
-import EditPostButtonBarContainer, { mapDispatchToProps } from '../../src/components/EditPostButtonBarContainer';
+import path from 'path';
+import fakeProps from 'react-fake-props';
+import sinon from 'sinon';
+import { EditPostButtonBarContainer, mapDispatchToProps } from '../../src/components/EditPostButtonBarContainer';
 import EditPostButtonBar from '../../src/components/EditPostButtonBar';
-import { firstPost, posts } from '../helpers/posts';
-import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
+import { firstPost } from '../helpers/posts';
+import { afterEach, beforeEach } from '../helpers/setup';
 import { ADD_BLOCK, UPDATE_POST_FAILURE } from '../../src/constants/index';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+const componentPath = path.join(__dirname, '../../src/components/EditPostButtonBar.js');
 
 test.beforeEach(async t => beforeEach(t));
 
@@ -97,54 +99,76 @@ test.serial('add block', async (t) => {
 });
 
 test('render container', (t) => {
-  const store = mockStore({
-    posts: {
-      posts: {
-        all: Immutable.Set(posts),
-      },
-    },
-  });
-  const enzymeWrapper = mountWithContext(t,
-    <Provider store={store}>
-      <EditPostButtonBarContainer />
-    </Provider>,
+  const props = fakeProps(componentPath);
+  const enzymeWrapper = shallow(
+    <EditPostButtonBarContainer {...props} />,
   );
-  const iconButtons = enzymeWrapper.find(IconButton);
-  t.is(iconButtons.length, 4);
+  const buttonBar = enzymeWrapper.find(EditPostButtonBar);
+  t.is(buttonBar.length, 1);
 });
 
 test('trigger savePost', (t) => {
-  let didSave = false;
-  const wrapper = shallow(<EditPostButtonBar savePost={() => { didSave = true; }} />);
+  const savePost = sinon.spy();
+  const props = fakeProps(componentPath);
+  const wrapper = shallow(
+    <EditPostButtonBar
+      {...props}
+      savePost={savePost}
+    />,
+  );
   wrapper.find(IconButton).first().simulate('click');
-  t.true(didSave);
+  t.true(savePost.calledOnce);
 });
 
 test('trigger savePost and exit', (t) => {
-  let didSave = false;
-  const wrapper = shallow(<EditPostButtonBar savePost={() => { didSave = true; }} />);
+  const savePost = sinon.spy();
+  const props = fakeProps(componentPath);
+  const wrapper = shallow(
+    <EditPostButtonBar
+      {...props}
+      savePost={savePost}
+    />,
+  );
   wrapper.find(IconButton).at(1).simulate('click');
-  t.true(didSave);
+  t.true(savePost.calledOnce);
 });
 
 test('trigger exportPost', (t) => {
-  let didExport = false;
-  const wrapper = shallow(<EditPostButtonBar exportPost={() => { didExport = true; }} />);
+  const props = fakeProps(componentPath);
+  const exportPost = sinon.spy();
+  const wrapper = shallow(
+    <EditPostButtonBar
+      {...props}
+      exportPost={exportPost}
+    />,
+  );
   wrapper.find(IconButton).at(2).simulate('click');
-  t.true(didExport);
+  t.true(exportPost.calledOnce);
 });
 
 test('trigger importPost', (t) => {
-  let importPost = false;
-  const wrapper = shallow(<EditPostButtonBar importPost={() => { importPost = true; }} />);
+  const props = fakeProps(componentPath);
+  const importPost = sinon.spy();
+  const wrapper = shallow(
+    <EditPostButtonBar
+      {...props}
+      importPost={importPost}
+    />,
+  );
   wrapper.find(IconButton).at(3).simulate('click');
-  t.true(importPost);
+  t.true(importPost.calledOnce);
 });
 
 test('trigger upload', (t) => {
-  let didUpload = false;
-  const wrapper = shallow(<EditPostButtonBar upload={() => { didUpload = true; }} />);
+  const props = fakeProps(componentPath);
+  const upload = sinon.spy();
+  const wrapper = shallow(
+    <EditPostButtonBar
+      {...props}
+      upload={upload}
+    />,
+  );
   wrapper.find('input').first().simulate('change', { target: { files: [0] } });
-  t.true(didUpload);
+  t.true(upload.calledOnce);
 });
 

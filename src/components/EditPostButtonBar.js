@@ -1,5 +1,4 @@
 import React from 'react';
-import * as _ from 'lodash';
 import PropTypes from 'prop-types';
 import { IconButton } from 'material-ui';
 import NavigationCheck from 'material-ui/svg-icons/navigation/check';
@@ -70,7 +69,6 @@ EditPostButtonBar.propTypes = {
   exportPost: PropTypes.func.isRequired,
   importPost: PropTypes.func.isRequired,
   savePost: PropTypes.func.isRequired,
-  savePostAndExit: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
 };
 
