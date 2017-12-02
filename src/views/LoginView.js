@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
-import { FlatButton, RaisedButton } from 'material-ui';
-import { redA400 } from 'material-ui/styles/colors';
+import { Button, FormLabel } from 'material-ui';
+import red from 'material-ui/colors/red';
+import { TextField } from 'redux-form-material-ui';
 
 import { loginUser } from '../actions/index';
-import { renderTextField, renderPasswordTextField } from '../utils/helpers';
+import { renderPasswordTextField } from '../utils/helpers';
 import '../common/tap';
 import { getStatusText } from '../reducers/auth';
 
@@ -17,18 +18,16 @@ const form = reduxForm({
 
 export const LoginForm = ({ handleSubmit, handleFormSubmit, renderAlert }) => (
   <form onSubmit={handleSubmit(handleFormSubmit)}>
-    <div>
-      <Field name="email" component={renderTextField} label="Email" />
-    </div>
-    <div>
-      <Field name="password" component={renderPasswordTextField} label="Password" />
-    </div>
-    <div>
-      <RaisedButton type="submit" label="Login" />
-    </div>
-    <div>
-      {renderAlert()}
-    </div>
+    <FormLabel component="legend">Mail</FormLabel>
+    <Field name="email" component={TextField} />
+
+    <FormLabel component="legend">Password</FormLabel>
+    <Field name="password" component={renderPasswordTextField} />
+
+    <Button type="submit" color={'primary'}>
+      Login
+    </Button>
+    {renderAlert()}
   </form>
 );
 
@@ -70,7 +69,7 @@ class LoginFormContainer extends React.Component {
     if (this.props.errorMessage) {
       return (
         <div style={{ marginTop: '1em' }}>
-          <span style={{ color: redA400 }}>
+          <span style={{ color: red }}>
             {this.props.errorMessage}
           </span>
         </div>
@@ -90,10 +89,11 @@ class LoginFormContainer extends React.Component {
           renderAlert={this.renderAlert}
         />
         <p>
-          <FlatButton
+          <Button
             onClick={() => replace('/password/forgot')}
-            label="forgot password?"
-          />
+          >
+            Forgot password?
+          </Button>
         </p>
       </div>
     );

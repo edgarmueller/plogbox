@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { routerActions } from 'react-router-redux';
-import { RaisedButton } from 'material-ui';
-import { redA400 } from 'material-ui/styles/colors';
+import { Button, FormLabel } from 'material-ui';
+import red from 'material-ui/colors/red';
 import PropTypes from 'prop-types';
 import { registerUser } from '../actions/index';
 import { renderPasswordTextField, renderTextField } from '../utils/helpers';
@@ -45,7 +45,7 @@ export class SignUpPage extends React.Component {
     if (this.props.errorMessage) {
       return (
         <div style={{ marginTop: '1em' }}>
-          <span style={{ color: redA400 }}>
+          <span style={{ color: red }}>
             {this.props.errorMessage}
           </span>
         </div>
@@ -61,30 +61,30 @@ export class SignUpPage extends React.Component {
     return (
       <form onSubmit={handleSubmit(this.handleFormSubmit)}>
         <div>
+          <FormLabel component="legend">Mail</FormLabel>
           <Field
             name="email"
             component={renderTextField}
             type="text"
-            label="Mail"
           />
         </div>
         <div>
+          <FormLabel component="legend">Password</FormLabel>
           <Field
             name="password"
             component={renderPasswordTextField}
             type="password"
-            label="Password"
           />
         </div>
         <div>
+          <FormLabel component="legend">Repeat Password</FormLabel>
           <Field
             name="password-repeat"
             component={renderPasswordTextField}
             type="password"
-            label="Repeat Password"
           />
         </div>
-        <RaisedButton type="submit" >Register</RaisedButton>
+        <Button type="submit" color="primary" >Register</Button>
         <div>
           {this.renderAlert()}
         </div>
@@ -117,10 +117,9 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export const WrappedSignUpPage = form(SignUpPage);
 
 export default connect(
   mapStateToProps,
   { registerUser, replace: routerActions.replace },
-)(WrappedSignUpPage);
+)(form(SignUpPage));
 

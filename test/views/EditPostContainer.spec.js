@@ -11,7 +11,7 @@ import Dialog from 'material-ui/Dialog';
 import { applyMiddleware, createStore } from 'redux';
 import path from 'path';
 import fakeProps from 'react-fake-props';
-import { EditPost } from '../../src/components/EditPost';
+import EditPost from '../../src/components/EditPost';
 import { EditPostContainer, mapDispatchToProps } from '../../src/components/EditPostContainer';
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 
@@ -95,18 +95,6 @@ test.serial('fetch blocks', async (t) => {
   t.is(FETCH_BLOCKS_SUCCESS, _.head(actions).type);
 });
 
-test('should render', (t) => {
-  const props = fakeProps(componentPath);
-  const resolved = new Promise(r => r({
-    data: {
-      data: { },
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  const enzymeWrapper = shallow(<EditPostContainer {...props} />);
-  const postPage = enzymeWrapper.find(EditPost);
-  t.is(postPage.length, 1);
-});
 
 test.serial('should show error', (t) => {
   const props = fakeProps(componentPath);
@@ -164,7 +152,8 @@ test.serial('should not show error if error message has been reset', (t) => {
   t.false(dialog.props().open);
 });
 
-test('should render', (t) => {
+
+test('container should render', (t) => {
   const props = fakeProps(componentPath);
   const resolved = new Promise(r => r({
     data: {

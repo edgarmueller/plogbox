@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
-import { RaisedButton } from 'material-ui';
+import { Button } from 'material-ui';
 import { renderPasswordTextField } from '../utils/helpers';
 
 const ResetPasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
@@ -23,7 +23,7 @@ const ResetPasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
         label="Repeat Password"
       />
     </div>
-    <RaisedButton type="submit" >Register</RaisedButton>
+    <Button type="submit" >Register</Button>
     <div>
       {renderAlert()}
     </div>

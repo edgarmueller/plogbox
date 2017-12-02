@@ -1,9 +1,8 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar';
-import SvgIconFace from 'material-ui/svg-icons/action/face';
+import { Button, Toolbar } from 'material-ui';
+import SvgIconFace from 'material-ui-icons/Face';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
@@ -19,36 +18,28 @@ export const NavBar = ({
   user,
   navigateTo,
   logout,
-}) => {
+                       }) => {
   if (isAuthenticated) {
     return (
       <nav>
-        <Toolbar style={{ backgroundColor: '#913D88' }}>
-          <ToolbarGroup>
-            <FlatButton
-              labelStyle={{
-                color: '#fff',
-                fontWeight: 'bold',
-                fontFamily: 'monospace',
-                fontSize: '1.25em',
-              }}
-              onClick={() => navigateTo('/')}
-              label="plog_"
-            />
-            <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/')} label="HOME" />
-            <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/posts')} label="POSTS" />
-          </ToolbarGroup>
-          <ToolbarGroup lastChild>
-            <div style={styles}>
-              <Chip
-                onTouchTap={() => navigateTo('/profile')}
-              >
-                <Avatar color="#444" icon={<SvgIconFace />} />
-                Logged in with {user}
-              </Chip>
-            </div>
-            <FlatButton labelStyle={{ color: 'white' }} onClick={() => logout()} label="LOGOUT" />
-          </ToolbarGroup>
+        <Toolbar>
+          <Button className={{ color: 'white' }} onClick={() => navigateTo('/')}>
+            Home
+          </Button>
+          <Button className={{ color: 'white' }} onClick={() => navigateTo('/posts')}>
+            Posts
+          </Button>
+          <div style={styles}>
+            <Chip
+              onTouchTap={() => navigateTo('/profile')}
+              label={`Logged in with ${user}`}
+            >
+              <Avatar color="#444" icon={<SvgIconFace />} />
+            </Chip>
+          </div>
+          <Button className={{ color: 'white' }} onClick={() => logout()}>
+            Logout
+          </Button>
         </Toolbar>
       </nav>
     );
@@ -56,23 +47,24 @@ export const NavBar = ({
 
   return (
     <nav>
-      <Toolbar style={{ backgroundColor: '#913D88' }}>
-        <ToolbarGroup>
-          <FlatButton
-            labelStyle={{
-              color: '#fff',
-              fontWeight: 'bold',
-              fontFamily: 'monospace',
-              fontSize: '1.25em',
-            }}
-            onClick={() => navigateTo('/')}
-            label="plog_"
-          />
-        </ToolbarGroup>
-        <ToolbarGroup>
-          <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/sign-up')} label="SIGN-UP" />
-          <FlatButton labelStyle={{ color: 'white' }} onClick={() => navigateTo('/login')} label="LOGIN" />
-        </ToolbarGroup>
+      <Toolbar>
+        <Button
+          className={{
+            color: '#fff',
+            fontWeight: 'bold',
+            fontFamily: 'monospace',
+            fontSize: '1.25em',
+          }}
+          onClick={() => navigateTo('/')}
+        >
+          plog
+        </Button>
+        <Button className={{ color: 'white' }} onClick={() => navigateTo('/sign-up')}>
+          Sign up
+        </Button>
+        <Button className={{ color: 'white' }} onClick={() => navigateTo('/login')}>
+          Login
+        </Button>
       </Toolbar>
     </nav>
   );

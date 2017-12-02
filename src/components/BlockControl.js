@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FloatingActionButton, MenuItem, SelectField } from 'material-ui';
-import ContentRemove from 'material-ui/svg-icons/content/remove';
-import DownArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import UpArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import { FormControl, IconButton, Input, InputLabel, MenuItem, Select } from 'material-ui';
+import ContentRemove from 'material-ui-icons/Remove';
+import DownArrow from 'material-ui-icons/KeyboardArrowDown';
+import UpArrow from 'material-ui-icons/KeyboardArrowUp';
 import Dropzone from 'react-dropzone';
-
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
@@ -50,80 +49,89 @@ const renderBlockControl = (postId, block, onDrop, onChange) => {
   );
 };
 
-export const BlockControl =
-  ({
-     postId,
-     block,
-     onDrop,
-     updateBlockDialect,
-     updateBlockText,
-     moveBlockUp,
-     moveBlockDown,
-     removeBlock,
-     isFirstBlock,
-     isLastBlock,
-   }) =>
-    (
+export class BlockControl extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      dialect: props.block.dialect,
+    };
+  }
+
+  render() {
+    const {
+      postId,
+      block,
+      onDrop,
+      updateBlockDialect,
+      updateBlockText,
+      moveBlockUp,
+      moveBlockDown,
+      removeBlock,
+      isFirstBlock,
+      isLastBlock,
+    } = this.props;
+
+    return (
       <div key={block.id}>
         <div
           style={{
             paddingBottom: '0.5em',
           }}
         >
-          <SelectField
-            floatingLabelText="Block Dialect"
-            value={block.dialect}
-            onChange={(ev, newValue, dialect) => {
-              updateBlockDialect(block, dialect);
-            }}
-          >
-            <MenuItem value={'markdown'} primaryText="Markdown" />
-            <MenuItem
-              value={'latex'}
-              primaryText="Latex"
-            />
-            <MenuItem
-              value={'image'}
-              primaryText="Image"
-              onClick={() => updateBlockText(block, '')}
-            />
-          </SelectField>
+          <FormControl>
+            <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
+            <Select
+              input={<Input name="dialect" id="block-dialect" />}
+              value={this.state.dialect}
+              onChange={(ev) => {
+                this.setState(() => ({ dialect: ev.target.value }));
+                updateBlockDialect(block, ev.target.value);
+              }}
+            >
+              <MenuItem value={'markdown'}>Markdown</MenuItem>
+              <MenuItem value={'latex'}>Latex</MenuItem>
+              <MenuItem
+                value={'image'}
+                onClick={() => updateBlockText(block, '')}
+              >Image</MenuItem>
+            </Select>
+          </FormControl>
 
           <span style={{ marginLeft: '1em' }}>
-            <FloatingActionButton
+            <IconButton
               onClick={() => removeBlock(postId, block)}
-              backgroundColor="#2c3e50"
-              mini
+              color="#2c3e50"
             >
               <ContentRemove />
-            </FloatingActionButton>
+            </IconButton>
             {
               !isFirstBlock ?
-                <FloatingActionButton
+                <IconButton
                   onClick={() => moveBlockUp(block)}
-                  backgroundColor="#2c3e50"
-                  mini
+                  color="#2c3e50"
                 >
                   <UpArrow />
-                </FloatingActionButton> :
+                </IconButton> :
                 <span>&nbsp;</span>
             }
             {
               !isLastBlock ?
-                <FloatingActionButton
+                <IconButton
                   onClick={() => moveBlockDown(block)}
-                  backgroundColor="#2c3e50"
-                  mini
+                  color="#2c3e50"
                 >
                   <DownArrow />
-                </FloatingActionButton> :
+                </IconButton> :
                 <span>&nbsp;</span>
             }
           </span>
         </div>
-        { renderBlockControl(postId, block, onDrop, updateBlockText) }
+        {renderBlockControl(postId, block, onDrop, updateBlockText)}
       </div>
     );
+  }
+}
 
 BlockControl.propTypes = {
   postId: PropTypes.number.isRequired,

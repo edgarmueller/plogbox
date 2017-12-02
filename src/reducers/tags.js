@@ -6,7 +6,9 @@ export const tags = (state = [], action) => {
       return action.tags;
     case ADD_TAG_SUCCESS: {
       const copy = state.slice();
-      copy.push(action.tag.name);
+      if (copy.indexOf(action.tag.name) === -1) {
+        copy.push(action.tag.name);
+      }
       return copy;
     }
     default:

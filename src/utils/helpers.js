@@ -1,16 +1,16 @@
 import React from 'react';
-import { TextField } from 'material-ui';
+import { TextField } from 'redux-form-material-ui';
 import PropTypes from 'prop-types';
 
-export const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
+export const renderTextField = ({ input, label, meta: { error }, ...custom }) => (
   <TextField
-    hintText={label}
-    floatingLabelText={label}
-    errorText={touched && error}
+    error={error !== undefined}
+    helperText={label}
+    label={error || label}
     {...input}
     {...custom}
   />
-  );
+);
 
 renderTextField.propTypes = {
   input: PropTypes.object,
@@ -32,10 +32,10 @@ renderTextField.defaultProps = {
 
 export const renderPasswordTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
   <TextField
-    hintText={label}
+    error={error !== undefined}
     type="password"
-    floatingLabelText={label}
-    errorText={touched && error}
+    helperText={label}
+    label={error || label}
     {...input}
     {...custom}
   />

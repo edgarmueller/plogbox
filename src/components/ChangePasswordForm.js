@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field } from 'redux-form';
-import { RaisedButton } from 'material-ui';
+import { Button } from 'material-ui';
 import PropTypes from 'prop-types';
 import { renderPasswordTextField } from '../utils/helpers';
 
@@ -22,7 +22,7 @@ const ChangePasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
         label="New Password"
       />
     </div>
-    <RaisedButton type="submit" label="Change password" />
+    <Button type="submit" label="Change password" />
     <div>
       {renderAlert()}
     </div>

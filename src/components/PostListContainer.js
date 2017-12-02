@@ -4,35 +4,29 @@ import { connect } from 'react-redux';
 import * as routerActions from 'react-router-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import { Dialog, FlatButton } from 'material-ui';
+import { Dialog, DialogTitle } from 'material-ui';
 import * as actions from '../actions';
 import { getAllPosts, getIsFetchingPosts, getPostErrorMessage } from '../reducers/index';
 import '../common/tap';
 import { RESET_ERROR_MESSAGE } from '../constants';
-import { PostList } from './PostList';
+import PostList from './PostList';
 
 export class PostListContainer extends React.Component {
 
   constructor() {
     super();
     this.state = {
-      selectedRow: -1,
+      isEditingTags: false,
     };
-    this.setSelection = this.setSelection.bind(this);
+    this.setSelectedCell = this.setSelectedCell.bind(this);
   }
 
   componentWillMount() {
-    const { fetchPosts } = this.props;
-    fetchPosts();
+    this.props.fetchPosts();
   }
 
-  setSelection(didDelete, row, col) {
-    // TODO: pass function to setState
-    this.setState({
-      didDelete,
-      selectedRow: row,
-      selectedCol: col,
-    });
+  setSelectedCell(isEditingTags) {
+    this.setState(() => ({ isEditingTags }));
   }
 
   render() {
@@ -55,28 +49,15 @@ export class PostListContainer extends React.Component {
         <PostList
           posts={posts}
           addPost={addPost}
-          setSelection={this.setSelection}
-          selection={{
-            row: this.state.selectedRow,
-            col: this.state.selectedCol,
-          }}
           selectPost={selectPost}
           deletePost={deletePost}
-          suggestedTags={this.state.suggestedTags}
         />
 
         <Dialog
-          title="An error occurred"
-          actions={[
-            <FlatButton
-              label="OK"
-              primary
-              onTouchTap={resetErrorMessage}
-            />,
-          ]}
-          modal
+          onRequestClose={resetErrorMessage}
           open={!_.isEmpty(errorMessage)}
         >
+          <DialogTitle>An error occurred</DialogTitle>
           {errorMessage}
         </Dialog>
       </div>

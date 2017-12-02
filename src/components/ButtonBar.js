@@ -1,27 +1,25 @@
 import React from 'react';
 import * as _ from 'lodash';
 import PropTypes from 'prop-types';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentArchive from 'material-ui/svg-icons/content/archive';
-import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
+import ContentArchive from 'material-ui-icons/Archive';
+import ContentUnarchive from 'material-ui-icons/Unarchive';
+import { IconButton } from 'material-ui';
 
 const ButtonBar = ({ exportPosts, importPosts, importPostsFromFile, posts }) => (
   <div>
-    <FloatingActionButton
+    <IconButton
       onClick={() => exportPosts(posts)}
-      backgroundColor="#913d88"
-      mini
+      color="#913d88"
     >
       <ContentArchive />
-    </FloatingActionButton>
+    </IconButton>
 
-    <FloatingActionButton
+    <IconButton
       onClick={importPosts}
-      backgroundColor="#913d88"
-      mini
+      color="#913d88"
     >
       <ContentUnarchive />
-    </FloatingActionButton>
+    </IconButton>
 
     <input
       id={'upload'}

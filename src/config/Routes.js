@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { UserAuthWrapper } from 'redux-auth-wrapper';
+import { connectedReduxRedirect } from 'redux-auth-wrapper/history3/redirect';
 import { replace } from 'react-router-redux';
 
 import App from '../components/App';
@@ -16,10 +16,11 @@ import ChangePasswordView from '../views/ChangePasswordView';
 import ResetPasswordView from '../views/ResetPasswordView';
 import ActivateAccountView from '../views/ActivateAccountView';
 
-// Redirects to /login by default
-const requireAuth = UserAuthWrapper({
-  authSelector: state => state.auth,
-  predicate: auth => auth.isAuthenticated,
+export const requireAuth = connectedReduxRedirect({
+  redirectPath: '/login',
+  authenticatedSelector: state => state.auth !== null,
+  // authenticatingSelector: state => state.user.isLoading,
+  // AuthenticatingComponent: Loading,
   redirectAction: replace,
   wrapperDisplayName: 'UserIsJWTAuthenticated',
 });

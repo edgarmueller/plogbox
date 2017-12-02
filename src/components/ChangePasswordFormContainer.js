@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { redA400 } from 'material-ui/styles/colors';
+import red from 'material-ui/colors/red';
 import * as actions from '../actions';
 import ChangePasswordForm from './ChangePasswordForm';
 
@@ -17,7 +17,7 @@ export class ChangePasswordFormContainer extends React.Component {
     if (this.props.errorMessage) {
       return (
         <div style={{ marginTop: '1em' }}>
-          <span style={{ color: redA400 }}>
+          <span style={{ color: red }}>
             {this.props.errorMessage}
           </span>
         </div>

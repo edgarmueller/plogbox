@@ -1,16 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Tag } from './Tag';
+import Tags from './Tags';
 import * as actions from '../actions';
 import * as api from '../api';
 import { SET_TAGS } from '../constants/index';
 
-export class TagContainer extends React.Component {
+export class TagsContainer extends React.Component {
 
   componentWillMount() {
     this.props.fetchSuggestedTags();
+    this.state = {
+      isEditing: false,
+    };
   }
+
 
   componentDidUpdate(prevProps) {
     if (prevProps.isEditingTags && !this.props.isEditingTags) {
@@ -19,49 +22,29 @@ export class TagContainer extends React.Component {
   }
 
   render() {
-    const { post, isEditingTags, addTag, removeTag, setSelection, suggestedTags } = this.props;
+    const { post, addTag, removeTag, suggestedTags, isEditing, done } = this.props;
 
     return (
-      <Tag
+      <Tags
         post={post}
-        isEditingTags={isEditingTags}
+        isEditing={isEditing}
         addTag={addTag}
         removeTag={removeTag}
-        setSelection={setSelection}
+        done={done}
         suggestedTags={suggestedTags}
       />
     );
   }
 }
 
-TagContainer.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    tags: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-      }),
-    ),
-  }).isRequired,
-  isEditingTags: PropTypes.bool,
-  suggestedTags: PropTypes.arrayOf(PropTypes.string),
-  setSelection: PropTypes.func.isRequired,
-  addTag: PropTypes.func.isRequired,
-  removeTag: PropTypes.func.isRequired,
-  fetchSuggestedTags: PropTypes.func.isRequired,
-};
+TagsContainer.propTypes = Tags.propTypes;
+TagsContainer.defaultProps = Tags.defaultProps;
 
-TagContainer.defaultProps = {
-  isEditingTags: false,
-  suggestedTags: [],
-};
-
-const mapStateToProps = (state, { isEditingTags }) => ({
-  isEditingTags,
+const mapStateToProps = state => ({
   suggestedTags: state.tags,
 });
 
-export const mapDispatchToProps = (dispatch, { setSelection }) => ({
+export const mapDispatchToProps = dispatch => ({
   addTag(postId, tag) {
     return dispatch(
       actions.addTag(
@@ -87,10 +70,9 @@ export const mapDispatchToProps = (dispatch, { setSelection }) => ({
         },
       );
   },
-  setSelection,
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(TagContainer);
+)(TagsContainer);

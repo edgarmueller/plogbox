@@ -7,6 +7,7 @@ const Block = ({ block, isDownloading, imagePath }) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {
+
         if (isDownloading) {
           return (<div id={block.text}>Loading...</div>);
         }

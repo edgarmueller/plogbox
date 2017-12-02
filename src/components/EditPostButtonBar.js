@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton } from 'material-ui';
-import NavigationCheck from 'material-ui/svg-icons/navigation/check';
-import ContentArchive from 'material-ui/svg-icons/content/archive';
-import ContentUnarchive from 'material-ui/svg-icons/content/unarchive';
-import ContentSave from 'material-ui/svg-icons/content/save';
+import { IconButton, Tooltip } from 'material-ui';
+import NavigationCheck from 'material-ui-icons/Check';
+import ContentArchive from 'material-ui-icons/Archive';
+import ContentUnarchive from 'material-ui-icons/Unarchive';
+import ContentSave from 'material-ui-icons/Save';
 
 const EditPostButtonBar =
   ({
@@ -17,33 +17,29 @@ const EditPostButtonBar =
    }) =>
     (
       <span>
-        <IconButton
-          onClick={() => savePost(post, blocks)}
-          tooltip={'Save this post'}
-        >
-          <ContentSave />
-        </IconButton>
+        <Tooltip title="Save this post">
+          <IconButton onClick={() => savePost(post, blocks)}>
+            <ContentSave />
+          </IconButton>
+        </Tooltip>
 
-        <IconButton
-          onClick={() => savePost(post, blocks, true)}
-          tooltip={'Save and go back to post list'}
-        >
-          <NavigationCheck />
-        </IconButton>
+        <Tooltip title="Save and go back to post list">
+          <IconButton onClick={() => savePost(post, blocks, true)}>
+            <NavigationCheck />
+          </IconButton>
+        </Tooltip>
 
-        <IconButton
-          onClick={() => exportPost(blocks)}
-          tooltip={'Export thist post as a JSON file'}
-        >
-          <ContentArchive />
-        </IconButton>
+        <Tooltip title="Export thist post as a JSON file">
+          <IconButton onClick={() => exportPost(blocks)}>
+            <ContentArchive />
+          </IconButton>
+        </Tooltip>
 
-        <IconButton
-          onClick={() => importPost()}
-          tooltip={'Import the blocks of an exported post'}
-        >
-          <ContentUnarchive />
-        </IconButton>
+        <Tooltip title="Import the blocks of an exported post">
+          <IconButton onClick={() => importPost()}>
+            <ContentUnarchive />
+          </IconButton>
+        </Tooltip>
 
         <input
           id={'upload'}

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { EditPost } from './EditPost';
+import EditPost from './EditPost';
 import { RESET_ERROR_MESSAGE } from '../constants/index';
 import * as action from '../actions';
 import { getBlocks, getIsFetchingBlock, getPostErrorMessage, getSelectedPost } from '../reducers';

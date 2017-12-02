@@ -6,9 +6,8 @@ import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import { File } from 'file-api';
-import 'jsdom/lib/jsdom';
+import { IconButton } from 'material-ui';
 import ButtonBar, { mapDispatchToProps } from '../../src/components/ButtonBarContainer';
 import { firstPost, posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
@@ -43,7 +42,7 @@ test.serial('ButtonBar should render', (t) => {
     </Provider>,
   );
 
-  const buttons = enzymeWrapper.find(FloatingActionButton);
+  const buttons = enzymeWrapper.find(IconButton);
   t.is(buttons.length, 2);
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
-import { redA400 } from 'material-ui/styles/colors';
+import red from 'material-ui/colors/red';
 import * as actions from '../actions';
 import ResetPasswordForm from './ResetPasswordForm';
 
@@ -17,12 +17,12 @@ export class ResetPasswordFormContainer extends React.Component {
     return formProps => this.props.resetPassword(token, formProps);
   }
 
-  // TODO: dup code
+  // TODO: dup code, extract to HOC
   renderAlert() {
     if (this.props.errorMessage) {
       return (
         <div style={{ marginTop: '1em' }}>
-          <span style={{ color: redA400 }}>
+          <span style={{ color: red }}>
             {this.props.errorMessage}
           </span>
         </div>

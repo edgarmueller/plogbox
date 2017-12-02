@@ -1,13 +1,22 @@
 import React from 'react';
 import * as _ from 'lodash';
-import { Card, CardText, CardTitle, FlatButton, FloatingActionButton, TextField } from 'material-ui';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import { Card, CardContent, Button, TextField, Toolbar, AppBar, withStyles } from 'material-ui';
+import ContentAdd from 'material-ui-icons/Add';
 
 import Dialog from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
 import BlockControl from './BlockControlContainer';
 import EditPostButtonBar from './EditPostButtonBarContainer';
-import Block from './Block';
+import Block from './BlockContainer';
+
+const styles = () => ({
+  flex: {
+    flex: 1,
+  },
+  MuiCardContent: {
+    padding: 0,
+  },
+});
 
 export class EditPost extends React.Component {
 
@@ -39,27 +48,29 @@ export class EditPost extends React.Component {
       errorMessage,
       resetErrorMessage,
       isFetchingBlock,
+      classes,
     } = this.props;
 
     return (
       <div>
         <Card>
-          <CardTitle>
+          <CardContent className={classes.MuiCardContent}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span><strong>EDIT &nbsp;</strong></span>
-              <TextField
-                name="title"
-                type="text"
-                label="Title"
-                value={selectedPost.title}
-                onChange={(ev, newValue) => updatePostTitle(newValue)}
-              />
-
-              <EditPostButtonBar />
+              <AppBar position="static" color={'default'}>
+                <Toolbar>
+                  <TextField
+                    name="title"
+                    type="text"
+                    label="Post Title"
+                    value={selectedPost.title}
+                    onChange={ev => updatePostTitle(ev.target.value)}
+                  />
+                  <EditPostButtonBar />
+                </Toolbar>
+              </AppBar>
             </div>
-          </CardTitle>
-          <CardText>
             <div style={{
+              paddingTop: '1em',
               display: 'flex',
             }}
             >
@@ -85,12 +96,13 @@ export class EditPost extends React.Component {
                   marginTop: '1em',
                 }}
                 >
-                  <FloatingActionButton
+                  <Button
+                    fab
                     onClick={() => addBlock(selectedPost.id, this.state.dialect, '')}
-                    backgroundColor="#2c3e50"
+                    color="#2c3e50"
                   >
                     <ContentAdd />
-                  </FloatingActionButton>
+                  </Button>
                 </div>
               </div>
               <div style={{ width: '50%' }}>
@@ -108,15 +120,15 @@ export class EditPost extends React.Component {
                 }
               </div>
             </div>
-          </CardText>
+          </CardContent>
         </Card>
 
         <Dialog
           title={'Error occurred'}
           actions={[
-            <FlatButton
+            <Button
               label="OK"
-              primary
+              color="primary"
               onTouchTap={resetErrorMessage}
             />,
           ]}
@@ -141,6 +153,7 @@ EditPost.propTypes = {
   resetErrorMessage: PropTypes.func.isRequired,
   isFetchingBlock: PropTypes.bool,
   updatePostTitle: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 EditPost.defaultProps = {
@@ -149,4 +162,4 @@ EditPost.defaultProps = {
   isFetchingBlock: false,
 };
 
-export default EditPost;
+export default withStyles(styles)(EditPost);

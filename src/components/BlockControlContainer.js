@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';

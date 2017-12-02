@@ -2,7 +2,7 @@ import test from 'ava';
 import React from 'react';
 import { shallow } from 'enzyme';
 import Avatar from 'material-ui/Avatar';
-import { FlatButton } from 'material-ui';
+import { Button } from 'material-ui';
 import { NavBar } from '../../src/components/NavBar';
 import '../helpers/setup';
 
@@ -32,6 +32,6 @@ test('NavBar should render for unauthenticated user', (t) => {
     );
 
   // home, sign-up and login buttons for unauthenticated users
-  const flatButtons = enzymeWrapper.find(FlatButton);
+  const flatButtons = enzymeWrapper.find(Button);
   t.deepEqual(flatButtons.length, 3);
 });

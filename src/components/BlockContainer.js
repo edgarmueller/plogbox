@@ -62,15 +62,22 @@ BlockContainer.propTypes = {
 };
 
 export const mapDispatchToProps = dispatch => ({
-  downloadFile(postId, block, fun) {
+  /**
+   * Download a given file
+   *
+   * @param postId the ID of the post the block is belonging to
+   * @param block the block that determines which file to be downloaded
+   * @param success callback to call when download is finished
+   */
+  downloadFile(postId, block, success) {
     const file = block.text;
     dispatch(
       action.downloadFile(postId, file)(
         (fileData) => {
           localStorage.setItem(`block_${block.id}_image`, fileData);
-          fun();
+          success();
         },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE)
+        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
       ));
   },
 });
