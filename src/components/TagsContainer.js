@@ -9,9 +9,9 @@ export class TagsContainer extends React.Component {
 
   componentWillMount() {
     this.props.fetchSuggestedTags();
-    this.state = {
+    this.setState({
       isEditing: false,
-    };
+    });
   }
 
 

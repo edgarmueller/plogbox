@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as routerActions from 'react-router-redux';
-import { red } from 'material-ui';
+import { red } from 'material-ui/colors';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import * as actions from '../actions';
 
