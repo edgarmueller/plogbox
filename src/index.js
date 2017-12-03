@@ -10,6 +10,7 @@ import Root from './components/Root';
 import { selectPost } from './actions';
 import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
 import { testToken } from './api/index';
+import registerServiceWorker from './registerServiceWorker';
 
 
 // ID of the DOM element to mount app on
@@ -59,13 +60,15 @@ const render = (Component) => {
     <AppContainer>
       <Component store={store} />
     </AppContainer>,
-        document.getElementById(DOM_APP_EL_ID));
+    document.getElementById(DOM_APP_EL_ID),
+  );
 };
 
 const init = (dispatch) => {
   loadTokenFromStorage(dispatch);
   loadSelectedPost();
   render(Root);
+  registerServiceWorker();
 };
 
 init(store.dispatch);
