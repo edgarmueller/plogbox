@@ -1,5 +1,5 @@
 import React from 'react';
-import { RaisedButton } from 'material-ui';
+import { Button } from 'material-ui';
 import { connect } from 'react-redux';
 import { routerActions } from 'react-router-redux';
 import PropTypes from 'prop-types';
@@ -9,7 +9,7 @@ export const ProfileView = ({ navigateTo }) => (
     <p>
       You can change your password anytime. To do so, click the button below
     </p>
-    <RaisedButton
+    <Button
       onClick={() => navigateTo('/password/change')}
       label="Change password"
     />

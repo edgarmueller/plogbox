@@ -1,6 +1,6 @@
 import { reduxForm } from 'redux-form';
-import { connect, mapDispatchToProps } from 'react-redux';
-import { ChangePasswordFormContainer } from '../components/ChangePasswordFormContainer';
+import { connect } from 'react-redux';
+import { ChangePasswordFormContainer, mapDispatchToProps } from '../components/ChangePasswordFormContainer';
 
 const form = reduxForm({
   form: 'change-password',
