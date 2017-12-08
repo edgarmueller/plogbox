@@ -90,7 +90,6 @@ export class BlockControl extends React.Component {
               }}
             >
               <MenuItem value={'markdown'}>Markdown</MenuItem>
-              <MenuItem value={'latex'}>Latex</MenuItem>
               <MenuItem
                 value={'image'}
                 onClick={() => updateBlockText(block, '')}
