@@ -17,6 +17,8 @@ export const BlockControlContainer =
      removeBlock,
      isFirstBlock,
      isLastBlock,
+     onFocus,
+     isFocused,
    }) =>
     (
       <BlockControl
@@ -30,6 +32,8 @@ export const BlockControlContainer =
         updateBlockDialect={updateBlockDialect}
         updateBlockText={updateBlockText}
         removeBlock={removeBlock}
+        isFocused={isFocused}
+        onFocus={onFocus}
       />
     );
 

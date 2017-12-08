@@ -70,15 +70,17 @@ export class BlockControl extends React.Component {
       removeBlock,
       isFirstBlock,
       isLastBlock,
+      isFocused,
+      onFocus,
     } = this.props;
 
     return (
-      <div key={block.id}>
-        <div
-          style={{
-            paddingBottom: '0.5em',
-          }}
-        >
+      <div
+        key={block.id}
+        onFocus={() => onFocus()}
+        style={{border: isFocused ? 'solid 1px #00ff00' : 'none'}}
+      >
+        <div style={{paddingBottom: '0.5em'}}>
           <FormControl>
             <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
             <Select
@@ -141,11 +143,19 @@ BlockControl.propTypes = {
   moveBlockUp: PropTypes.func.isRequired,
   moveBlockDown: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
+  onFocus: PropTypes.func,
   updateBlockDialect: PropTypes.func.isRequired,
   updateBlockText: PropTypes.func.isRequired,
   removeBlock: PropTypes.func.isRequired,
   isFirstBlock: PropTypes.bool.isRequired,
   isLastBlock: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
+};
+
+BlockControl.defaultProps = {
+  isFocused: false,
+  onFocus: () => { /* noop */
+  },
 };
 
 export default BlockControl;

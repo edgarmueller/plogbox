@@ -7,26 +7,26 @@ const mk = require('markdown-it-katex');
 
 md.use(mk);
 
-const Block = ({ block, isDownloading, imagePath }) => {
+const Block = ({ block, isDownloading, imagePath, isFocused }) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {
-
         if (isDownloading) {
           return (<div id={block.text}>Loading...</div>);
         }
 
         return (
-          <img
-            src={imagePath}
-            alt={imagePath}
-          />
+          <img src={imagePath} alt={imagePath} />
         );
       }
 
       return (<div>No image selected yet</div>);
     default:
-      return <ReactMarkdown id={block.id} source={md.render(block.text)}/>;
+      return (
+        <div style={{ border: isFocused ? 'solid 1px #00ff00' : 'none' }}>
+          <ReactMarkdown id={block.id} source={md.render(block.text)} />
+        </div>
+      );
   }
 };
 
@@ -39,6 +39,7 @@ Block.propTypes = {
   }).isRequired,
   isDownloading: PropTypes.bool,
   imagePath: PropTypes.string,
+  isFocused: PropTypes.bool.isRequired,
 };
 
 Block.defaultProps = {

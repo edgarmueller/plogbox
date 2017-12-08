@@ -41,11 +41,12 @@ export class BlockContainer extends React.Component {
   }
 
   render() {
-    const { block } = this.props;
+    const {block, isFocused} = this.props;
     return (<Block
       block={block}
       isDownloading={this.state.isDownloading}
       imagePath={this.state.imagePath}
+      isFocused={isFocused}
     />);
   }
 }
@@ -59,6 +60,11 @@ BlockContainer.propTypes = {
     text: PropTypes.string.isRequired,
   }).isRequired,
   downloadFile: PropTypes.func.isRequired,
+  isFocused: PropTypes.bool,
+};
+
+BlockContainer.defaultProps = {
+  isFocused: false,
 };
 
 export const mapDispatchToProps = dispatch => ({

@@ -9,7 +9,6 @@ import BlockControl from './BlockControlContainer';
 import EditPostButtonBar from './EditPostButtonBarContainer';
 import Block from './BlockContainer';
 
-
 const styles = () => ({
   flex: {
     flex: 1,
@@ -28,6 +27,7 @@ export class EditPost extends React.Component {
       message: '',
       dialect: 'markdown',
       text: '',
+      focusedBlockId: -1,
     };
   }
 
@@ -91,6 +91,8 @@ export class EditPost extends React.Component {
                           block={block}
                           isFirstBlock={index === 0}
                           isLastBlock={index === blocks.length - 1}
+                          onFocus={() => this.setState({focusedBlockId: block.id})}
+                          isFocused={block.id === this.state.focusedBlockId}
                         />
                       ),
                   )
@@ -117,6 +119,7 @@ export class EditPost extends React.Component {
                         postId={selectedPost.id}
                         isFetchingBlock={isFetchingBlock}
                         block={block}
+                        isFocused={block.id === this.state.focusedBlockId}
                       />
                     ),
                   )
