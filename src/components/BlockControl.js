@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl, IconButton, Input, InputLabel, MenuItem, Select } from 'material-ui';
-import ContentRemove from 'material-ui-icons/Remove';
+import ContentDelete from 'material-ui-icons/Delete';
 import DownArrow from 'material-ui-icons/KeyboardArrowDown';
 import UpArrow from 'material-ui-icons/KeyboardArrowUp';
 import Dropzone from 'react-dropzone';
@@ -103,7 +103,7 @@ export class BlockControl extends React.Component {
               onClick={() => removeBlock(postId, block)}
               color="#2c3e50"
             >
-              <ContentRemove />
+              <ContentDelete/>
             </IconButton>
             {
               !isFirstBlock ?

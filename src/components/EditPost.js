@@ -9,6 +9,7 @@ import BlockControl from './BlockControlContainer';
 import EditPostButtonBar from './EditPostButtonBarContainer';
 import Block from './BlockContainer';
 
+
 const styles = () => ({
   flex: {
     flex: 1,
@@ -71,6 +72,8 @@ export class EditPost extends React.Component {
             </div>
             <div style={{
               paddingTop: '1em',
+              paddingLeft: '1em',
+              paddingRight: '1em',
               display: 'flex',
             }}
             >

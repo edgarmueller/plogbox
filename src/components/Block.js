@@ -1,7 +1,11 @@
 import React from 'react';
-import Latex from 'react-latex';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+
+const md = require('markdown-it')();
+const mk = require('markdown-it-katex');
+
+md.use(mk);
 
 const Block = ({ block, isDownloading, imagePath }) => {
   switch (block.dialect) {
@@ -21,14 +25,8 @@ const Block = ({ block, isDownloading, imagePath }) => {
       }
 
       return (<div>No image selected yet</div>);
-    case 'latex':
-      return (
-        <div id={block.text}>
-          <Latex>{block.text}</Latex>
-        </div>
-      );
     default:
-      return <ReactMarkdown id={block.id} source={block.text} />;
+      return <ReactMarkdown id={block.id} source={md.render(block.text)}/>;
   }
 };
 
