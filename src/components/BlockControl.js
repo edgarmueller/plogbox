@@ -80,7 +80,7 @@ export class BlockControl extends React.Component {
         onFocus={() => onFocus()}
         style={{border: isFocused ? 'solid 1px #00ff00' : 'none'}}
       >
-        <div style={{paddingBottom: '0.5em'}}>
+        <div style={{ paddingBottom: '0.5em' }}>
           <FormControl>
             <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
             <Select
@@ -104,7 +104,7 @@ export class BlockControl extends React.Component {
               onClick={() => removeBlock(postId, block)}
               color="#2c3e50"
             >
-              <ContentDelete/>
+              <ContentDelete />
             </IconButton>
             {
               !isFirstBlock ?
