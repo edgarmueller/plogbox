@@ -6,7 +6,10 @@ import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import BlockControl, { mapDispatchToProps } from '../../src/components/BlockControlContainer';
+import {
+  ConnectBlockControlContainer,
+  mapDispatchToProps,
+} from '../../src/components/BlockControlContainer';
 import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
 import {
   UPDATE_BLOCK_DIALECT,
@@ -54,10 +57,8 @@ test('updateBlockDialect', async (t) => {
     text: '# some markdown text',
   };
   const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([block]),
-      },
+    blocks: {
+      blocks: Immutable.List([block]),
     },
   });
   const props = mapDispatchToProps(store.dispatch);
@@ -80,10 +81,8 @@ test('removeBlock', async (t) => {
   }));
   t.context.sandbox.stub(Axios, 'delete').returns(resolved);
   const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([b]),
-      },
+    blocks: {
+      blocks: Immutable.List([b]),
     },
   });
   const props = mapDispatchToProps(store.dispatch);
@@ -99,10 +98,8 @@ test('update text of a block', async (t) => {
     text: '# some markdown text',
   };
   const store = mockStore({
-    posts: {
-      posts: {
-        blocks: Immutable.List([b]),
-      },
+    blocks: {
+      blocks: Immutable.List([b]),
     },
   });
   const props = mapDispatchToProps(store.dispatch);
@@ -113,7 +110,11 @@ test('update text of a block', async (t) => {
 });
 
 test.cb('should render Editor', (t) => {
-  const store = mockStore({ });
+  const store = mockStore({
+    blocks: {
+      blocks: Immutable.List(),
+    },
+  });
   const block = {
     dialect: 'markdown',
     text: 'Some example text',
@@ -126,7 +127,7 @@ test.cb('should render Editor', (t) => {
     const enzymeWrapper = mountWithContext(
       t,
       <Provider store={store}>
-        <BlockControl
+        <ConnectBlockControlContainer
           postId={0}
           block={block}
           isLastBlock

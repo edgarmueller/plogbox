@@ -1,6 +1,6 @@
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { mapDispatchToProps, mapStateToProps, EditPostContainer } from '../components/EditPostContainer';
+import EditPostContainer, { mapDispatchToProps, mapStateToProps } from '../components/EditPostContainer';
 
 export default withRouter(connect(
   mapStateToProps,

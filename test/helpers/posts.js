@@ -1,20 +1,22 @@
+export const blocks = [
+  {
+    id: 0,
+    dialect: 'markdown',
+    text: `
+            # Test, test, test!
+            ## Wohooo
+            ### Sub wohoo
+            `,
+  },
+];
+
 export const posts = [
   {
     id: 0,
     title: "Let's test!",
     date: new Date().getTime(),
     isDraft: true,
-    blocks: [
-      {
-        id: 0,
-        dialect: 'markdown',
-        text: `
-            # Test, test, test!
-            ## Wohooo
-            ### Sub wohoo
-            `,
-      },
-    ],
+    blocks,
     tags: [
       {
         name: 'woohoo',
@@ -28,4 +30,3 @@ export const posts = [
 
 export const firstPost = posts[0];
 
-export default posts;

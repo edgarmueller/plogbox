@@ -103,7 +103,7 @@ export class EditPost extends React.Component {
                 >
                   <Button
                     fab
-                    onClick={() => addBlock(selectedPost.id, this.state.dialect, '')}
+                    onClick={() => addBlock(selectedPost.id, this.state.dialect, '', blocks.length)}
                     color="#2c3e50"
                   >
                     <ContentAdd />

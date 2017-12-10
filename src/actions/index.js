@@ -40,6 +40,7 @@ import {
   ACTIVATE_ACCOUNT_FAILURE,
   FETCH_BLOCK_REQUEST,
   FETCH_BLOCK_SUCCESS, UPDATE_BLOCK_NAME,
+  MOVE_BLOCK_TO,
 } from '../constants/index';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -119,14 +120,14 @@ export const createPost = post => dispatch => api.createPost(post)
       },
     );
 
-// TODO: this should take post id as a parameter
 export const updatePost = (selectedPost, blocks) => (dispatch) => {
-  // TODO: update only changed blocks
-  blocks.forEach((block) => {
-    api.updateBlock(selectedPost.id, block);
+  const promises = blocks.map((block, idx) => {
+    const clonedBlock = _.clone(block);
+    clonedBlock.index = idx;
+    return api.updateBlock(selectedPost.id, clonedBlock);
   });
 
-  return api.updatePost(selectedPost)
+  return Promise.all(promises, api.updatePost(selectedPost)
     .then(
       (resp) => {
         dispatch({
@@ -134,10 +135,9 @@ export const updatePost = (selectedPost, blocks) => (dispatch) => {
           post: resp.data.data,
         });
       },
-      (error) => {
-        errorHandler(dispatch, error, UPDATE_POST_FAILURE);
-      },
-    );
+      error => errorHandler(dispatch, error, UPDATE_POST_FAILURE),
+    ),
+  );
 };
 
 export const deletePost = post => dispatch =>
@@ -258,6 +258,12 @@ export const updateBlockName = (block, name) => ({
   name,
 });
 
+export const moveBlock = (dragIndex, hoverIndex) => ({
+  type: MOVE_BLOCK_TO,
+  dragIndex,
+  hoverIndex,
+});
+
 export const updateBlockDialect = (block, dialect) => ({
   type: UPDATE_BLOCK_DIALECT,
   block,
@@ -288,6 +294,8 @@ export const removeBlock = (postId, block) => dispatch =>
     .then(
       (resp) => {
         // TODO: write test that expects blockId in response
+        // TODO: this will fail if a request has been executed multiple times!
+        //       should this even be allowed?
         dispatch({
           type: REMOVE_BLOCK_SUCCESS,
           blockId: resp.data.data.blockId,

@@ -2,7 +2,6 @@ import test from 'ava';
 import React from 'react';
 import Axios from 'axios';
 import * as Immutable from 'immutable';
-import { shallow } from 'enzyme';
 import * as _ from 'lodash';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
@@ -11,8 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import { applyMiddleware, createStore } from 'redux';
 import path from 'path';
 import fakeProps from 'react-fake-props';
-import EditPost from '../../src/components/EditPost';
-import { EditPostContainer, mapDispatchToProps } from '../../src/components/EditPostContainer';
+import EditPostContainer, { mapDispatchToProps } from '../../src/components/EditPostContainer';
 import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 
 import {
@@ -106,6 +104,9 @@ test.serial('should show error', (t) => {
       },
       errorMessage: 'An error occurred',
     },
+    blocks: {
+      blocks: Immutable.List(),
+    },
     auth: {
       userId: 0,
     },
@@ -150,18 +151,4 @@ test.serial('should not show error if error message has been reset', (t) => {
   );
   const dialog = enzymeWrapper.find(Dialog);
   t.false(dialog.props().open);
-});
-
-
-test('container should render', (t) => {
-  const props = fakeProps(componentPath);
-  const resolved = new Promise(r => r({
-    data: {
-      data: { },
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  const enzymeWrapper = shallow(<EditPostContainer {...props} />);
-  const postPage = enzymeWrapper.find(EditPost);
-  t.is(postPage.length, 1);
 });

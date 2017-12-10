@@ -4,10 +4,12 @@ import { routerReducer } from 'react-router-redux';
 
 import tagReducer from './tags';
 import posts, * as fromPosts from './posts';
+import blocks, * as fromBlocks from './blocks';
 import authReducer, * as fromAuth from './auth';
 
 const app = combineReducers({
   posts,
+  blocks,
   auth: authReducer,
 
     // form
@@ -21,11 +23,12 @@ const app = combineReducers({
 export default app;
 
 export const getSelectedPost = state => fromPosts.getPostBeingEdited(state.posts);
-export const getBlocks = state => fromPosts.getBlocks(state.posts);
 export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts);
-export const getIsFetchingBlock = state => fromPosts.isFetchingBlock(state.posts);
 export const getAllPosts = state => fromPosts.getAllPosts(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
+
+export const getBlocks = state => fromBlocks.getBlocks(state.blocks);
+export const getIsFetchingBlock = state => fromBlocks.isFetchingBlock(state.blocks);
 
 // auth getters
 export const getIsAuthenticated = state => fromAuth.isAuthenticated(state.auth);

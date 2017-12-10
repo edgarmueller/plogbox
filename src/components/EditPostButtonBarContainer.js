@@ -30,9 +30,7 @@ export class EditPostButtonBarContainer extends React.Component {
 
 EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 
-EditPostButtonBar.defaultProps = {
-  blocks: [],
-};
+EditPostButtonBarContainer.defaultProps = EditPostButtonBar.defaultProps;
 
 const mapStateToProps = state => ({
   post: getSelectedPost(state),

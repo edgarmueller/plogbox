@@ -129,7 +129,7 @@ PostList.propTypes = {
   addPost: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
   selectPost: PropTypes.func.isRequired,
-  classes: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 PostList.defaultProps = {

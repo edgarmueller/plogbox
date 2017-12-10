@@ -55,12 +55,6 @@ EditPostButtonBar.propTypes = {
   // TODO: duplciate prop type definition
   post: PropTypes.shape({
     title: PropTypes.string,
-    blocks: PropTypes.arrayOf(
-      PropTypes.shape({
-        dialect: PropTypes.string.isRequired,
-        text: PropTypes.string,
-      }),
-    ),
   }).isRequired,
   exportPost: PropTypes.func.isRequired,
   importPost: PropTypes.func.isRequired,
