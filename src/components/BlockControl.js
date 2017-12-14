@@ -23,11 +23,13 @@ const Editor = (props) => {
   return null;
 };
 
-
 const renderBlockControl = (postId, block, onDrop, onChange) => {
   if (block.dialect === 'image') {
     return (
-      <Dropzone onDrop={onDrop(postId)(block)}>
+      <Dropzone
+        accept="image/jpeg, image/png"
+        onDrop={onDrop(postId)(block)}
+      >
         {block.name}
       </Dropzone>
     );
@@ -53,6 +55,7 @@ export class BlockControl extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log('block control', props.block);
     this.state = {
       dialect: props.block.dialect,
     };
@@ -78,7 +81,7 @@ export class BlockControl extends React.Component {
       <div
         key={block.id}
         onFocus={() => onFocus()}
-        style={{border: isFocused ? 'solid 1px #00ff00' : 'none'}}
+        style={{ border: isFocused ? 'solid 1px #00ff00' : 'none' }}
       >
         <div style={{ paddingBottom: '0.5em' }}>
           <FormControl>
