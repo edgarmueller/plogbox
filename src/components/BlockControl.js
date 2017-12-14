@@ -96,7 +96,7 @@ export class BlockControl extends React.Component {
         key={block.id}
         onFocus={() => onFocus()}
         style={{
-          border: isFocused ? 'solid 1px #00ff00' : 'none',
+          border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff',
           padding: '0.5em',
         }}
       >

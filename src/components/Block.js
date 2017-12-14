@@ -16,14 +16,18 @@ const Block = ({ block, isDownloading, imagePath, isFocused }) => {
         }
 
         return (
-          <img src={imagePath} alt={imagePath} />
+          <img
+            style={{ border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff' }}
+            src={imagePath}
+            alt={imagePath}
+          />
         );
       }
 
       return (<div>No image selected yet</div>);
     default:
       return (
-        <div style={{ border: isFocused ? 'solid 1px #00ff00' : 'none' }}>
+        <div style={{ border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff' }}>
           <ReactMarkdown id={block.id} source={md.render(block.text)} />
         </div>
       );
