@@ -29,6 +29,10 @@ const renderBlockControl = (postId, block, onDrop, onChange) => {
       <Dropzone
         accept="image/jpeg, image/png"
         onDrop={onDrop(postId)(block)}
+        style={{
+          height: '1em',
+          margin: '0.25em',
+        }}
       >
         {block.name}
       </Dropzone>
@@ -51,11 +55,19 @@ const renderBlockControl = (postId, block, onDrop, onChange) => {
   );
 };
 
+const handleStyle = {
+  backgroundColor: 'green',
+  width: '1rem',
+  height: '1rem',
+  display: 'inline-block',
+  marginRight: '0.75rem',
+  cursor: 'move',
+};
+
 export class BlockControl extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log('block control', props.block);
     this.state = {
       dialect: props.block.dialect,
     };
@@ -75,18 +87,25 @@ export class BlockControl extends React.Component {
       isLastBlock,
       isFocused,
       onFocus,
+      connectDropTarget,
+      connectDragSource,
     } = this.props;
 
-    return (
+    return connectDropTarget(
       <div
         key={block.id}
         onFocus={() => onFocus()}
-        style={{ border: isFocused ? 'solid 1px #00ff00' : 'none' }}
+        style={{
+          border: isFocused ? 'solid 1px #00ff00' : 'none',
+          padding: '0.5em',
+        }}
       >
         <div style={{ paddingBottom: '0.5em' }}>
-          <FormControl>
+          {connectDragSource(<div style={handleStyle} />)}
+          <FormControl style={{ minWidth: '120' }}>
             <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
             <Select
+              autoWidth
               input={<Input name="dialect" id="block-dialect" />}
               value={this.state.dialect}
               onChange={(ev) => {
@@ -132,7 +151,7 @@ export class BlockControl extends React.Component {
           </span>
         </div>
         {renderBlockControl(postId, block, onDrop, updateBlockText)}
-      </div>
+      </div>,
     );
   }
 }
@@ -153,6 +172,8 @@ BlockControl.propTypes = {
   isFirstBlock: PropTypes.bool.isRequired,
   isLastBlock: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
+  connectDragSource: PropTypes.func.isRequired,
+  connectDropTarget: PropTypes.func.isRequired,
 };
 
 BlockControl.defaultProps = {

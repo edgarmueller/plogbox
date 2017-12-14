@@ -23,6 +23,8 @@ export const BlockControlContainer =
      isLastBlock,
      onFocus,
      isFocused,
+     connectDragSource,
+     connectDropTarget,
    }) =>
     (
       <BlockControl
@@ -38,24 +40,12 @@ export const BlockControlContainer =
         removeBlock={removeBlock}
         isFocused={isFocused}
         onFocus={onFocus}
+        connectDragSource={connectDragSource}
+        connectDropTarget={connectDropTarget}
       />
     );
 
 BlockControlContainer.propTypes = BlockControl.propTypes;
-
-export const DnDBlockContainer = (
-  {
-    connectDragSource,
-    connectDropTarget,
-    ...otherProps
-  }) =>
-  connectDragSource(
-    connectDropTarget(
-      <div>
-        <BlockControlContainer {...otherProps} />
-      </div>,
-    ),
-  );
 
 export const mapStateToProps = (state, { block }) => ({
   blockIndex: getBlocks(state).indexOf(block),
@@ -69,14 +59,16 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(action.moveBlockUp(block));
   },
   onDrop: postId => block => (acceptedFiles) => {
-    action.uploadFile(postId, block.id, _.head(acceptedFiles))
-      .then(
-        (resp) => {
-          dispatch(action.updateBlockName(block, resp.data.data.name));
-          dispatch(action.updateBlockText(block, resp.data.data.text));
-        },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-      );
+    if (!_.isEmpty(acceptedFiles)) {
+      action.uploadFile(postId, block.id, _.head(acceptedFiles))
+        .then(
+          (resp) => {
+            dispatch(action.updateBlockName(block, resp.data.data.name));
+            dispatch(action.updateBlockText(block, resp.data.data.text));
+          },
+          error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
+        );
+    }
   },
   removeBlock(postId, block) {
     dispatch(action.removeBlock(postId, block));
@@ -164,5 +156,7 @@ export const ConnectedBlockControlContainer = connect(
 )(BlockControlContainer);
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-  DropTarget(ItemTypes.BLOCK, blockTarget, collectDrop)(DragSource(ItemTypes.BLOCK, blockSource, collect)(DnDBlockContainer))
+  DropTarget(ItemTypes.BLOCK, blockTarget, collectDrop)(
+    DragSource(ItemTypes.BLOCK, blockSource, collect)(BlockControlContainer)
+  )
 );

@@ -79,7 +79,7 @@ export class EditPost extends React.Component {
             >
               <div style={{
                 width: '50%',
-                marginRight: '1em',
+                marginRight: '1em'
               }}
               >
                 {
