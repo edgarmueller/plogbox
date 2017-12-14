@@ -2,9 +2,9 @@ import * as _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { DragSource, DropTarget } from 'react-dnd';
-import { findDOMNode } from 'react-dom'
+import { findDOMNode } from 'react-dom';
 import * as action from '../actions/index';
-import { BlockControl } from './BlockControl';
+import BlockControl from './BlockControl';
 import { UPDATE_BLOCK_FAILURE } from '../constants';
 import ItemTypes from '../dnd/ItemTypes';
 import { getBlocks } from '../reducers';
@@ -47,11 +47,12 @@ export const DnDBlockContainer = (
   {
     connectDragSource,
     connectDropTarget,
+    ...otherProps
   }) =>
   connectDragSource(
     connectDropTarget(
       <div>
-        <ConnectBlockControlContainer />
+        <BlockControlContainer {...otherProps} />
       </div>,
     ),
   );
@@ -157,14 +158,11 @@ const collect = (connector, monitor) => ({
   isDragging: monitor.isDragging(),
 });
 
-export const ConnectBlockControlContainer = connect(
+export const ConnectedBlockControlContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(BlockControlContainer);
 
-export default DropTarget(
-  ItemTypes.BLOCK, blockTarget, collectDrop,
-)(DragSource(
-  ItemTypes.BLOCK, blockSource, collect,
-)(DnDBlockContainer));
-
+export default connect(mapStateToProps, mapDispatchToProps)(
+  DropTarget(ItemTypes.BLOCK, blockTarget, collectDrop)(DragSource(ItemTypes.BLOCK, blockSource, collect)(DnDBlockContainer))
+);

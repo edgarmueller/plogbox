@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {
-  ConnectBlockControlContainer,
+  ConnectedBlockControlContainer,
   mapDispatchToProps,
 } from '../../src/components/BlockControlContainer';
 import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
@@ -127,7 +127,7 @@ test.cb('should render Editor', (t) => {
     const enzymeWrapper = mountWithContext(
       t,
       <Provider store={store}>
-        <ConnectBlockControlContainer
+        <ConnectedBlockControlContainer
           postId={0}
           block={block}
           isLastBlock
