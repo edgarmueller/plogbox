@@ -33,7 +33,7 @@ test.afterEach(t => afterEach(t));
 test('move block up', (t) => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.moveBlock(t.context.block, Direction.UP);
+  props.handlers.moveBlock(t.context.block, Direction.UP);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(MOVE_BLOCK_UP, _.head(actions).type);
@@ -42,7 +42,7 @@ test('move block up', (t) => {
 test('move block down', (t) => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.moveBlock(t.context.block, Direction.DOWN);
+  props.handlers.moveBlock(t.context.block, Direction.DOWN);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(MOVE_BLOCK_DOWN, _.head(actions).type);
@@ -60,7 +60,7 @@ test('update block dialect', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  props.updateBlock(block, 'latex', block.text);
+  props.handlers.updateBlock(block, 'latex', block.text);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(UPDATE_BLOCK_DIALECT, _.head(actions).type);
@@ -84,7 +84,7 @@ test('delete block', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  await props.deleteBlock(1, 1);
+  await props.handlers.deleteBlock(1, 1);
   const actions = store.getActions();
   t.is(actions.length, 1);
 });
@@ -101,7 +101,7 @@ test('update text of a block', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  props.updateBlock(b, 'markdown', 'new, shiny text');
+  props.handlers.updateBlock(b, 'markdown', 'new, shiny text');
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(UPDATE_BLOCK_TEXT, _.head(actions).type);
