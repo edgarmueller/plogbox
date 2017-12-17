@@ -66,3 +66,9 @@ export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE';
 export const ERROR_PASSWORDS_DONT_DIFFER = 'ERROR_PASSWORDS_DONT_DIFFER';
 
 export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://plog-backend.herokuapp.com' : 'http://localhost:9000';
+
+// TODO: move to constants
+export const Direction = Object.freeze({
+  UP: Symbol('up'),
+  DOWN: Symbol('down'),
+});

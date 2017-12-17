@@ -1,7 +1,5 @@
 import test from 'ava';
-import React from 'react';
 import Axios from 'axios';
-import { Provider } from 'react-redux';
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
@@ -10,12 +8,12 @@ import {
   BlockControlContainer,
   mapDispatchToProps,
 } from '../../src/components/BlockControlContainer';
-import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
+import { afterEach, beforeEach } from '../helpers/setup';
 import {
   UPDATE_BLOCK_DIALECT,
   UPDATE_BLOCK_TEXT,
   MOVE_BLOCK_UP,
-  MOVE_BLOCK_DOWN,
+  MOVE_BLOCK_DOWN, Direction,
 } from '../../src/constants';
 
 const middlewares = [thunk];
@@ -32,25 +30,25 @@ test.beforeEach(async (t) => {
 
 test.afterEach(t => afterEach(t));
 
-test('moveBlockUp', (t) => {
+test('move block up', (t) => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.moveBlockUp(t.context.block);
+  props.moveBlock(t.context.block, Direction.UP);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(MOVE_BLOCK_UP, _.head(actions).type);
 });
 
-test('moveBlockDown', (t) => {
+test('move block down', (t) => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.moveBlockDown(t.context.block);
+  props.moveBlock(t.context.block, Direction.DOWN);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(MOVE_BLOCK_DOWN, _.head(actions).type);
 });
 
-test('updateBlockDialect', async (t) => {
+test('update block dialect', async (t) => {
   const block = {
     id: 1,
     dialect: 'markdown',
@@ -62,13 +60,13 @@ test('updateBlockDialect', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  props.updateBlockDialect(block, 'latex');
+  props.updateBlock(block, 'latex', block.text);
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(UPDATE_BLOCK_DIALECT, _.head(actions).type);
 });
 
-test('removeBlock', async (t) => {
+test('delete block', async (t) => {
   const b = {
     id: 1,
     dialect: 'markdown',
@@ -86,7 +84,7 @@ test('removeBlock', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  await props.removeBlock(1, 1);
+  await props.deleteBlock(1, 1);
   const actions = store.getActions();
   t.is(actions.length, 1);
 });
@@ -103,43 +101,8 @@ test('update text of a block', async (t) => {
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  props.updateBlockText(b, 'new, shiny text');
+  props.updateBlock(b, 'markdown', 'new, shiny text');
   const actions = store.getActions();
   t.is(actions.length, 1);
   t.is(UPDATE_BLOCK_TEXT, _.head(actions).type);
-});
-
-test.cb('should render Editor', (t) => {
-  const store = mockStore({
-    blocks: {
-      blocks: Immutable.List(),
-    },
-  });
-  const block = {
-    dialect: 'markdown',
-    text: 'Some example text',
-  };
-  setupDom(() => {
-    /* eslint-disable */
-    const AceEditor = require('react-ace').default;
-    /* eslint-enable */
-
-    const enzymeWrapper = mountWithContext(
-      t,
-      <Provider store={store}>
-        <BlockControlContainer
-          postId={0}
-          block={block}
-          isLastBlock
-          isFirstBlock
-          connectDropTarget={id => id}
-          connectDragSource={id => id}
-        />
-      </Provider>,
-    );
-
-    const editor = enzymeWrapper.find(AceEditor);
-    t.is(editor.length, 1);
-    t.end();
-  });
 });

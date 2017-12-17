@@ -9,7 +9,7 @@ import thunk from 'redux-thunk';
 import ReactMarkdown from 'react-markdown';
 import { Provider } from 'react-redux';
 import { File } from 'file-api';
-import Block, { BlockContainer, mapDispatchToProps } from '../../src/components/BlockContainer';
+import RenderedBlock, { RenderedBlockContainer, mapDispatchToProps } from '../../src/components/RenderedBlockContainer';
 import { firstPost, posts } from '../helpers/posts';
 import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
 
@@ -37,7 +37,7 @@ test('should render markdown', (t) => {
   const enzymeWrapper = mountWithContext(
     t,
     <Provider store={store}>
-      <Block
+      <RenderedBlock
         postId={firstPost.id}
         block={block}
       />
@@ -66,7 +66,7 @@ test('should render image', (t) => {
   const enzymeWrapper = mountWithContext(
     t,
     <Provider store={store}>
-      <Block
+      <RenderedBlock
         postId={firstPost.id}
         block={block}
       />
@@ -90,7 +90,7 @@ test.serial('trigger download during mount', (t) => {
   t.context.sandbox.stub(Axios, 'get').returns(resolved);
   let didDownload;
   const enzymeWrapper = shallow(
-    <BlockContainer
+    <RenderedBlockContainer
       postId={firstPost.id}
       block={block}
       downloadFile={() => {

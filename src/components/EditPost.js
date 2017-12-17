@@ -5,9 +5,9 @@ import ContentAdd from 'material-ui-icons/Add';
 
 import Dialog from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
-import BlockControl from './BlockControlContainer';
+import BlockComponent from './BlockComponent';
 import EditPostButtonBar from './EditPostButtonBarContainer';
-import Block from './BlockContainer';
+import RenderedBlock from './RenderedBlockContainer';
 
 const styles = () => ({
   flex: {
@@ -85,7 +85,7 @@ export class EditPost extends React.Component {
                 {
                   blocks.map((block, index) =>
                       (
-                        <BlockControl
+                        <BlockComponent
                           key={block.id}
                           postId={selectedPost.id}
                           block={block}
@@ -114,7 +114,7 @@ export class EditPost extends React.Component {
                 {
                   blocks.map(block =>
                     (
-                      <Block
+                      <RenderedBlock
                         key={block.id}
                         postId={selectedPost.id}
                         isFetchingBlock={isFetchingBlock}

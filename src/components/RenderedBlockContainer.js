@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';
 import { UPDATE_BLOCK_FAILURE } from '../constants/index';
-import Block from './Block';
+import RenderedBlock from './RenderedBlock';
 
-export class BlockContainer extends React.Component {
+export class RenderedBlockContainer extends React.Component {
 
   constructor(props) {
     super(props);
@@ -42,7 +42,7 @@ export class BlockContainer extends React.Component {
 
   render() {
     const {block, isFocused} = this.props;
-    return (<Block
+    return (<RenderedBlock
       block={block}
       isDownloading={this.state.isDownloading}
       imagePath={this.state.imagePath}
@@ -51,7 +51,7 @@ export class BlockContainer extends React.Component {
   }
 }
 
-BlockContainer.propTypes = {
+RenderedBlockContainer.propTypes = {
   postId: PropTypes.number.isRequired,
   block: PropTypes.shape({
     id: PropTypes.number.isRequired,
@@ -63,7 +63,7 @@ BlockContainer.propTypes = {
   isFocused: PropTypes.bool,
 };
 
-BlockContainer.defaultProps = {
+RenderedBlockContainer.defaultProps = {
   isFocused: false,
 };
 
@@ -91,4 +91,4 @@ export const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(BlockContainer);
+)(RenderedBlockContainer);

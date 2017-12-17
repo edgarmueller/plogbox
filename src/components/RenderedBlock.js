@@ -7,7 +7,7 @@ const mk = require('markdown-it-katex');
 
 md.use(mk);
 
-const Block = ({ block, isDownloading, imagePath, isFocused }) => {
+const RenderedBlock = ({ block, isDownloading, imagePath, isFocused }) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {
@@ -34,7 +34,7 @@ const Block = ({ block, isDownloading, imagePath, isFocused }) => {
   }
 };
 
-Block.propTypes = {
+RenderedBlock.propTypes = {
   block: PropTypes.shape({
     id: PropTypes.number.isRequired,
     dialect: PropTypes.string.isRequired,
@@ -46,9 +46,9 @@ Block.propTypes = {
   isFocused: PropTypes.bool.isRequired,
 };
 
-Block.defaultProps = {
+RenderedBlock.defaultProps = {
   isDownloading: false,
   imagePath: undefined,
 };
 
-export default Block;
+export default RenderedBlock;
