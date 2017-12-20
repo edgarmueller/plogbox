@@ -1,5 +1,7 @@
-
-import { USER_LOGOUT_SUCCESS } from '../constants/index';
+import {
+  USER_LOGIN_FAILURE,
+  USER_LOGOUT_SUCCESS,
+} from '../constants';
 
 export const createFetchingProgressReducer =
   (request, success, failure) => (state = false, action) => {
@@ -7,6 +9,7 @@ export const createFetchingProgressReducer =
       case request:
         return true;
       case USER_LOGOUT_SUCCESS:
+      case USER_LOGIN_FAILURE:
       case success:
       case failure:
         return false;

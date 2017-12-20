@@ -1,6 +1,15 @@
 import React from 'react';
 import * as _ from 'lodash';
-import { Card, CardContent, Button, TextField, Toolbar, AppBar, withStyles } from 'material-ui';
+import {
+  AppBar,
+  Button,
+  Card,
+  CardContent,
+  DialogTitle,
+  withStyles,
+  TextField,
+  Toolbar,
+} from 'material-ui';
 import ContentAdd from 'material-ui-icons/Add';
 
 import Dialog from 'material-ui/Dialog';
@@ -47,7 +56,6 @@ export class EditPost extends React.Component {
       selectedPost,
       updatePostTitle,
       errorMessage,
-      resetErrorMessage,
       isFetchingBlock,
       classes,
     } = this.props;
@@ -104,7 +112,7 @@ export class EditPost extends React.Component {
                   <Button
                     fab
                     onClick={() => addBlock(selectedPost.id, this.state.dialect, '', blocks.length)}
-                    color="#2c3e50"
+                    color="default"
                   >
                     <ContentAdd />
                   </Button>
@@ -130,18 +138,12 @@ export class EditPost extends React.Component {
         </Card>
 
         <Dialog
-          title={'Error occurred'}
-          actions={[
-            <Button
-              label="OK"
-              color="primary"
-              onTouchTap={resetErrorMessage}
-            />,
-          ]}
-          modal
           open={!_.isEmpty(errorMessage)}
         >
-          {errorMessage}
+          <DialogTitle>An error occurred</DialogTitle>
+          <div>
+            {errorMessage}
+          </div>
         </Dialog>
       </div>
     );
@@ -149,22 +151,27 @@ export class EditPost extends React.Component {
 }
 
 EditPost.propTypes = {
-  blocks: PropTypes.arrayOf(PropTypes.object),
-  addBlock: PropTypes.func.isRequired,
+  blocks: PropTypes.arrayOf(
+    PropTypes.shape({
+      dialect: PropTypes.string.isRequired,
+      text: PropTypes.string,
+    }),
+  ),
   selectedPost: PropTypes.shape({
     dialect: PropTypes.string,
     text: PropTypes.string,
   }).isRequired,
   errorMessage: PropTypes.string,
-  resetErrorMessage: PropTypes.func.isRequired,
   isFetchingBlock: PropTypes.bool,
-  updatePostTitle: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+
+  addBlock: PropTypes.func.isRequired,
+  updatePostTitle: PropTypes.func.isRequired,
 };
 
 EditPost.defaultProps = {
+  errorMessage: '',
   blocks: [],
-  errorMessage: undefined,
   isFetchingBlock: false,
 };
 

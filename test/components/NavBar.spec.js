@@ -1,37 +1,35 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import '../helpers/setup';
+
 import React from 'react';
 import { shallow } from 'enzyme';
 import Avatar from 'material-ui/Avatar';
-import { Button } from 'material-ui';
 import { NavBar } from '../../src/components/NavBar';
-import '../helpers/setup';
+import { Link } from 'react-router-dom';
 
-test('NavBar should render', (t) => {
+test('NavBar should render', () => {
   const props = {
     isAuthenticated: true,
     isAdmin: false,
     user: 'foo',
     navigateTo: () => {},
-    logout: () => {}
+    logout: () => {},
   };
   const enzymeWrapper = shallow(
     <NavBar {...props} />,
   );
   const userText = enzymeWrapper.find(Avatar);
-  t.deepEqual(1, userText.length);
+  expect(userText.length).toBe(1);
 });
 
-test('NavBar should render for unauthenticated user', (t) => {
+test('NavBar should render for unauthenticated user', () => {
   const props = {
     isAuthenticated: false,
     navigateTo: () => {},
     logout: () => {},
   };
-  const enzymeWrapper = shallow(
-    <NavBar {...props} />,
-    );
-
+  const enzymeWrapper = shallow(<NavBar {...props} />);
   // home, sign-up and login buttons for unauthenticated users
-  const flatButtons = enzymeWrapper.find(Button);
-  t.deepEqual(flatButtons.length, 3);
+  const flatButtons = enzymeWrapper.find(Link);
+  expect(flatButtons.length).toBe(3);
 });

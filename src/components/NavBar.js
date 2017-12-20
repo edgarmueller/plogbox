@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import { Button, Toolbar } from 'material-ui';
@@ -23,12 +24,8 @@ export const NavBar = ({
     return (
       <nav>
         <Toolbar>
-          <Button className={{ color: 'white' }} onClick={() => navigateTo('/')}>
-            Home
-          </Button>
-          <Button className={{ color: 'white' }} onClick={() => navigateTo('/posts')}>
-            Posts
-          </Button>
+          <Link to="/">Home</Link>
+          <Link to="/posts">Posts</Link>
           <div style={styles}>
             <Chip
               onTouchTap={() => navigateTo('/profile')}
@@ -37,7 +34,7 @@ export const NavBar = ({
               <Avatar color="#444" icon={<SvgIconFace />} />
             </Chip>
           </div>
-          <Button className={{ color: 'white' }} onClick={() => logout()}>
+          <Button className={{ color: 'white' }} onClick={logout}>
             Logout
           </Button>
         </Toolbar>
@@ -48,23 +45,9 @@ export const NavBar = ({
   return (
     <nav>
       <Toolbar>
-        <Button
-          className={{
-            color: '#fff',
-            fontWeight: 'bold',
-            fontFamily: 'monospace',
-            fontSize: '1.25em',
-          }}
-          onClick={() => navigateTo('/')}
-        >
-          plog
-        </Button>
-        <Button className={{ color: 'white' }} onClick={() => navigateTo('/sign-up')}>
-          Sign up
-        </Button>
-        <Button className={{ color: 'white' }} onClick={() => navigateTo('/login')}>
-          Login
-        </Button>
+        <Link to="/">plog</Link>
+        <Link to="/sign-up">Sign up</Link>
+        <Link to="/login">Login</Link>
       </Toolbar>
     </nav>
   );

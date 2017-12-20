@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
@@ -45,22 +47,6 @@ class LoginFormContainer extends React.Component {
     this.renderAlert = this.renderAlert.bind(this);
   }
 
-  componentWillMount() {
-    const { isAuthenticated, replace, redirect } = this.props;
-    if (isAuthenticated) {
-      replace(redirect);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, replace, redirect } = nextProps;
-    const { isAuthenticated: wasAuthenticated } = this.props;
-
-    if (!wasAuthenticated && isAuthenticated) {
-      replace(redirect);
-    }
-  }
-
   handleFormSubmit(formProps) {
     this.props.loginUser(formProps);
   }
@@ -80,7 +66,10 @@ class LoginFormContainer extends React.Component {
   }
 
   render() {
-    const { handleSubmit, replace } = this.props;
+    const { isAuthenticated, handleSubmit } = this.props;
+    if (isAuthenticated) {
+      return (<Redirect to="/posts" />);
+    }
     return (
       <div>
         <LoginForm
@@ -89,11 +78,9 @@ class LoginFormContainer extends React.Component {
           renderAlert={this.renderAlert}
         />
         <p>
-          <Button
-            onClick={() => replace('/password/forgot')}
-          >
+          <Link to="/password/forgot">
             Forgot password?
-          </Button>
+          </Link>
         </p>
       </div>
     );
@@ -102,10 +89,8 @@ class LoginFormContainer extends React.Component {
 
 LoginFormContainer.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  replace: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
-  redirect: PropTypes.string.isRequired,
   errorMessage: PropTypes.string,
 };
 
@@ -113,12 +98,10 @@ LoginFormContainer.defaultProps = {
   errorMessage: undefined,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const isAuthenticated = state.auth.isAuthenticated || false;
-  const redirect = ownProps.location.query.redirect || '/';
   return {
     isAuthenticated,
-    redirect,
     errorMessage: getStatusText(state.auth),
   };
 };

@@ -43,8 +43,7 @@ export const Tags = ({ post, isEditing, addTag, removeTag, done, suggestedTags, 
                 className={classes.chip}
                 key={tag.name}
                 label={tag.name}
-                // backgroundColor={tag.color ? `#${tag.color}` : blue}
-                onRequestDelete={() => {
+                onDelete={() => {
                   removeTag(post.id, tag);
                   done();
                 }}

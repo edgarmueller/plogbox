@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';
-import { UPDATE_BLOCK_FAILURE } from '../constants/index';
 import RenderedBlock from './RenderedBlock';
 
 export class RenderedBlockContainer extends React.Component {
@@ -23,7 +22,7 @@ export class RenderedBlockContainer extends React.Component {
       block.text &&
       !this.state.isDownloading &&
       _.isEmpty(this.state.imagePath)) {
-
+      // FIXME
       this.setState({
         isDownloading: true,
       });
@@ -41,7 +40,7 @@ export class RenderedBlockContainer extends React.Component {
   }
 
   render() {
-    const {block, isFocused} = this.props;
+    const { block, isFocused } = this.props;
     return (<RenderedBlock
       block={block}
       isDownloading={this.state.isDownloading}
@@ -77,14 +76,13 @@ export const mapDispatchToProps = dispatch => ({
    */
   downloadFile(postId, block, success) {
     const file = block.text;
-    dispatch(
-      action.downloadFile(postId, file)(
-        (fileData) => {
-          localStorage.setItem(`block_${block.id}_image`, fileData);
-          success();
-        },
-        error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-      ));
+    const p = dispatch(action.downloadFile(postId, file));
+    return p.then(
+      (fileData) => {
+        localStorage.setItem(`block_${block.id}_image`, fileData);
+        success();
+      },
+    );
   },
 });
 

@@ -1,16 +1,13 @@
-import test from 'ava';
-import auth from '../../src/reducers/auth';
 import '../helpers/setup';
-import { afterEach, beforeEach } from '../helpers/setup';
-import { USER_LOGIN_SUCCESS } from '../../src/constants';
+import auth from '../../src/reducers/auth';
+import {
+  USER_LOGIN_FAILURE,
+  USER_LOGIN_SUCCESS,
+  USER_LOGOUT_SUCCESS,
+} from '../../src/constants';
 import token from '../helpers/token';
-import { USER_LOGIN_FAILURE, USER_LOGOUT_SUCCESS } from '../../src/constants/index';
 
-test.beforeEach(async t => await beforeEach(t));
-
-test.afterEach(t => afterEach(t));
-
-test.serial('login user successfully', (t) => {
+test('login user successfully', () => {
     // arrange, make sure we have no token set
   localStorage.setItem('token', null);
   const before = {
@@ -31,11 +28,11 @@ test.serial('login user successfully', (t) => {
   });
 
     // assert
-  t.is(after.user, 'foo@example.com');
-  t.true(after.token !== null);
+  expect(after.user).toBe('foo@example.com');
+  expect(after.token !== null).toBeTruthy();
 });
 
-test.serial('login failure', (t) => {
+test('login failure', () => {
     // arrange
   const before = {
     isAuthenticating: false,
@@ -54,15 +51,15 @@ test.serial('login failure', (t) => {
   });
 
     // assert
-  t.is(after.isAuthenticating, false);
-  t.is(after.isAuthenticated, false);
-  t.is(after.statusText, 'An authentication error occurred: Not found.');
-  t.is(after.token, null);
-  t.is(after.user, null);
-  t.is(after.userId, null);
+  expect(after.isAuthenticating).toBeFalsy();
+  expect(after.isAuthenticated).toBeFalsy();
+  expect(after.statusText).toBe('An authentication error occurred: Not found.');
+  expect(after.token).toBeNull();
+  expect(after.user).toBeNull();
+  expect(after.userId).toBeNull();
 });
 
-test.serial('logout successfully', (t) => {
+test('logout successfully', () => {
     // arrange
   const before = {
     isAuthenticating: false,
@@ -78,11 +75,11 @@ test.serial('logout successfully', (t) => {
     type: USER_LOGOUT_SUCCESS,
   });
 
-    // assert
-  t.is(after.isAuthenticating, false);
-  t.is(after.isAuthenticated, false);
-  t.is(after.statusText, 'You have been logged out successfully.');
-  t.is(after.token, null);
-  t.is(after.user, null);
-  t.is(after.userId, null);
+  // assert
+  expect(after.isAuthenticating).toBeFalsy();
+  expect(after.isAuthenticated).toBeFalsy();
+  expect(after.statusText).toBe('You have been logged out successfully.');
+  expect(after.token).toBeNull();
+  expect(after.user).toBeNull();
+  expect(after.userId).toBeNull();
 });

@@ -9,14 +9,14 @@ const ButtonBar = ({ exportPosts, importPosts, importPostsFromFile, posts }) => 
   <div>
     <IconButton
       onClick={() => exportPosts(posts)}
-      color="#913d88"
+      color="default"
     >
       <ContentArchive />
     </IconButton>
 
     <IconButton
       onClick={importPosts}
-      color="#913d88"
+      color="default"
     >
       <ContentUnarchive />
     </IconButton>

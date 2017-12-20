@@ -1,52 +1,64 @@
-import test from 'ava';
+import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import Axios from 'axios';
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import MockAdapter from 'axios-mock-adapter';
 import Dialog from 'material-ui/Dialog';
 import { applyMiddleware, createStore } from 'redux';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import EditPostContainer, { mapDispatchToProps } from '../../src/components/EditPostContainer';
-import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 
 import {
   FETCH_BLOCKS_SUCCESS,
   UPDATE_POST_TITLE,
   RESET_ERROR_MESSAGE,
+  BASE_URL,
 } from '../../src/constants';
 import { firstPost, posts } from '../helpers/posts';
 import app from '../../src/reducers/index';
-
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const componentPath = path.join(__dirname, '../../src/components/EditPostContainer.js');
 
-test.beforeEach(async t => beforeEach(t));
 
-test.afterEach(t => afterEach(t));
+jest.mock('popper.js', () => {
+  const PopperJS = jest.requireActual('popper.js');
 
-test.serial('addBlock', async (t) => {
-  const resolved = new Promise(r => r({
+  return class {
+    static placements = PopperJS.placements;
+
+    constructor() {
+      return {
+        destroy: () => {},
+        scheduleUpdate: () => {},
+      };
+    }
+  };
+});
+
+test('addBlock', async () => {
+  const mock = new MockAdapter(Axios);
+  const response = {
     data: {
-      data: {
-        dialect: 'markdown',
-        text: '# some markdown text',
-      },
+      dialect: 'markdown',
+      text: '# some markdown text',
     },
-  }));
-  t.context.sandbox.stub(Axios, 'put').returns(resolved);
+  };
+  mock.onPut(`http://localhost:9000/api/posts/0/blocks`)
+    .reply(200, response);
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
   await props.addBlock(1, 'markdown', '# some markdown text');
   const actions = store.getActions();
-  t.is(actions.length, 1);
+  expect(actions.length).toBe(1);
 });
 
-test.serial('update title of a post', async (t) => {
+test('update title of a post', async () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -59,42 +71,41 @@ test.serial('update title of a post', async (t) => {
   const props = mapDispatchToProps(store.dispatch);
   props.updatePostTitle('Yo, wat up');
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(UPDATE_POST_TITLE, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(UPDATE_POST_TITLE);
 });
 
-test.serial('fetch blocks', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
+test('fetch blocks', async () => {
+  const mock = new MockAdapter(Axios);
+  const data = {
+    data: []
   };
-  const resolved = new Promise(r => r({
-    data: {
-      data: b,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  const selectedPost = {
-    id: 1,
-    title: 'Hey there!',
-  };
+  mock.onGet(`http://localhost:9000/api/posts/0/blocks`).reply(
+    200, data
+  );
   const store = mockStore({
     posts: {
       posts: {
-        selectedPost,
+        selectedPost: firstPost,
       },
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  await props.fetchBlocks(selectedPost);
+  await props.fetchBlocks(firstPost);
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(FETCH_BLOCKS_SUCCESS, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(FETCH_BLOCKS_SUCCESS);
 });
 
+test('should show error', () => {
+  const mock = new MockAdapter(Axios);
+  const data = {
+      data: []
+  } ;
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`,).reply(
+      200, data
+  );
 
-test.serial('should show error', (t) => {
   const props = fakeProps(componentPath);
   const store = mockStore({
     posts: {
@@ -112,16 +123,16 @@ test.serial('should show error', (t) => {
     },
   });
 
-  const enzymeWrapper = mountWithContext(t,
+  const enzymeWrapper = mountWithContext(
     <Provider store={store}>
       <EditPostContainer {...props} />
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);
-  t.is(dialog.length, 1);
+  expect(dialog.length).toBe(1);
 });
 
-test.serial('should not show error if error message has been reset', (t) => {
+test('should not show error if error message has been reset', () => {
   const props = fakeProps(componentPath);
   const store = createStore(
     app,
@@ -144,11 +155,11 @@ test.serial('should not show error if error message has been reset', (t) => {
     type: RESET_ERROR_MESSAGE,
   });
 
-  const enzymeWrapper = mountWithContext(t,
+  const enzymeWrapper = mountWithContext(
     <Provider store={store}>
       <EditPostContainer {...props} />
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);
-  t.false(dialog.props().open);
+  expect(dialog.props().open).toBeFalsy();
 });

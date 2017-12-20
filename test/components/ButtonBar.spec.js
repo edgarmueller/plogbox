@@ -1,25 +1,27 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import Axios from 'axios';
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
+import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { File } from 'file-api';
 import { IconButton } from 'material-ui';
 import ButtonBar, { mapDispatchToProps } from '../../src/components/ButtonBarContainer';
 import { firstPost, posts } from '../helpers/posts';
-import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
-import { CREATE_POST_SUCCESS, EXPORT_POSTS_FAILURE } from '../../src/constants';
+import {
+  BASE_URL,
+  CREATE_POST_SUCCESS,
+  EXPORT_POSTS_FAILURE,
+} from '../../src/constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-test.beforeEach(async t => beforeEach(t));
 
-test.afterEach(t => afterEach(t));
-
-test.serial('ButtonBar should render', (t) => {
+test('should render', () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -27,26 +29,16 @@ test.serial('ButtonBar should render', (t) => {
       },
     },
   });
-
-  const resolved = new Promise(r => r({
-    data: {
-      data: posts,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-
   const enzymeWrapper = mountWithContext(
-    t,
     <Provider store={store}>
       <ButtonBar />
     </Provider>,
   );
-
   const buttons = enzymeWrapper.find(IconButton);
-  t.is(buttons.length, 2);
+  expect(buttons.length).toBe(2);
 });
 
-test.serial.cb('exportPosts via mapDispatchToProps', (t) => {
+test('exportPosts via mapDispatchToProps', async () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -54,23 +46,17 @@ test.serial.cb('exportPosts via mapDispatchToProps', (t) => {
       },
     },
   });
-  const resolved = new Promise(r => r({
-    data: {
-      data: posts,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  setupDom(async () => {
-    const props = mapDispatchToProps(store.dispatch);
-    props.exportPosts(posts)
-      .then((exportedPosts) => {
-        t.is(exportedPosts.length, 1);
-        t.end();
-      });
-  });
+  const data = {
+    data: posts,
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`).reply(200, data);
+  const props = mapDispatchToProps(store.dispatch);
+  const exportedPosts = await props.exportPosts(posts);
+  expect(exportedPosts.length).toBe(1);
 });
 
-test.serial.cb('exportPosts via mapDispatchToProps fetch failure', (t) => {
+test('exportPosts via mapDispatchToProps fetch failure', async () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -78,19 +64,14 @@ test.serial.cb('exportPosts via mapDispatchToProps fetch failure', (t) => {
       },
     },
   });
-  const resolved = Promise.reject({});
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  setupDom(async () => {
-    const props = mapDispatchToProps(store.dispatch);
-    props.exportPosts(posts)
-      .then(() => {
-        t.is(_.head(store.getActions()).type, EXPORT_POSTS_FAILURE);
-        t.end();
-      });
-  });
+  const mock = new MockAdapter(Axios);
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`).reply(404, { status: 'error' });
+  const props = mapDispatchToProps(store.dispatch);
+  await props.exportPosts(posts);
+  expect(_.head(store.getActions()).type).toBe(EXPORT_POSTS_FAILURE);
 });
 
-test.serial.cb('importPosts via mapDispatchToProps', (t) => {
+test('importPosts via mapDispatchToProps', async () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -98,19 +79,17 @@ test.serial.cb('importPosts via mapDispatchToProps', (t) => {
       },
     },
   });
-  const resolved = new Promise(r => r({
-    data: {
-      data: firstPost,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'put').returns(resolved);
+  const response = {
+    data: firstPost,
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onPut(`${BASE_URL}/api/posts`).reply(200, response);
+  mock.onPut(`${BASE_URL}/api/posts/${firstPost.id}/blocks`).reply(
+    200,
+    { status: 'success' },
+  );
   const f = new File('test/exported-posts.json');
-  setupDom(async () => {
-    const props = mapDispatchToProps(store.dispatch);
-    props.importPostsFromFile(f)
-      .then(() => {
-        t.is(_.head(store.getActions()).type, CREATE_POST_SUCCESS);
-        t.end();
-      });
-  });
+  const props = mapDispatchToProps(store.dispatch);
+  await props.importPostsFromFile(f);
+  expect(_.head(store.getActions()).type).toBe(CREATE_POST_SUCCESS);
 });

@@ -56,21 +56,21 @@ export const mapDispatchToProps = (dispatch) => {
   };
   const updateBlock = (block, dialect, text) => {
     if (block.dialect !== dialect) {
-      dispatch(updateBlockDialect(block, dialect));
+      return dispatch(updateBlockDialect(block, dialect));
     }
     if (block.text !== text) {
-      dispatch(updateBlockText(block, text));
+      return dispatch(updateBlockText(block, text));
     }
   };
   const deleteBlock = (postId, block) => {
-    dispatch(removeBlock(postId, block));
+    return dispatch(removeBlock(postId, block));
   };
   return {
     handlers: {
       moveBlock,
       updateBlock,
       deleteBlock,
-    }
+    },
   };
 };
 

@@ -1,59 +1,47 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import '../helpers/setup';
 import Axios from 'axios';
 import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import configureMockStore from 'redux-mock-store';
+import MockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
-import {
-  BlockControlContainer,
-  mapDispatchToProps,
-} from '../../src/components/BlockControlContainer';
-import { afterEach, beforeEach } from '../helpers/setup';
+
+import { mapDispatchToProps } from '../../src/components/BlockControlContainer';
 import {
   UPDATE_BLOCK_DIALECT,
   UPDATE_BLOCK_TEXT,
   MOVE_BLOCK_UP,
-  MOVE_BLOCK_DOWN, Direction,
+  MOVE_BLOCK_DOWN, Direction, BASE_URL,
 } from '../../src/constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+const block = {
+  id: 1,
+  dialect: 'markdown',
+  text: '# some markdown text',
+};
 
-test.beforeEach(async (t) => {
-  beforeEach(t);
-  t.context.block = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
-});
-
-test.afterEach(t => afterEach(t));
-
-test('move block up', (t) => {
+test('move block up', () => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.handlers.moveBlock(t.context.block, Direction.UP);
+  props.handlers.moveBlock(block, Direction.UP);
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(MOVE_BLOCK_UP, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(MOVE_BLOCK_UP);
 });
 
-test('move block down', (t) => {
+test('move block down', () => {
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.handlers.moveBlock(t.context.block, Direction.DOWN);
+  props.handlers.moveBlock(block, Direction.DOWN);
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(MOVE_BLOCK_DOWN, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(MOVE_BLOCK_DOWN);
 });
 
-test('update block dialect', async (t) => {
-  const block = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
+test('update block dialect', async () => {
   const store = mockStore({
     blocks: {
       blocks: Immutable.List([block]),
@@ -62,47 +50,36 @@ test('update block dialect', async (t) => {
   const props = mapDispatchToProps(store.dispatch);
   props.handlers.updateBlock(block, 'latex', block.text);
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(UPDATE_BLOCK_DIALECT, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(UPDATE_BLOCK_DIALECT);
 });
 
-test('delete block', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
-  const resolved = new Promise(r => r({
-    data: {
-      data: b,
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'delete').returns(resolved);
+test('delete block', async () => {
+  const mock = new MockAdapter(Axios);
+  mock.onDelete(`${BASE_URL}/api/posts/1/blocks/1`).reply(
+    200,
+    { status: 'success' },
+  );
   const store = mockStore({
     blocks: {
-      blocks: Immutable.List([b]),
+      blocks: Immutable.List([block]),
     },
   });
   const props = mapDispatchToProps(store.dispatch);
   await props.handlers.deleteBlock(1, 1);
   const actions = store.getActions();
-  t.is(actions.length, 1);
+  expect(actions.length).toBe(1);
 });
 
-test('update text of a block', async (t) => {
-  const b = {
-    id: 1,
-    dialect: 'markdown',
-    text: '# some markdown text',
-  };
+test('update text of a block', async () => {
   const store = mockStore({
     blocks: {
-      blocks: Immutable.List([b]),
+      blocks: Immutable.List([block]),
     },
   });
   const props = mapDispatchToProps(store.dispatch);
-  props.handlers.updateBlock(b, 'markdown', 'new, shiny text');
+  await props.handlers.updateBlock(block, 'markdown', 'new, shiny text');
   const actions = store.getActions();
-  t.is(actions.length, 1);
-  t.is(UPDATE_BLOCK_TEXT, _.head(actions).type);
+  expect(actions.length).toBe(1);
+  expect(_.head(actions).type).toBe(UPDATE_BLOCK_TEXT);
 });

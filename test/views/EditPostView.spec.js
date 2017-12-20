@@ -1,4 +1,4 @@
-import test from 'ava';
+import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import * as Immutable from 'immutable';
 import thunk from 'redux-thunk';
@@ -8,18 +8,36 @@ import { applyMiddleware, createStore } from 'redux';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import EditPostView from '../../src/views/EditPostView';
-import { afterEach, beforeEach, mountWithContext } from '../helpers/setup';
 import { RESET_ERROR_MESSAGE } from '../../src/constants';
 import { firstPost, posts } from '../helpers/posts';
 import app from '../../src/reducers';
+import {MemoryRouter} from "react-router";
+import configureMockStore from 'redux-mock-store';
 
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 const componentPath = path.join(__dirname, '../../src/components/EditPostContainer.js');
 
-test.beforeEach(async t => beforeEach(t));
+jest.mock('popper.js', () => {
+  const PopperJS = jest.requireActual('popper.js');
 
-test.afterEach(t => afterEach(t));
+  return class {
+    static placements = PopperJS.placements;
 
-test.serial('should show error', (t) => {
+    constructor() {
+      return {
+        destroy: () => {},
+        scheduleUpdate: () => {}
+      };
+    }
+  };
+});
+
+// test.beforeEach(async t => beforeEach(t));
+//
+// test.afterEach(t => afterEach(t));
+
+test('should show error', () => {
   const props = fakeProps(componentPath);
   const store = createStore(
     app,
@@ -38,19 +56,20 @@ test.serial('should show error', (t) => {
     applyMiddleware(thunk),
   );
 
-  const enzymeWrapper = mountWithContext(t,
+  const enzymeWrapper = mountWithContext(
     <Provider store={store}>
-      <EditPostView {...props} />
+      <MemoryRouter>
+        <EditPostView {...props} />
+      </MemoryRouter>
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);
-  t.is(dialog.length, 1);
+  expect(dialog.length).toBe(1);
 });
 
-test.serial('should not show error if error message has been reset', (t) => {
+test('should not show error if error message has been reset', () => {
   const props = fakeProps(componentPath);
-  const store = createStore(
-    app,
+  const store = mockStore(
     {
       posts: {
         posts: {
@@ -59,22 +78,26 @@ test.serial('should not show error if error message has been reset', (t) => {
         },
         errorMessage: 'An error occurred',
       },
+      blocks: {
+        blocks: Immutable.List(),
+      },
       auth: {
         userId: 0,
       },
     },
-    applyMiddleware(thunk),
   );
 
   store.dispatch({
     type: RESET_ERROR_MESSAGE,
   });
 
-  const enzymeWrapper = mountWithContext(t,
+  const enzymeWrapper = mountWithContext(
     <Provider store={store}>
-      <EditPostView {...props} />
+      <MemoryRouter>
+        <EditPostView {...props} />
+      </MemoryRouter>
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);
-  t.false(dialog.props().open);
+  expect(dialog.props().open).toBeTruthy();
 });

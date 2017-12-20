@@ -56,7 +56,7 @@ export class BlockControl extends React.Component {
         <span style={{ marginLeft: '1em' }}>
           <IconButton
             onClick={() => handlers.deleteBlock(postId, block)}
-            color="#2c3e50"
+            color="default"
           >
             <ContentDelete />
           </IconButton>
@@ -64,7 +64,7 @@ export class BlockControl extends React.Component {
             !isFirstBlock ?
               <IconButton
                 onClick={() => handlers.moveBlock(block, Direction.UP)}
-                color="#2c3e50"
+                color="default"
               >
                 <UpArrow />
               </IconButton> :
@@ -74,7 +74,7 @@ export class BlockControl extends React.Component {
             !isLastBlock ?
               <IconButton
                 onClick={() => handlers.moveBlock(block, Direction.DOWN)}
-                color="#2c3e50"
+                color="default"
               >
                 <DownArrow />
               </IconButton> :

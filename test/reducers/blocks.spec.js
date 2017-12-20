@@ -1,17 +1,14 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import '../helpers/setup';
 import Immutable from 'immutable';
 
 import { moveBlockDown, moveBlockUp } from '../../src/actions';
 import { firstPost } from '../helpers/posts';
 import { blocksReducer } from '../../src/reducers/blocks';
-import { afterEach, beforeEach } from '../helpers/setup';
+
 import { FETCH_BLOCKS_SUCCESS } from '../../src/constants/index';
 
-test.beforeEach(async t => beforeEach(t));
-
-test.afterEach(t => afterEach(t));
-
-test.serial('fetch blocks', (t) => {
+test('fetch blocks', () => {
   const after = blocksReducer(undefined, {
     type: FETCH_BLOCKS_SUCCESS,
     post: firstPost,
@@ -21,11 +18,11 @@ test.serial('fetch blocks', (t) => {
       text: '# lowskilled',
     }],
   });
-  t.is(after.size, 1);
+  expect(after.size).toBe(1);
 });
 
 
-test('move block up', (t) => {
+test('move block up', () => {
   const bob = {
     id: 1,
     index: 0,
@@ -56,15 +53,15 @@ test('move block up', (t) => {
 
   const after = blocksReducer(before, moveBlockUp(alice));
   // Alice must come first
-  t.is(after.first().id, 2);
+  expect(after.first().id).toBe(2);
   // Bob is now at 2nd position and must point at Alice
-  t.is(after.rest().first().id, 1);
+  expect(after.rest().first().id).toBe(1);
   // John must point at Bob
-  t.is(after.last().id, 3);
+  expect(after.last().id).toBe(3);
 });
 
 
-test('move block down', (t) => {
+test('move block down', () => {
   const bob = {
     id: 1,
     prevId: 0, // first post in order
@@ -96,7 +93,7 @@ test('move block down', (t) => {
 
   const after = blocksReducer(before, moveBlockDown(alice));
   // Alice must at last position
-  t.is(after.last().id, 2);
+  expect(after.last().id).toBe(2);
   // John is now at 2nd position and must point at Bob
-  t.is(after.rest().first().id, 3);
+  expect(after.rest().first().id).toBe(3);
 });

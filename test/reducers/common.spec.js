@@ -1,20 +1,19 @@
-import test from 'ava';
-
+import '../helpers/setup';
 import { createFetchingProgressReducer, createErrorMessageReducer } from '../../src/reducers/common';
 
-test('progress reducer', (t) => {
+test('progress reducer', () => {
   const progress = createFetchingProgressReducer('REQ', 'SUCC', 'FAIL');
-  t.true(progress(null, { type: 'REQ' }));
-  t.false(progress(null, { type: 'SUCC' }));
-  t.false(progress(null, { type: 'FAIL' }));
+  expect(progress(null, { type: 'REQ' })).toBeTruthy();
+  expect(progress(null, { type: 'SUCC' })).toBeFalsy();
+  expect(progress(null, { type: 'FAIL' })).toBeFalsy();
 });
 
-test('status message reducer', (t) => {
+test('status message reducer', () => {
   const errorMsg = createErrorMessageReducer('REQ', 'SUCC', 'FAIL');
-  t.is(null, errorMsg(null, { type: 'REQ' }));
-  t.is(null, errorMsg(null, { type: 'SUCC' }));
-  t.is('test', errorMsg(null, {
+  expect(errorMsg(null, { type: 'REQ' })).toBeNull();
+  expect(errorMsg(null, { type: 'SUCC' })).toBeNull();
+  expect(errorMsg(null, {
     type: 'FAIL',
     statusText: 'test',
-  }));
+  })).toBe('test');
 });

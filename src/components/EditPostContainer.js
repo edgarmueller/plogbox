@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import { connect } from 'react-redux';
 import EditPost from './EditPost';
-import { RESET_ERROR_MESSAGE } from '../constants/index';
 import * as action from '../actions';
 import { getBlocks, getIsFetchingBlock, getPostErrorMessage, getSelectedPost } from '../reducers';
 
@@ -19,13 +19,8 @@ class EditPostContainer extends React.Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(EditPostContainer);
 
 EditPostContainer.propTypes = {
-  fetchBlocks: PropTypes.func.isRequired,
-  addBlock: PropTypes.func.isRequired,
-  resetErrorMessage: PropTypes.func.isRequired,
-  updatePostTitle: PropTypes.func.isRequired,
   blocks: PropTypes.arrayOf(
     PropTypes.shape({
       dialect: PropTypes.string.isRequired,
@@ -35,6 +30,15 @@ EditPostContainer.propTypes = {
   selectedPost: PropTypes.shape({
     title: PropTypes.string,
   }).isRequired,
+
+  addBlock: PropTypes.func.isRequired,
+  fetchBlocks: PropTypes.func.isRequired,
+  resetErrorMessage: PropTypes.func.isRequired,
+  updatePostTitle: PropTypes.func.isRequired,
+};
+
+EditPostContainer.defaultProps = {
+  blocks: [],
 };
 
 export const mapStateToProps = state => ({
@@ -60,10 +64,9 @@ export const mapDispatchToProps = dispatch => ({
   updatePostTitle(title) {
     dispatch(action.updatePostTitle(title));
   },
-  resetErrorMessage() {
-    dispatch({
-      type: RESET_ERROR_MESSAGE,
-    });
-  },
 });
 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DragDropContext(HTML5Backend)(EditPostContainer));

@@ -1,4 +1,6 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import '../helpers/setup';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import Axios from 'axios';
 import * as _ from 'lodash';
@@ -12,102 +14,67 @@ import sinon from 'sinon';
 import { EditPostButtonBarContainer, mapDispatchToProps } from '../../src/components/EditPostButtonBarContainer';
 import EditPostButtonBar from '../../src/components/EditPostButtonBar';
 import { firstPost } from '../helpers/posts';
-import { afterEach, beforeEach } from '../helpers/setup';
-import { ADD_BLOCK, UPDATE_POST_FAILURE } from '../../src/constants/index';
+import {
+  ADD_BLOCK,
+  BASE_URL,
+  UPDATE_POST_FAILURE,
+  UPDATE_POST_SUCCESS,
+} from '../../src/constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const componentPath = path.join(__dirname, '../../src/components/EditPostButtonBar.js');
 
-test.beforeEach(async t => beforeEach(t));
-
-test.afterEach(t => afterEach(t));
-
-test.serial('create post via save', (t) => {
-  const resolved = new Promise(r => r({
+test('save post via save', async () => {
+  const response = {
     data: {
-      data: { },
+      data: { status: 'success' },
     },
-  }));
-  let didPut = false;
-  t.context.sandbox.stub(Axios, 'post', () => {
-    didPut = true;
-    return resolved;
-  });
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onPost(`${BASE_URL}/api/posts/0`).reply(200, response);
   const store = mockStore({});
   const props = mapDispatchToProps(store.dispatch);
-  props.savePost(firstPost, [], undefined);
-  t.true(didPut);
+  await props.savePost(firstPost, [], undefined);
+  expect(_.head(store.getActions()).type).toBe(UPDATE_POST_SUCCESS);
 });
 
-test.serial('update post via save', async (t) => {
-  const resolved = new Promise(r => r({
-    data: {
-      data: { },
-    },
-  }));
-  let didPost = false;
-  t.context.sandbox.stub(Axios, 'post', () => {
-    didPost = true;
-    return resolved;
-  });
-  const store = mockStore({ });
-  const props = mapDispatchToProps(store.dispatch);
-  // set id to trigger update
-  const clonedDataSource = _.clone(firstPost);
-  clonedDataSource.id = 0;
-  await props.savePost(clonedDataSource, [firstPost], undefined);
-  t.true(didPost);
-});
-
-test.serial('create post via save may fail', async (t) => {
-  const resolved = Promise.reject({
-    statusText: 'error',
-    messages: ['expected'],
-  });
-  t.context.sandbox.stub(Axios, 'post').returns(resolved);
+test('update post via save may fail', async () => {
+  const response = {
+    status: 'error',
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onPost(`${BASE_URL}/api/posts/0`).reply(403, response);
   const store = mockStore({ });
   const props = mapDispatchToProps(store.dispatch);
   await props.savePost(firstPost, []);
   const actions = store.getActions();
-  t.is(_.head(actions).type, UPDATE_POST_FAILURE);
+  expect(_.head(actions).type).toBe(UPDATE_POST_FAILURE);
 });
 
-test.serial('update post may fail if post exists', async (t) => {
-  const resolved = Promise.reject({});
-  t.context.sandbox.stub(Axios, 'post').returns(resolved);
-  const store = mockStore({ });
-  const props = mapDispatchToProps(store.dispatch);
-  await props.savePost(firstPost, []);
-  const actions = store.getActions();
-  t.is(_.head(actions).type, UPDATE_POST_FAILURE);
-});
-
-
-test.serial('add block', async (t) => {
-  const resolved = new Promise(r => r({
-    data: {
-      data: { },
-    },
-  }));
-  t.context.sandbox.stub(Axios, 'put').returns(resolved);
+test('add block', async () => {
+  const response = {
+    status: 'success',
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onPut(`${BASE_URL}/api/posts/0/blocks`).reply(200, response);
   const store = mockStore({ });
   const props = mapDispatchToProps(store.dispatch);
   await props.addBlock(firstPost.id, 'markdown', '## Heading');
   const actions = store.getActions();
-  t.is(_.head(actions).type, ADD_BLOCK);
+  expect(_.head(actions).type).toBe(ADD_BLOCK);
 });
 
-test('render container', (t) => {
+test('render container', () => {
   const props = fakeProps(componentPath);
   const enzymeWrapper = shallow(
     <EditPostButtonBarContainer {...props} />,
   );
   const buttonBar = enzymeWrapper.find(EditPostButtonBar);
-  t.is(buttonBar.length, 1);
+  expect(buttonBar.length).toBe(1);
 });
 
-test('trigger savePost', (t) => {
+test('trigger savePost', () => {
   const savePost = sinon.spy();
   const props = fakeProps(componentPath);
   const wrapper = shallow(
@@ -117,10 +84,10 @@ test('trigger savePost', (t) => {
     />,
   );
   wrapper.find(IconButton).first().simulate('click');
-  t.true(savePost.calledOnce);
+  expect(savePost.calledOnce).toBeTruthy();
 });
 
-test('trigger savePost and exit', (t) => {
+test('trigger savePost and exit', () => {
   const savePost = sinon.spy();
   const props = fakeProps(componentPath);
   const wrapper = shallow(
@@ -130,10 +97,10 @@ test('trigger savePost and exit', (t) => {
     />,
   );
   wrapper.find(IconButton).at(1).simulate('click');
-  t.true(savePost.calledOnce);
+  expect(savePost.calledOnce).toBeTruthy();
 });
 
-test('trigger exportPost', (t) => {
+test('trigger exportPost', () => {
   const props = fakeProps(componentPath);
   const exportPost = sinon.spy();
   const wrapper = shallow(
@@ -143,10 +110,10 @@ test('trigger exportPost', (t) => {
     />,
   );
   wrapper.find(IconButton).at(2).simulate('click');
-  t.true(exportPost.calledOnce);
+  expect(exportPost.calledOnce).toBeTruthy();
 });
 
-test('trigger importPost', (t) => {
+test('trigger importPost', () => {
   const props = fakeProps(componentPath);
   const importPost = sinon.spy();
   const wrapper = shallow(
@@ -156,10 +123,10 @@ test('trigger importPost', (t) => {
     />,
   );
   wrapper.find(IconButton).at(3).simulate('click');
-  t.true(importPost.calledOnce);
+  expect(importPost.calledOnce).toBeTruthy();
 });
 
-test('trigger upload', (t) => {
+test('trigger upload', () => {
   const props = fakeProps(componentPath);
   const upload = sinon.spy();
   const wrapper = shallow(
@@ -169,6 +136,6 @@ test('trigger upload', (t) => {
     />,
   );
   wrapper.find('input').first().simulate('change', { target: { files: [0] } });
-  t.true(upload.calledOnce);
+  expect(upload.calledOnce).toBeTruthy();
 });
 

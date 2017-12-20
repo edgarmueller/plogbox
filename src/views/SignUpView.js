@@ -20,23 +20,6 @@ export class SignUpPage extends React.Component {
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  componentWillMount() {
-    const { isAuthenticated, replace, redirect } = this.props;
-    if (isAuthenticated) {
-      replace(redirect);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { isAuthenticated, replace, redirect } = nextProps;
-    const { isAuthenticated: wasAuthenticated } = this.props;
-
-    if (!wasAuthenticated && isAuthenticated) {
-      replace(redirect);
-    }
-  }
-
-
   handleFormSubmit(formProps) {
     this.props.registerUser(formProps);
   }
@@ -97,7 +80,7 @@ SignUpPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string,
   registerUser: PropTypes.func.isRequired,
-  redirect: PropTypes.string.isRequired,
+  // redirect: PropTypes.string.isRequired,
   replace: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
@@ -108,10 +91,10 @@ SignUpPage.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const isAuthenticated = state.auth.isAuthenticated || false;
-  const redirect = ownProps.location ? ownProps.location.query.redirect || '/' : '/';
+  // const redirect = ownProps.location ? ownProps.location.query.redirect || '/' : '/';
   return {
     isAuthenticated,
-    redirect,
+    // redirect,
     errorMessage: state.auth.statusText,
     message: state.auth.message,
   };

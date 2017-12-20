@@ -1,6 +1,9 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import { mountWithContext } from '../helpers/setup';
+import sinon from 'sinon';
 import * as _ from 'lodash';
 import Axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import * as Immutable from 'immutable';
 import { shallow } from 'enzyme';
@@ -11,16 +14,12 @@ import { Provider } from 'react-redux';
 import { File } from 'file-api';
 import RenderedBlock, { RenderedBlockContainer, mapDispatchToProps } from '../../src/components/RenderedBlockContainer';
 import { firstPost, posts } from '../helpers/posts';
-import { afterEach, beforeEach, mountWithContext, setupDom } from '../helpers/setup';
+import { BASE_URL } from '../../src/constants';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-test.beforeEach(async t => beforeEach(t));
-
-test.afterEach(t => afterEach(t));
-
-test('should render markdown', (t) => {
+test('should render markdown', () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -35,7 +34,6 @@ test('should render markdown', (t) => {
   };
 
   const enzymeWrapper = mountWithContext(
-    t,
     <Provider store={store}>
       <RenderedBlock
         postId={firstPost.id}
@@ -44,11 +42,11 @@ test('should render markdown', (t) => {
     </Provider>,
   );
   const reactMd = enzymeWrapper.find(ReactMarkdown);
-  t.is(reactMd.length, 1);
+  expect(reactMd.length).toBe(1);
 });
 
 
-test('should render image', (t) => {
+test('should render image', () => {
   const store = mockStore({
     posts: {
       posts: {
@@ -64,7 +62,6 @@ test('should render image', (t) => {
   };
 
   const enzymeWrapper = mountWithContext(
-    t,
     <Provider store={store}>
       <RenderedBlock
         postId={firstPost.id}
@@ -73,10 +70,10 @@ test('should render image', (t) => {
     </Provider>,
   );
   const img = enzymeWrapper.find('img');
-  t.is(img.length, 1);
+  expect(img.length).toBe(1);
 });
 
-test.serial('trigger download during mount', (t) => {
+test('trigger download during mount', () => {
   // remove any existing image
   localStorage.removeItem('block_0_image');
   const block = {
@@ -84,11 +81,14 @@ test.serial('trigger download during mount', (t) => {
     dialect: 'markdown',
     text: 'some text',
   };
-  const resolved = new Promise(r => r({
+  const response = {
     data: new File('test/exported-posts.json'),
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
-  let didDownload;
+  };
+  const mock = new MockAdapter(Axios);
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`)
+    .reply(200, response);
+
+  let didDownload = false;
   const enzymeWrapper = shallow(
     <RenderedBlockContainer
       postId={firstPost.id}
@@ -108,49 +108,45 @@ test.serial('trigger download during mount', (t) => {
   enzymeWrapper.setProps({
     block: block2,
   });
-  t.true(didDownload);
+  expect(didDownload).toBeTruthy();
 });
 
-
-test.serial('downloadFile', async (t) => {
+test('downloadFile', async () => {
   const store = mockStore({ });
-  const resolved = new Promise(r => r({
-    // data: {
+  const response = Promise.resolve({
     data: new File('test/exported-posts.json'),
-    // },
-  }));
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
+  });
+  const sandbox = sinon.sandbox.create();
+  sandbox.stub(Axios, 'get').returns(response);
+  // TODO: axios-mock-adapter doesn't return out file response?
   const props = mapDispatchToProps(store.dispatch);
-  let promiseResolve;
-  const promise = new Promise((resolve, reject) => {
-    promiseResolve = resolve;
-    setTimeout(reject, 1000).ref();
-  });
-
-  setupDom(() => {
-    props.downloadFile(
-      0,
-      {
-        id: 0,
-        text: 'dummy',
-      },
-      promiseResolve,
-    );
-  });
-  await promise;
-  t.not(localStorage.getItem('block_0_image'), undefined);
+  await props.downloadFile(
+    0,
+    {
+      id: 0,
+      text: 'dummy',
+    },
+    () => { },
+  );
+  expect(localStorage.getItem('block_0_image')).not.toBe(undefined);
+  sandbox.restore();
 });
 
-test.serial('downloadFile failure', async (t) => {
+test('downloadFile failure', async () => {
   const store = mockStore({ });
-  const resolved = Promise.reject({});
-  t.context.sandbox.stub(Axios, 'get').returns(resolved);
+  const response = { status: 'error' };
+  const mock = new MockAdapter(Axios);
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks/file/dummy`)
+    .reply(403, response);
   const props = mapDispatchToProps(store.dispatch);
-
-  await props.downloadFile(0, {
-    id: 0,
-    text: 'dummy',
-  });
+  await props.downloadFile(
+    0,
+    {
+      id: 0,
+      text: 'dummy',
+    },
+    () => {},
+  );
   const storedActions = store.getActions();
-  t.is(_.last(storedActions).type, 'UPDATE_BLOCK_FAILURE');
+  expect(_.last(storedActions).type).toBe('UPDATE_BLOCK_FAILURE');
 });

@@ -48,13 +48,13 @@ export const mapDispatchToProps = dispatch => ({
     return new Promise((resolve, reject) => {
       reader.onload = (ev) => {
         const readPosts = JSON.parse(ev.target.result);
-        return resolve(Promise.all(_.map(readPosts, (postWithBlocks) => {
+        return Promise.all(_.map(readPosts, (postWithBlocks) => {
           const p = api.createPost({
             title: postWithBlocks.title,
             isDraft: postWithBlocks.isDraft,
             date: postWithBlocks.date,
           });
-          p.then(
+          return p.then(
             (resp) => {
               dispatch({
                 type: CREATE_POST_SUCCESS,
@@ -63,7 +63,7 @@ export const mapDispatchToProps = dispatch => ({
               return resp.data.data;
             },
             // TODO: fix error handling
-            error => console.error('error during improt', error),
+            error => reject('error during improt', error),
           ).then(
             post =>
               // TODO: provide API to add mutliple blocks at once
@@ -74,9 +74,9 @@ export const mapDispatchToProps = dispatch => ({
                 }),
               )),
             // TODO: fix error handling
-            () => console.error('error during post import'),
+            () => reject('error during post import'),
           );
-        })));
+        })).then(resolve);
       };
       reader.readAsText(file);
     });

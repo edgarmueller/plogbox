@@ -77,19 +77,19 @@ export class PostList extends React.Component {
             <TableBody>
               {
                 posts.map(post => (
-                  <TableRow key={post.id}>
+                  <TableRow key={`${post.id}-${post.title}`}>
                     <TableCell>{post.title}</TableCell>
                     <TableCell>{formatDate(post.date)}</TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => selectPost(post)}
-                        color="#2c3e50"
+                        color="default"
                       >
                         <ContentCreate />
                       </IconButton>
                       <IconButton
                         onClick={() => deletePost(post)}
-                        color="#2c3e50"
+                        color="default"
                       >
                         <ContentDelete />
                       </IconButton>
@@ -113,7 +113,7 @@ export class PostList extends React.Component {
             fab
             style={floatingButtonStyle}
             onClick={addPost}
-            color="#2c3e50"
+            color="primary"
           >
             <ContentAdd />
           </Button>

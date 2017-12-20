@@ -1,32 +1,39 @@
-import test from 'ava';
+/* eslint-disable import/first */
+import { mountWithContext } from '../helpers/setup';
 import React from 'react';
+import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
-import { createStore, combineReducers } from 'redux';
-import * as router from 'react-router';
-import { routerReducer } from 'react-router-redux';
-import authReducer from '../../src/reducers/auth';
-import App from '../../src/components/App';
-import Root from '../../src/components/Root';
+import { MemoryRouter, Switch } from 'react-router';
+import configureMockStore from 'redux-mock-store';
+
+import { App } from '../../src/components/App';
 import NavigationBar from '../../src/components/NavBar';
 
-test('should render', (t) => {
+const mockStore = configureMockStore();
+
+test('should render nav bar', () => {
   const enzymeWrapper = shallow(<App />);
   const navBar = enzymeWrapper.find(NavigationBar);
-  t.is(navBar.length, 1);
+  expect(navBar.length).toBe(1);
 });
 
-test('Root should render', (t) => {
-  router.browserHistory = {
-    push: () => { },
-    listen: () => { },
-  };
-  const store = createStore(combineReducers({
-    auth: authReducer,
-    routing: routerReducer,
-  }));
-  const enzymeWrapper = shallow(
-    <Root store={store} />,
+test('should render router', () => {
+  const store = mockStore({
+    auth: {
+      isAuthenticated: false,
+    },
+    routing: {
+      location: {
+        pathname: '/login',
+      },
+    },
+  });
+  const enzymeWrapper = mountWithContext(
+    <Provider store={store}>
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    </Provider>,
   );
-
-  t.is(1, enzymeWrapper.find(router.Router).length);
+  expect(enzymeWrapper.find(Switch).length).toBe(1);
 });

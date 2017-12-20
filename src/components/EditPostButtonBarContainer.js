@@ -51,6 +51,7 @@ export const mapDispatchToProps = dispatch => ({
       dispatch(action.updatePost(selectedPost, blocks));
       return dispatch(routerActions.push('/posts'));
     }
+
     return dispatch(action.updatePost(selectedPost, blocks));
   },
   exportPost(blocks) {

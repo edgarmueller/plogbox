@@ -41,7 +41,8 @@ import {
   FETCH_BLOCK_REQUEST,
   FETCH_BLOCK_SUCCESS, UPDATE_BLOCK_NAME,
   MOVE_BLOCK_TO,
-} from '../constants/index';
+  UPDATE_BLOCK_FAILURE,
+} from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
 
@@ -127,17 +128,16 @@ export const updatePost = (selectedPost, blocks) => (dispatch) => {
     return api.updateBlock(selectedPost.id, clonedBlock);
   });
 
-  return Promise.all(promises, api.updatePost(selectedPost)
+  return Promise.all(promises)
+    .then(() => api.updatePost(selectedPost))
     .then(
-      (resp) => {
+      resp =>
         dispatch({
           type: UPDATE_POST_SUCCESS,
           post: resp.data.data,
-        });
-      },
+        }),
       error => errorHandler(dispatch, error, UPDATE_POST_FAILURE),
-    ),
-  );
+    );
 };
 
 export const deletePost = post => dispatch =>
@@ -152,7 +152,7 @@ export const deletePost = post => dispatch =>
 //
 // Auth actions --
 //
-export const logoutUser = () => (dispatch) => {
+export const logoutUser = () => dispatch =>
   api.logoutUser()
     .then(
       (resp) => {
@@ -166,8 +166,6 @@ export const logoutUser = () => (dispatch) => {
         dispatch(routerActions.push('login'));
       },
     );
-};
-
 
 /**
  * Action for signing up an user.
@@ -206,9 +204,7 @@ export const loginUser = ({ email, password }) => dispatch =>
           userId,
         });
       },
-      (error) => {
-        errorHandler(dispatch, error, USER_LOGIN_FAILURE);
-      },
+      error => errorHandler(dispatch, error, USER_LOGIN_FAILURE),
     );
 
 export const fetchPosts = () => (dispatch, getState) => {
@@ -223,12 +219,8 @@ export const fetchPosts = () => (dispatch, getState) => {
   return api
     .fetchPosts()
     .then(
-      (resp) => {
-        dispatch(initPosts(resp.data.data));
-      },
-      (error) => {
-        errorHandler(dispatch, error, FETCH_POSTS_FAILURE);
-      },
+      resp => dispatch(initPosts(resp.data.data)),
+      error => errorHandler(dispatch, error, FETCH_POSTS_FAILURE),
     );
 };
 
@@ -236,13 +228,12 @@ export const fetchPosts = () => (dispatch, getState) => {
 export const fetchBlocks = selectedPost => dispatch =>
   api.fetchBlocks(selectedPost.id)
     .then(
-      (resp) => {
+      resp =>
         dispatch({
           type: FETCH_BLOCKS_SUCCESS,
           postId: selectedPost.id,
           blocks: resp.data.data,
-        });
-      },
+        }),
       error => errorHandler(dispatch, error, FETCH_BLOCKS_FAILURE),
     );
 
@@ -278,15 +269,11 @@ export const updatePostTitle = title => ({
 export const addBlock = (postId, block) => dispatch =>
   api.addBlock(postId, block)
     .then(
-      (resp) => {
-        dispatch({
-          type: ADD_BLOCK,
-          block: resp.data.data,
-        });
-      },
-      (error) => {
-        errorHandler(dispatch, error, ADD_BLOCK_FAILURE);
-      },
+      resp => dispatch({
+        type: ADD_BLOCK,
+        block: resp.data.data,
+      }),
+      error => errorHandler(dispatch, error, ADD_BLOCK_FAILURE),
     );
 
 export const removeBlock = (postId, block) => dispatch =>
@@ -400,28 +387,30 @@ export const activateAccount = token => dispatch =>
       error => errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE),
     );
 
-export const downloadFile = (postId, fileId) => (onSuccess, onRejected) => (dispatch) => {
+export const downloadFile = (postId, fileId) => (dispatch) => {
   dispatch({
     type: FETCH_BLOCK_REQUEST,
   });
-  api.download(postId, fileId)
+  return api.download(postId, fileId)
     .then(
-      (resp) => {
-        const reader = new FileReader();
-        const loadEnd = () => {
-          dispatch({
-            type: FETCH_BLOCK_SUCCESS,
-          });
-          onSuccess(reader.result);
-        };
-        if (process.env.NODE_ENV === 'test') {
-          reader.on('loadend', loadEnd);
-        } else {
-          reader.onloadend = loadEnd;
-        }
-        reader.readAsDataURL(resp.data);
-      },
-      error => onRejected(error),
+      resp => new Promise(
+        (resolve, reject) => {
+          const reader = new FileReader();
+          const loadEnd = () => {
+            dispatch({
+              type: FETCH_BLOCK_SUCCESS,
+            });
+            resolve(reader.result);
+          };
+          if (process.env.NODE_ENV === 'test') {
+            reader.on('loadend', loadEnd);
+          } else {
+            reader.onloadend = loadEnd;
+          }
+          reader.readAsDataURL(resp.data);
+        },
+      ),
+      error => errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
     );
 };
 

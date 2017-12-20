@@ -1,23 +1,22 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import lightBaseTheme from 'material-ui/styles/ baseThemes/lightBaseTheme';
-// import getMuiTheme from 'material-ui/styles/createMuiTheme';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import PropTypes from 'prop-types';
-import Routes from '../config/Routes';
+import { ConnectedRouter } from 'react-router-redux';
+import { Route } from 'react-router';
+import App from './App';
+
+// TODO
+import { history } from '../components/configureStore';
 
 const Root = ({ store }) => {
   const theme = createMuiTheme();
-  const history = syncHistoryWithStore(browserHistory, store);
   return (
     <MuiThemeProvider theme={theme}>
       <Provider store={store}>
-        <Router history={history}>
-          {Routes}
-        </Router>
+        <ConnectedRouter history={history}>
+          <Route path="/" component={App} />
+        </ConnectedRouter>
       </Provider>
     </MuiThemeProvider>
   );

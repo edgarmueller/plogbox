@@ -1,14 +1,11 @@
 {
-  "presets": ["es2015", "react", "stage-2"],
+  "presets": ["es2015", "react", "stage-0"],
   "plugins": [
     "react-hot-loader/babel"
   ],
   "env": {
     "test": {
-      "compact": "true",
-      "plugins": [
-          "istanbul"
-      ]
+      "presets": ["es2015", "react", "stage-0"]
     }
   }
 }

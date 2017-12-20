@@ -1,14 +1,13 @@
-import test from 'ava';
+import '../helpers/setup';
 import React from 'react';
 import { shallow } from 'enzyme';
-import { afterEach, beforeEach } from '../helpers/setup';
 import HomeView from '../../src/views/HomeView';
 
-test.beforeEach(async t => beforeEach(t));
+// test.beforeEach(async t => beforeEach(t));
+//
+// test.afterEach(t => afterEach(t));
 
-test.afterEach(t => afterEach(t));
-
-test('HomeView should render', (t) => {
+test('HomeView should render', () => {
   const enzymeWrapper = shallow(
     <HomeView
       handleSubmit={() => {}}
@@ -16,5 +15,5 @@ test('HomeView should render', (t) => {
     />,
   );
   const h1 = enzymeWrapper.find('h1')
-  t.is(h1.length, 1);
+  expect(h1.length).toBe(1);
 });

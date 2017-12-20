@@ -112,7 +112,6 @@ export const upload = (postId, blockId, file) => {
 
 export const download = (postId, file) => {
   const url = `${BASE_URL}/api/posts/${postId}/blocks/file/${file}`;
-
   return Axios.get(
     url,
     {
