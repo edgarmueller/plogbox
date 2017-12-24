@@ -80,8 +80,6 @@ SignUpPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   errorMessage: PropTypes.string,
   registerUser: PropTypes.func.isRequired,
-  // redirect: PropTypes.string.isRequired,
-  replace: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 
@@ -89,12 +87,10 @@ SignUpPage.defaultProps = {
   errorMessage: undefined,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const isAuthenticated = state.auth.isAuthenticated || false;
-  // const redirect = ownProps.location ? ownProps.location.query.redirect || '/' : '/';
   return {
     isAuthenticated,
-    // redirect,
     errorMessage: state.auth.statusText,
     message: state.auth.message,
   };
