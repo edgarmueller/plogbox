@@ -36,7 +36,7 @@ test('login user', async () => {
       email: 'foo@bar.com',
       password: 'password',
     }));
-  const headAction = _.head(store.getActions());
+  const headAction = _.nth(store.getActions(), 1);
   expect(headAction.type).toBe(USER_LOGIN_SUCCESS);
 });
 
@@ -54,7 +54,7 @@ test('login user failure', async () => {
     email: 'foo@bar.com',
     password: 'password',
   }));
-  const headAction = _.head(store.getActions());
+  const headAction = _.nth(store.getActions(), 1);
   expect(headAction.type).toBe(USER_LOGIN_FAILURE);
 });
 
