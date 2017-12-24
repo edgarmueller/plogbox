@@ -10,7 +10,7 @@
     "test": "cross-env NODE_ENV=test jest",
     "eject": "react-scripts eject",
     "test-only": "cross-env NODE_ENV=test jest --no-cache test/components/login.spec.js",
-    "test-with-coverage": "cross-env NODE_ENV=test nyc ava",
+    "test-with-coverage": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info |coveralls",
     "report": "nyc report --reporter=html",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rimraf build",
@@ -49,7 +49,18 @@
     "moduleNameMapper": {
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js"
-    }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/build/**",
+      "!**/test/**",
+      "!**/public/**",
+      "!**/vendor/**",
+      "!**/coverage/**",
+      "!**/__mocks__/**"
+    ]
   },
   "nyc": {
     "all": true,
@@ -131,6 +142,7 @@
     "mousetrap": "^1.6.1",
     "org": "^0.2.0",
     "prop-types": "^15.5.8",
+    "radium": "^0.19.6",
     "react": "^15.5.4",
     "react-ace": "^5.1.0",
     "react-autosuggest": "^9.3.2",
