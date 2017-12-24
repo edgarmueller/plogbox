@@ -14,6 +14,9 @@ test('NavBar should render', () => {
     user: 'foo',
     navigateTo: () => {},
     logout: () => {},
+    classes: {
+      link: 'test',
+    },
   };
   const enzymeWrapper = shallow(
     <NavBar {...props} />,
@@ -27,6 +30,9 @@ test('NavBar should render for unauthenticated user', () => {
     isAuthenticated: false,
     navigateTo: () => {},
     logout: () => {},
+    classes: {
+      link: 'test',
+    },
   };
   const enzymeWrapper = shallow(<NavBar {...props} />);
   // home, sign-up and login buttons for unauthenticated users

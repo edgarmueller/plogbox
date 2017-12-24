@@ -3,38 +3,56 @@ import { Link } from 'react-router-dom';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
 import { Button, Toolbar } from 'material-ui';
+import { withStyles } from 'material-ui/styles';
 import SvgIconFace from 'material-ui-icons/Face';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
+import Radium from 'radium';
+
 import { logoutUser } from '../actions';
 import { getIsAuthenticated } from '../reducers';
 
-const styles = {
-  margin: '12px 24px',
-};
+const styles = () => ({
+  link: {
+    textDecoration: 'none',
+  },
+});
 
-export const NavBar = ({
-  isAuthenticated,
-  user,
-  navigateTo,
-  logout,
-                       }) => {
+const RadiumLink = Radium(Link);
+
+export const NavBar = (
+  {
+    isAuthenticated,
+    user,
+    navigateTo,
+    logout,
+    classes,
+  }) => {
   if (isAuthenticated) {
     return (
       <nav>
         <Toolbar>
-          <Link to="/">Home</Link>
-          <Link to="/posts">Posts</Link>
+          <Button>
+            <RadiumLink
+              className={classes.link}
+              to="/"
+            >
+              Home
+            </RadiumLink>
+          </Button>
+          <Button>
+            <Link to="/posts">Posts</Link>
+          </Button>
           <div style={styles}>
             <Chip
               onTouchTap={() => navigateTo('/profile')}
               label={`Logged in with ${user}`}
             >
-              <Avatar color="#444" icon={<SvgIconFace />} />
+              <Avatar color="#444" icon={<SvgIconFace />}/>
             </Chip>
           </div>
-          <Button className={{ color: 'white' }} onClick={logout}>
+          <Button onClick={logout}>
             Logout
           </Button>
         </Toolbar>
@@ -45,9 +63,15 @@ export const NavBar = ({
   return (
     <nav>
       <Toolbar>
-        <Link to="/">plog</Link>
-        <Link to="/sign-up">Sign up</Link>
-        <Link to="/login">Login</Link>
+        <Button>
+          <Link to="/">plog</Link>
+        </Button>
+        <Button>
+          <Link to="/sign-up">Sign up</Link>
+        </Button>
+        <Button>
+          <Link to="/login">Login</Link>
+        </Button>
       </Toolbar>
     </nav>
   );
@@ -58,6 +82,9 @@ NavBar.propTypes = {
   user: PropTypes.string,
   navigateTo: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
+  classes: PropTypes.shape({
+    link: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 NavBar.defaultProps = {
@@ -83,4 +110,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NavBar);
+)(withStyles(styles)(NavBar));
