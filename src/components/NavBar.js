@@ -33,18 +33,23 @@ export const NavBar = (
     return (
       <nav>
         <Toolbar>
-          <Button>
-            <RadiumLink
-              className={classes.link}
-              to="/"
-            >
-              Home
-            </RadiumLink>
-          </Button>
-          <Button>
-            <Link to="/posts">Posts</Link>
-          </Button>
-          <div style={styles}>
+          <RadiumLink
+            className={classes.link}
+            to="/"
+          >
+            <Button>
+              Logbook
+            </Button>
+          </RadiumLink>
+          <RadiumLink
+            className={classes.link}
+            to="/posts"
+          >
+            <Button>
+              Posts
+            </Button>
+          </RadiumLink>
+          <div>
             <Chip
               onTouchTap={() => navigateTo('/profile')}
               label={`Logged in with ${user}`}
@@ -63,15 +68,24 @@ export const NavBar = (
   return (
     <nav>
       <Toolbar>
-        <Button>
-          <Link to="/">plog</Link>
-        </Button>
-        <Button>
-          <Link to="/sign-up">Sign up</Link>
-        </Button>
-        <Button>
-          <Link to="/login">Login</Link>
-        </Button>
+        <RadiumLink
+          to="/"
+          className={classes.link}
+        >
+          <Button>plog</Button>
+        </RadiumLink>
+        <RadiumLink
+          to="/sign-up"
+          className={classes.link}
+        >
+          <Button>Sign up</Button>
+        </RadiumLink>
+        <RadiumLink
+          to="/login"
+          className={classes.link}
+        >
+          <Button>Login</Button>
+        </RadiumLink>
       </Toolbar>
     </nav>
   );

@@ -17,7 +17,6 @@ import {
   CREATE_POST_SUCCESS,
   DELETE_POST_SUCCESS,
   RESET_ERROR_MESSAGE,
-  SELECT_POST,
 } from '../../src/constants/index';
 import { MemoryRouter } from 'react-router';
 
@@ -94,13 +93,4 @@ test('reset error', () => {
   const actions = store.getActions();
   expect(actions.length).toBe(1);
   expect(_.head(actions).type).toBe(RESET_ERROR_MESSAGE);
-});
-
-test('select post', () => {
-  const store = mockStore({});
-  const props = mapDispatchToProps(store.dispatch);
-  props.selectPost();
-  const actions = store.getActions();
-  expect(actions.length).toBe(2);
-  expect(_.head(actions).type).toBe(SELECT_POST);
 });

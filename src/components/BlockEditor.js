@@ -1,8 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DropZone from 'react-dropzone';
-import { updateBlockText } from '../actions';
 
 const Editor = (props) => {
   if (typeof window !== 'undefined') {
@@ -21,12 +19,12 @@ const Editor = (props) => {
   return null;
 };
 
-export const BlockEditor = ({ postId, block, onDrop, updateText }) => {
+const BlockEditor = ({ postId, block, onDrop, handleUpdateBlock }) => {
   if (block.dialect === 'image') {
     return (
       <DropZone
         accept="image/jpeg, image/png"
-        onDrop={onDrop(postId)(block)}
+        onDrop={onDrop(postId, block)}
         style={{
           height: '1em',
           margin: '0.25em',
@@ -41,7 +39,10 @@ export const BlockEditor = ({ postId, block, onDrop, updateText }) => {
     <Editor
       mode="markdown"
       theme="github"
-      onChange={text => updateText(block, text)}
+      onChange={text => handleUpdateBlock({
+        ...block,
+        text,
+      })}
       name={`${block.id}_editor`}
       editorProps={{ $blockScrolling: true }}
       width={'100%'}
@@ -60,16 +61,7 @@ BlockEditor.propTypes = {
     text: PropTypes.string,
   }).isRequired,
   onDrop: PropTypes.func.isRequired,
-  updateText: PropTypes.func.isRequired,
+  handleUpdateBlock: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateText(block, text) {
-    dispatch(updateBlockText(block, text));
-  },
-});
-
-export default connect(
-  null,
-  mapDispatchToProps,
-)(BlockEditor);
+export default BlockEditor;

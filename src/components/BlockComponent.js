@@ -1,28 +1,88 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { connect } from 'react-redux';
 import { DragSource, DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
-import * as action from '../actions/index';
-import BlockControl from './BlockControlContainer';
-import { UPDATE_BLOCK_FAILURE } from '../constants';
+import BlockControl from './BlockControl';
 import ItemTypes from '../dnd/ItemTypes';
-import { getBlocks } from '../reducers';
 import BlockEditor from './BlockEditor';
 import BlockControlWrapper from './BlockControlWrapper';
+import { uploadFile } from '../actions';
+import { Direction } from '../constants';
+import * as api from '../api';
+import { moveBlockDown, moveBlockUp } from '../utils/blocks';
 
-export const BlockComponent =
-  ({
-     postId,
-     block,
-     onDrop,
-     onFocus,
-     isFocused,
-     connectDragSource,
-     connectDropTarget,
-   }) =>
-    (
+export class BlockComponent extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleDeleteBlock = this.handleDeleteBlock.bind(this);
+    this.handleUpdateBlock = this.handleUpdateBlock.bind(this);
+    this.handleMoveBlock = this.handleMoveBlock.bind(this);
+    this.handleMoveBlockUp = this.handleMoveBlockUp.bind(this);
+    this.handleMoveBlockDown = this.handleMoveBlockDown.bind(this);
+  }
+
+  onDrop(postId, block) {
+    return (acceptedFiles) => {
+      if (!_.isEmpty(acceptedFiles)) {
+        uploadFile(postId, block.id, _.head(acceptedFiles))
+          .then(
+            resp => this.handleUpdateBlock(resp.data.data),
+            // TODO
+            error => console.error('TODO: proper error handling', error),
+          );
+      }
+    };
+  }
+
+  handleMoveBlock(block, direction) {
+    if (direction === Direction.UP) {
+      this.handleMoveBlockUp(block);
+    } else {
+      this.handleMoveBlockDown(block);
+    }
+  }
+
+  handleMoveBlockUp(block) {
+    const { blocks, handleSetBlocks } = this.props;
+    handleSetBlocks(moveBlockUp(blocks, block));
+  }
+
+  handleMoveBlockDown(block) {
+    const { blocks, handleSetBlocks } = this.props;
+    handleSetBlocks(moveBlockDown(blocks, block));
+  }
+
+  handleUpdateBlock(block) {
+    const { blocks, handleSetBlocks } = this.props;
+    const blockIndex = _.findIndex(blocks, b => b.id === block.id);
+    if (blockIndex !== -1) {
+      const copy = blocks.slice();
+      copy[blockIndex] = block;
+      handleSetBlocks(copy);
+    }
+  }
+
+  handleDeleteBlock(block) {
+    const { blocks, handleSetBlocks, postId } = this.props;
+    api.removeBlock(postId, block)
+      .then(() => handleSetBlocks(_.without(blocks, block)));
+  }
+
+  render() {
+    const {
+      postId,
+      block,
+      blocks,
+      blockIndex,
+      onFocus,
+      isFocused,
+      connectDragSource,
+      connectDropTarget,
+    } = this.props;
+
+    return (
       <BlockControlWrapper
         key={block.id}
         onFocus={onFocus}
@@ -30,17 +90,24 @@ export const BlockComponent =
         connectDropTarget={connectDropTarget}
       >
         <BlockControl
-          postId={postId}
           block={block}
+          isFirstBlock={blockIndex === 0}
+          isLastBlock={blockIndex === blocks.length - 1}
+          handleDeleteBlock={this.handleDeleteBlock}
+          handleUpdateBlock={this.handleUpdateBlock}
+          handleMoveBlock={this.handleMoveBlock}
           connectDragSource={connectDragSource}
         />
         <BlockEditor
           postId={postId}
           block={block}
-          onDrop={onDrop}
+          onDrop={this.onDrop}
+          handleUpdateBlock={this.handleUpdateBlock}
         />
       </BlockControlWrapper>
     );
+  }
+}
 
 BlockComponent.propTypes = {
   connectDragSource: PropTypes.func.isRequired,
@@ -49,33 +116,13 @@ BlockComponent.propTypes = {
   block: PropTypes.shape({
     dialect: PropTypes.string.isRequired,
     text: PropTypes.string,
-  }).isRequired,
-  onDrop: PropTypes.func.isRequired,
+  }),
+  blocks: PropTypes.array,
+  blockIndex: PropTypes.number,
   onFocus: PropTypes.func.isRequired,
   isFocused: PropTypes.bool.isRequired,
+  handleSetBlocks: PropTypes.func.isRequired,
 };
-
-export const mapStateToProps = (state, { block }) => ({
-  blockIndex: getBlocks(state).indexOf(block),
-});
-
-export const mapDispatchToProps = dispatch => ({
-  onDrop: postId => block => (acceptedFiles) => {
-    if (!_.isEmpty(acceptedFiles)) {
-      action.uploadFile(postId, block.id, _.head(acceptedFiles))
-        .then(
-          (resp) => {
-            dispatch(action.updateBlockName(block, resp.data.data.name));
-            dispatch(action.updateBlockText(block, resp.data.data.text));
-          },
-          error => action.errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-        );
-    }
-  },
-  moveBlockTo(dragIndex, hoverIndex) {
-    dispatch(action.moveBlock(dragIndex, hoverIndex));
-  },
-});
 
 const blockSource = {
   beginDrag(props) {
@@ -84,6 +131,15 @@ const blockSource = {
       index: props.blockIndex,
     };
   },
+};
+
+const moveBlockTo = (blocks, dragIndex, hoverIndex) => {
+  const dragBlock = blocks[dragIndex];
+  const hoveredBlock = blocks[hoverIndex];
+  const copy = blocks.slice();
+  copy[hoverIndex] = dragBlock;
+  copy[dragIndex] = hoveredBlock;
+  return copy;
 };
 
 const blockTarget = {
@@ -97,7 +153,9 @@ const blockTarget = {
     }
 
     // Determine rectangle on screen
+    // eslint-disable-next-line react/no-find-dom-node
     const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
+    // eslint-enable-next-line react/no-find-dom-node
 
     // Get vertical middle
     const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -123,33 +181,28 @@ const blockTarget = {
     }
 
     // Time to actually perform the action
-    props.moveBlockTo(dragIndex, hoverIndex);
+    props.handleSetBlocks(moveBlockTo(props.blocks, dragIndex, hoverIndex));
 
     // Note: we're mutating the monitor item here!
     // Generally it's better to avoid mutations,
     // but it's good here for the sake of performance
     // to avoid expensive index searches.
+    // eslint-disable-next-line no-param-reassign
     monitor.getItem().index = hoverIndex;
+    // eslint-enable-next-line no-param-reassign
   },
 };
 
-const collectDrop = (connector, monitor) => ({
+const collectTarget = (connector, monitor) => ({
   connectDropTarget: connector.dropTarget(),
   isOver: monitor.isOver(),
 });
 
-const collect = (connector, monitor) => ({
+const collectSource = (connector, monitor) => ({
   connectDragSource: connector.dragSource(),
   isDragging: monitor.isDragging(),
 });
 
-export const ConnectedBlockComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(BlockComponent);
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DropTarget(ItemTypes.BLOCK, blockTarget, collectDrop)(
-    DragSource(ItemTypes.BLOCK, blockSource, collect)(ConnectedBlockComponent),
-  ),
+export default DropTarget(ItemTypes.BLOCK, blockTarget, collectTarget)(
+  DragSource(ItemTypes.BLOCK, blockSource, collectSource)(BlockComponent),
 );

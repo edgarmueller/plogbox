@@ -11,8 +11,10 @@ export const ProfileView = ({ navigateTo }) => (
     </p>
     <Button
       onClick={() => navigateTo('/password/change')}
-      label="Change password"
-    />
+      color={'primary'}
+    >
+      Change password
+    </Button>
   </div>
   );
 

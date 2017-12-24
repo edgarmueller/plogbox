@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import * as Immutable from 'immutable';
@@ -11,31 +12,12 @@ import EditPostView from '../../src/views/EditPostView';
 import { RESET_ERROR_MESSAGE } from '../../src/constants';
 import { firstPost, posts } from '../helpers/posts';
 import app from '../../src/reducers';
-import {MemoryRouter} from "react-router";
+import { MemoryRouter } from 'react-router';
 import configureMockStore from 'redux-mock-store';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const componentPath = path.join(__dirname, '../../src/components/EditPostContainer.js');
-
-jest.mock('popper.js', () => {
-  const PopperJS = jest.requireActual('popper.js');
-
-  return class {
-    static placements = PopperJS.placements;
-
-    constructor() {
-      return {
-        destroy: () => {},
-        scheduleUpdate: () => {}
-      };
-    }
-  };
-});
-
-// test.beforeEach(async t => beforeEach(t));
-//
-// test.afterEach(t => afterEach(t));
 
 test('should show error', () => {
   const props = fakeProps(componentPath);

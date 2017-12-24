@@ -40,6 +40,13 @@ export const createPost = newPost =>
       getHeaderToken(),
     );
 
+export const searchPost = postTitle =>
+  Axios
+    .get(
+      `${BASE_URL}/api/posts/search/${postTitle}`,
+      getHeaderToken(),
+    );
+
 export const updatePost = postId =>
   Axios
     .post(

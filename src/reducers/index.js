@@ -22,12 +22,11 @@ const app = combineReducers({
 
 export default app;
 
-export const getSelectedPost = state => fromPosts.getPostBeingEdited(state.posts);
+export const findPostById = postId => state => fromPosts.findPostById(postId)(state.posts);
 export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts);
 export const getAllPosts = state => fromPosts.getAllPosts(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
 
-export const getBlocks = state => fromBlocks.getBlocks(state.blocks);
 export const getIsFetchingBlock = state => fromBlocks.isFetchingBlock(state.blocks);
 
 // auth getters

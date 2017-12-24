@@ -14,6 +14,8 @@ import ContentAdd from 'material-ui-icons/Add';
 
 import Dialog from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
+
+import * as api from '../api';
 import BlockComponent from './BlockComponent';
 import EditPostButtonBar from './EditPostButtonBarContainer';
 import RenderedBlock from './RenderedBlockContainer';
@@ -27,34 +29,60 @@ const styles = () => ({
   },
 });
 
-export class EditPost extends React.Component {
+const RenderedPost = ({ post, blocks, isFetchingBlock, focusedBlockId }) => {
+  return (
+    <div>
+      {
+        blocks.map(block =>
+          (
+            <RenderedBlock
+              key={block.id}
+              postId={post.id}
+              isFetchingBlock={isFetchingBlock}
+              block={block}
+              isFocused={block.id === focusedBlockId}
+            />
+          )
+        )
+      }
+    </div>
+  );
+};
 
-  constructor() {
-    super();
+class EditPost extends React.Component {
+
+  constructor(props) {
+    super(props);
     this.state = {
       open: false,
       message: '',
-      dialect: 'markdown',
       text: '',
       focusedBlockId: -1,
     };
+    this.handleAddBlock = this.handleAddBlock.bind(this);
   }
 
-  componentWillMount() {
-    // set initial state if we are editing a post
-    if (this.props.selectedPost) {
-      this.setState({
-        text: this.props.selectedPost.text,
-      });
-    }
+  handleAddBlock() {
+    const { blocks, handleSetBlocks, post } = this.props;
+    api.addBlock(
+      post.id,
+      {
+        dialect: 'markdown',
+        text: '',
+        index: blocks.length,
+      },
+    ).then(
+      resp => handleSetBlocks(blocks.slice().concat(resp.data.data)),
+      error => console.error('TODO: proper error handling', error),
+    );
   }
 
   render() {
     const {
+      handleSetBlocks,
       blocks,
-      addBlock,
-      selectedPost,
-      updatePostTitle,
+      post,
+      handleUpdatePost,
       errorMessage,
       isFetchingBlock,
       classes,
@@ -71,10 +99,16 @@ export class EditPost extends React.Component {
                     name="title"
                     type="text"
                     label="Post Title"
-                    value={selectedPost.title}
-                    onChange={ev => updatePostTitle(ev.target.value)}
+                    value={post.title}
+                    onChange={ev => handleUpdatePost({
+                      ...post,
+                      title: ev.target.value,
+                    })}
                   />
-                  <EditPostButtonBar />
+                  <EditPostButtonBar
+                    post={post}
+                    blocks={blocks}
+                  />
                 </Toolbar>
               </AppBar>
             </div>
@@ -87,7 +121,7 @@ export class EditPost extends React.Component {
             >
               <div style={{
                 width: '50%',
-                marginRight: '1em'
+                marginRight: '1em',
               }}
               >
                 {
@@ -95,12 +129,13 @@ export class EditPost extends React.Component {
                       (
                         <BlockComponent
                           key={block.id}
-                          postId={selectedPost.id}
+                          postId={post.id}
                           block={block}
-                          isFirstBlock={index === 0}
-                          isLastBlock={index === blocks.length - 1}
-                          onFocus={() => this.setState({focusedBlockId: block.id})}
+                          blocks={blocks}
+                          blockIndex={index}
+                          onFocus={() => this.setState({ focusedBlockId: block.id })}
                           isFocused={block.id === this.state.focusedBlockId}
+                          handleSetBlocks={handleSetBlocks}
                         />
                       ),
                   )
@@ -111,7 +146,7 @@ export class EditPost extends React.Component {
                 >
                   <Button
                     fab
-                    onClick={() => addBlock(selectedPost.id, this.state.dialect, '', blocks.length)}
+                    onClick={() => this.handleAddBlock()}
                     color="default"
                   >
                     <ContentAdd />
@@ -119,19 +154,12 @@ export class EditPost extends React.Component {
                 </div>
               </div>
               <div style={{ width: '50%' }}>
-                {
-                  blocks.map(block =>
-                    (
-                      <RenderedBlock
-                        key={block.id}
-                        postId={selectedPost.id}
-                        isFetchingBlock={isFetchingBlock}
-                        block={block}
-                        isFocused={block.id === this.state.focusedBlockId}
-                      />
-                    ),
-                  )
-                }
+                <RenderedPost
+                  post={post}
+                  blocks={blocks}
+                  isFetchingBlock={isFetchingBlock}
+                  focusedBlockId={this.state.focusedBlockId}
+                />
               </div>
             </div>
           </CardContent>
@@ -157,22 +185,24 @@ EditPost.propTypes = {
       text: PropTypes.string,
     }),
   ),
-  selectedPost: PropTypes.shape({
-    dialect: PropTypes.string,
-    text: PropTypes.string,
+  post: PropTypes.shape({
+    id: PropTypes.number,
   }).isRequired,
   errorMessage: PropTypes.string,
   isFetchingBlock: PropTypes.bool,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape({
+    MuiCardContent: PropTypes.string.isRequired,
+  }).isRequired,
 
-  addBlock: PropTypes.func.isRequired,
-  updatePostTitle: PropTypes.func.isRequired,
+  handleSetBlocks: PropTypes.func.isRequired,
+  handleUpdatePost: PropTypes.func.isRequired,
 };
 
 EditPost.defaultProps = {
-  errorMessage: '',
   blocks: [],
+  errorMessage: '',
   isFetchingBlock: false,
 };
 
 export default withStyles(styles)(EditPost);
+

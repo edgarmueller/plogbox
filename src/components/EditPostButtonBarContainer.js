@@ -6,7 +6,6 @@ import fileDownload from 'react-file-download';
 import Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
 import EditPostButtonBar from './EditPostButtonBar';
-import { getBlocks, getSelectedPost } from '../reducers/index';
 
 export class EditPostButtonBarContainer extends React.Component {
 
@@ -31,12 +30,6 @@ export class EditPostButtonBarContainer extends React.Component {
 EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 
 EditPostButtonBarContainer.defaultProps = EditPostButtonBar.defaultProps;
-
-const mapStateToProps = state => ({
-  post: getSelectedPost(state),
-  blocks: getBlocks(state),
-});
-
 
 export const mapDispatchToProps = dispatch => ({
   addBlock(postId, dialect, text) {
@@ -74,6 +67,6 @@ export const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(EditPostButtonBarContainer);

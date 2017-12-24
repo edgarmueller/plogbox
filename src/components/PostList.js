@@ -49,7 +49,7 @@ export class PostList extends React.Component {
     const {
       posts,
       addPost,
-      selectPost,
+      handlePostSelected,
       deletePost,
       classes,
     } = this.props;
@@ -82,7 +82,7 @@ export class PostList extends React.Component {
                     <TableCell>{formatDate(post.date)}</TableCell>
                     <TableCell>
                       <IconButton
-                        onClick={() => selectPost(post)}
+                        onClick={() => handlePostSelected(post)}
                         color="default"
                       >
                         <ContentCreate />
@@ -124,11 +124,10 @@ export class PostList extends React.Component {
 }
 
 PostList.propTypes = {
-  // classes: PropTypes.object.isRequired,
   posts: PropTypes.arrayOf(PropTypes.object),
   addPost: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
-  selectPost: PropTypes.func.isRequired,
+  handlePostSelected: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
 };
 
@@ -138,4 +137,3 @@ PostList.defaultProps = {
 };
 
 export default withStyles(styles)(PostList);
-// export default PostList;

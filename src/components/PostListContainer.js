@@ -23,6 +23,8 @@ export class PostListContainer extends React.Component {
 
   componentWillMount() {
     this.props.fetchPosts();
+    // clear any previously selected post
+    localStorage.removeItem('selectedPostId');
   }
 
   setSelectedCell(isEditingTags) {
@@ -36,7 +38,7 @@ export class PostListContainer extends React.Component {
       isFetchingPosts,
       addPost,
       resetErrorMessage,
-      selectPost,
+      handlePostSelected,
       deletePost,
     } = this.props;
 
@@ -49,7 +51,7 @@ export class PostListContainer extends React.Component {
         <PostList
           posts={posts}
           addPost={addPost}
-          selectPost={selectPost}
+          handlePostSelected={handlePostSelected}
           deletePost={deletePost}
         />
 
@@ -72,7 +74,7 @@ PostListContainer.propTypes = {
   addPost: PropTypes.func.isRequired,
   resetErrorMessage: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
-  selectPost: PropTypes.func.isRequired,
+  handlePostSelected: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
 };
 
@@ -82,11 +84,16 @@ PostListContainer.defaultProps = {
   errorMessage: undefined,
 };
 
-const mapStateToProps = state => ({
-  posts: getAllPosts(state),
-  errorMessage: getPostErrorMessage(state),
-  isFetchingPosts: getIsFetchingPosts(state),
-});
+const mapStateToProps = (state) => {
+  const posts = _.filter(getAllPosts(state), post =>
+    !_.some(post.tags, tag => tag.name === 'journal'),
+  );
+  return {
+    posts,
+    errorMessage: getPostErrorMessage(state),
+    isFetchingPosts: getIsFetchingPosts(state),
+  };
+};
 
 export const mapDispatchToProps = dispatch => ({
   addPost() {
@@ -105,12 +112,12 @@ export const mapDispatchToProps = dispatch => ({
       type: RESET_ERROR_MESSAGE,
     });
   },
-  selectPost(post) {
-    dispatch(actions.selectPost(post));
-    dispatch(routerActions.push('posts/edit'));
-  },
   deletePost(post) {
     return dispatch(actions.deletePost(post));
+  },
+  handlePostSelected(post) {
+    dispatch(routerActions.push(`/posts/${post.id}`));
+    localStorage.setItem('selectedPostId', post.id);
   },
 });
 

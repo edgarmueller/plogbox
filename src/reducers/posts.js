@@ -13,9 +13,10 @@ import {
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
   RESET_ERROR_MESSAGE,
-  SELECT_POST,
+  SELECT_POST_BY_NAME_FAILURE,
   UPDATE_POST_FAILURE,
   UPDATE_POST_TITLE,
+  USER_LOGIN_FAILURE,
 } from '../constants';
 
 export const postsReducer = (state = {
@@ -26,12 +27,6 @@ export const postsReducer = (state = {
       return {
         ...state,
         all: Immutable.List(action.posts),
-      };
-
-    case SELECT_POST:
-      return {
-        ...state,
-        selectedPost: action.post,
       };
 
     case CREATE_POST_SUCCESS:
@@ -106,6 +101,8 @@ export const errorReducer = (state = null, action) => {
     case FETCH_POSTS_FAILURE:
     case DELETE_POST_FAILURE:
     case UPDATE_POST_FAILURE:
+    case SELECT_POST_BY_NAME_FAILURE:
+    case USER_LOGIN_FAILURE:
     case ADD_TAG_FAILURE:
       return action.statusText;
     case RESET_ERROR_MESSAGE:
@@ -121,7 +118,8 @@ export default combineReducers({
   errorMessage: errorReducer,
 });
 
-export const getPostBeingEdited = state => state.posts.selectedPost;
 export const isFetchingPosts = state => state.isFetching;
 export const getAllPosts = state => state.posts.all.toArray();
 export const getPostErrorMessage = state => state.errorMessage;
+export const findPostById = postId => state =>
+  state.posts.all.find(post => Number(post.id) === Number(postId));

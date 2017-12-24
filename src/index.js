@@ -1,16 +1,17 @@
 import React from 'react';
+import * as _ from 'lodash';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto/index.css';
 import { AppContainer } from 'react-hot-loader';
-import * as _ from 'lodash';
+import * as routerActions from 'react-router-redux';
 
 import './base.css';
 import configureStore from './components/configureStore';
 import Root from './components/Root';
-import { selectPost } from './actions';
 import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
 import { testToken } from './api/index';
 import registerServiceWorker from './registerServiceWorker';
+import {fetchPosts} from "./actions";
 
 
 // ID of the DOM element to mount app on
@@ -40,16 +41,20 @@ const loadTokenFromStorage = (dispatch) => {
         () => {
           dispatch({
             type: USER_LOGIN_FAILURE,
+            statusText: 'You need to login',
           });
         },
       );
   }
+
+  return token;
 };
 
 const loadSelectedPost = () => {
-  const selectedPost = localStorage.getItem('selectedPost');
-  if (selectedPost) {
-    store.dispatch(selectPost(JSON.parse(selectedPost)));
+  const selectedPostId = localStorage.getItem('selectedPostId');
+  if (selectedPostId) {
+    console.log('loadSelectedPost', selectedPostId);
+    store.dispatch(routerActions.push(`/posts/${selectedPostId}`));
   }
 };
 
@@ -65,10 +70,19 @@ const render = (Component) => {
 };
 
 const init = (dispatch) => {
-  loadTokenFromStorage(dispatch);
-  loadSelectedPost();
-  render(Root);
   registerServiceWorker();
+  const token = loadTokenFromStorage(dispatch);
+  if (token) {
+    dispatch(fetchPosts())
+      .then(
+        () => {
+          render(Root);
+          loadSelectedPost();
+        }
+      )
+  } else {
+    render(Root);
+  }
 };
 
 init(store.dispatch);

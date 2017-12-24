@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import Axios from 'axios';
@@ -12,7 +13,6 @@ import { applyMiddleware, createStore } from 'redux';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import EditPostContainer, { mapDispatchToProps } from '../../src/components/EditPostContainer';
-
 import {
   FETCH_BLOCKS_SUCCESS,
   UPDATE_POST_TITLE,
@@ -21,42 +21,10 @@ import {
 } from '../../src/constants';
 import { firstPost, posts } from '../helpers/posts';
 import app from '../../src/reducers/index';
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const componentPath = path.join(__dirname, '../../src/components/EditPostContainer.js');
-
-
-jest.mock('popper.js', () => {
-  const PopperJS = jest.requireActual('popper.js');
-
-  return class {
-    static placements = PopperJS.placements;
-
-    constructor() {
-      return {
-        destroy: () => {},
-        scheduleUpdate: () => {},
-      };
-    }
-  };
-});
-
-test('addBlock', async () => {
-  const mock = new MockAdapter(Axios);
-  const response = {
-    data: {
-      dialect: 'markdown',
-      text: '# some markdown text',
-    },
-  };
-  mock.onPut(`http://localhost:9000/api/posts/0/blocks`)
-    .reply(200, response);
-  const store = mockStore({});
-  const props = mapDispatchToProps(store.dispatch);
-  await props.addBlock(1, 'markdown', '# some markdown text');
-  const actions = store.getActions();
-  expect(actions.length).toBe(1);
-});
 
 test('update title of a post', async () => {
   const store = mockStore({
@@ -78,11 +46,10 @@ test('update title of a post', async () => {
 test('fetch blocks', async () => {
   const mock = new MockAdapter(Axios);
   const data = {
-    data: []
+    data: [],
   };
-  mock.onGet(`http://localhost:9000/api/posts/0/blocks`).reply(
-    200, data
-  );
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`)
+    .reply(200, data);
   const store = mockStore({
     posts: {
       posts: {
@@ -100,23 +67,21 @@ test('fetch blocks', async () => {
 test('should show error', () => {
   const mock = new MockAdapter(Axios);
   const data = {
-      data: []
-  } ;
-  mock.onGet(`${BASE_URL}/api/posts/0/blocks`,).reply(
-      200, data
-  );
+    data: [],
+  };
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`)
+    .reply(200, data);
 
   const props = fakeProps(componentPath);
   const store = mockStore({
     posts: {
       posts: {
         all: Immutable.Set(posts),
-        selectedPost: firstPost,
       },
       errorMessage: 'An error occurred',
     },
     blocks: {
-      blocks: Immutable.List(),
+      isFetchingBlock: false,
     },
     auth: {
       userId: 0,
@@ -125,7 +90,10 @@ test('should show error', () => {
 
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>
-      <EditPostContainer {...props} />
+      <EditPostContainer
+        {...props}
+        selectedPost={firstPost}
+      />
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);
@@ -140,7 +108,6 @@ test('should not show error if error message has been reset', () => {
       posts: {
         posts: {
           all: Immutable.Set(posts),
-          selectedPost: firstPost,
         },
         errorMessage: 'An error occurred',
       },
@@ -157,7 +124,10 @@ test('should not show error if error message has been reset', () => {
 
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>
-      <EditPostContainer {...props} />
+      <EditPostContainer
+        {...props}
+        selectedPost={firstPost}
+      />
     </Provider>,
   );
   const dialog = enzymeWrapper.find(Dialog);

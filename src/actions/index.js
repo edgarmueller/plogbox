@@ -8,25 +8,17 @@ import {
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_BLOCKS_SUCCESS,
-  SELECT_POST,
   SIGN_UP_USER_SUCCESS,
   SIGN_UP_USER_FAILURE,
-  UPDATE_BLOCK_DIALECT,
-  UPDATE_BLOCK_TEXT,
-  UPDATE_POST_TITLE,
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
-  REMOVE_BLOCK_SUCCESS,
   ADD_BLOCK,
   ADD_BLOCK_FAILURE,
-  REMOVE_BLOCK_FAILURE,
   FETCH_BLOCKS_FAILURE,
   DELETE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
   UPDATE_POST_FAILURE,
-  MOVE_BLOCK_UP,
-  MOVE_BLOCK_DOWN,
   ADD_TAG_SUCCESS,
   ADD_TAG_FAILURE,
   DELETE_TAG_SUCCESS,
@@ -38,11 +30,9 @@ import {
   ERROR_PASSWORDS_DONT_DIFFER,
   ACTIVATE_ACCOUNT_SUCCESS,
   ACTIVATE_ACCOUNT_FAILURE,
-  FETCH_BLOCK_REQUEST,
-  FETCH_BLOCK_SUCCESS, UPDATE_BLOCK_NAME,
-  MOVE_BLOCK_TO,
   UPDATE_BLOCK_FAILURE,
   USER_IS_LOGGING_IN,
+  SELECT_POST_BY_NAME_FAILURE, FETCH_BLOCKS_REQUEST,
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -59,6 +49,7 @@ export function errorHandler(dispatch, error, type) {
   let errorMessage = '';
   const errorResponse = error.response;
 
+  // TODO: clean up this mess
   if (errorResponse === undefined) {
     errorMessage = error.message;
   } else if (typeof errorResponse === 'string') {
@@ -101,21 +92,44 @@ export const initPosts = posts => ({
   posts,
 });
 
-export const selectPost = (post) => {
-  localStorage.setItem('selectedPost', JSON.stringify(post));
-  return {
-    type: SELECT_POST,
-    post,
-  };
-};
-
-export const createPost = post => dispatch => api.createPost(post)
+// TODO: should only get post id as parameter
+export const fetchBlocks = selectedPost => dispatch =>
+  api.fetchBlocks(selectedPost.id)
     .then(
       (resp) => {
+        const blocks = resp.data.data;
+        dispatch({
+          type: FETCH_BLOCKS_SUCCESS,
+          postId: selectedPost.id,
+          blocks,
+        });
+        return blocks;
+      },
+      error => errorHandler(dispatch, error, FETCH_BLOCKS_FAILURE),
+    );
+
+export const findPostByName = postTitle => dispatch =>
+  api.searchPost(postTitle)
+    .then(
+      (resp) => {
+        if (resp.data.status === 'success') {
+          return resp.data.data;
+        }
+        return undefined;
+      },
+      error => errorHandler(dispatch, error, SELECT_POST_BY_NAME_FAILURE),
+    );
+
+export const createPost = post => dispatch =>
+  api.createPost(post)
+    .then(
+      (resp) => {
+        const createdPost = resp.data.data;
         dispatch({
           type: CREATE_POST_SUCCESS,
-          post: resp.data.data,
+          post: createdPost,
         });
+        return createdPost;
       },
       (error) => {
         errorHandler(dispatch, error, CREATE_POST_FAILURE);
@@ -229,84 +243,18 @@ export const fetchPosts = () => (dispatch, getState) => {
     );
 };
 
-// TODO: should only get post id as parameter
-export const fetchBlocks = selectedPost => dispatch =>
-  api.fetchBlocks(selectedPost.id)
-    .then(
-      resp =>
-        dispatch({
-          type: FETCH_BLOCKS_SUCCESS,
-          postId: selectedPost.id,
-          blocks: resp.data.data,
-        }),
-      error => errorHandler(dispatch, error, FETCH_BLOCKS_FAILURE),
-    );
-
-export const updateBlockText = (block, text) => ({
-  type: UPDATE_BLOCK_TEXT,
-  block,
-  text,
-});
-
-export const updateBlockName = (block, name) => ({
-  type: UPDATE_BLOCK_NAME,
-  block,
-  name,
-});
-
-export const moveBlock = (dragIndex, hoverIndex) => ({
-  type: MOVE_BLOCK_TO,
-  dragIndex,
-  hoverIndex,
-});
-
-export const updateBlockDialect = (block, dialect) => ({
-  type: UPDATE_BLOCK_DIALECT,
-  block,
-  dialect,
-});
-
-export const updatePostTitle = title => ({
-  type: UPDATE_POST_TITLE,
-  title,
-});
-
 export const addBlock = (postId, block) => dispatch =>
   api.addBlock(postId, block)
     .then(
-      resp => dispatch({
-        type: ADD_BLOCK,
-        block: resp.data.data,
-      }),
+      (resp) => {
+        dispatch({
+          type: ADD_BLOCK,
+          block: resp.data.data,
+        });
+        return resp.data.data;
+      },
       error => errorHandler(dispatch, error, ADD_BLOCK_FAILURE),
     );
-
-export const removeBlock = (postId, block) => dispatch =>
-  api.removeBlock(postId, block)
-    .then(
-      (resp) => {
-        // TODO: write test that expects blockId in response
-        // TODO: this will fail if a request has been executed multiple times!
-        //       should this even be allowed?
-        dispatch({
-          type: REMOVE_BLOCK_SUCCESS,
-          blockId: resp.data.data.blockId,
-        });
-      },
-      (error) => {
-        errorHandler(dispatch, error, REMOVE_BLOCK_FAILURE);
-      },
-    );
-
-export const moveBlockUp = block => ({
-  type: MOVE_BLOCK_UP,
-  block,
-});
-
-export const moveBlockDown = block => ({
-  type: MOVE_BLOCK_DOWN,
-  block,
-});
 
 export const addTag = (postId, tag) => dispatch =>
   api.addTag(postId, tag)
@@ -394,7 +342,7 @@ export const activateAccount = token => dispatch =>
 
 export const downloadFile = (postId, fileId) => (dispatch) => {
   dispatch({
-    type: FETCH_BLOCK_REQUEST,
+    type: FETCH_BLOCKS_REQUEST,
   });
   return api.download(postId, fileId)
     .then(
@@ -403,7 +351,7 @@ export const downloadFile = (postId, fileId) => (dispatch) => {
           const reader = new FileReader();
           const loadEnd = () => {
             dispatch({
-              type: FETCH_BLOCK_SUCCESS,
+              type: FETCH_BLOCKS_SUCCESS,
             });
             resolve(reader.result);
           };

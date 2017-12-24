@@ -1,4 +1,5 @@
 import React from 'react';
+import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -66,10 +67,18 @@ class LoginFormContainer extends React.Component {
   }
 
   render() {
-    const { isAuthenticated, isAuthenticating, handleSubmit } = this.props;
-    if (isAuthenticated) {
-      return (<Redirect to="/posts" />);
+    const { isAuthenticated, isAuthenticating, handleSubmit, location } = this.props;
+    let redirectUrl;
+    if (location) {
+      const search = location.search;
+      const params = new URLSearchParams(search);
+      redirectUrl = params.get('redirect');
     }
+
+    if (isAuthenticated) {
+      return (<Redirect to={`${_.isEmpty(redirectUrl) ? '/posts' : redirectUrl}`} />);
+    }
+
     if (isAuthenticating) {
       return (<p>Logging in...</p>);
     }
@@ -82,7 +91,9 @@ class LoginFormContainer extends React.Component {
         />
         <p>
           <Link to="/password/forgot">
-            Forgot password?
+            <Button>
+              Forgot password?
+            </Button>
           </Link>
         </p>
       </div>

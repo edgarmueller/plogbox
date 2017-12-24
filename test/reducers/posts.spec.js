@@ -29,12 +29,6 @@ test('create post', () => {
   expect(after.all.size).toBe(2);
 });
 
-test('select a post', () => {
-  const before = postsReducer(undefined, initPosts(posts));
-  const after = postsReducer(before, selectPost(_.head(posts)));
-  expect(after.selectedPost).toEqual(_.head(posts));
-});
-
 test('delete a post', () => {
   const before = postsReducer(undefined, initPosts(posts));
   const after = postsReducer(before, {
@@ -42,14 +36,4 @@ test('delete a post', () => {
     post: firstPost,
   });
   expect(after.all.size).toBe(0);
-});
-
-test('get post being edited', () => {
-  expect(getSelectedPost({
-    posts: {
-      posts: {
-        selectedPost: firstPost,
-      },
-    },
-  })).toEqual(firstPost);
 });

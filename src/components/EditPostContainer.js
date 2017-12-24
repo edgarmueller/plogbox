@@ -3,66 +3,93 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import EditPost from './EditPost';
 import * as action from '../actions';
-import { getBlocks, getIsFetchingBlock, getPostErrorMessage, getSelectedPost } from '../reducers';
+import {
+  findPostById,
+  getIsFetchingBlock,
+  getPostErrorMessage,
+} from '../reducers';
 
 class EditPostContainer extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      post: props.post,
+      blocks: [],
+    };
+    this.handleSetBlocks = this.handleSetBlocks.bind(this);
+    this.handleUpdatePost = this.handleUpdatePost.bind(this);
+  }
+
   componentWillMount() {
-    const { fetchBlocks, selectedPost } = this.props;
-    fetchBlocks(selectedPost);
+    const { fetchBlocks, post } = this.props;
+    if (_.isEmpty(post.blocks)) {
+      fetchBlocks(post)
+        .then(blocks => this.setState({ blocks }));
+    }
+  }
+
+  handleSetBlocks(blocks) {
+    this.setState({ blocks });
+  }
+
+  handleUpdatePost(post) {
+    this.setState({ post });
   }
 
   render() {
-    return <EditPost {...this.props} />;
+    return (
+      <EditPost
+        post={this.state.post}
+        blocks={this.state.blocks}
+        handleUpdatePost={this.handleUpdatePost}
+        handleSetBlocks={this.handleSetBlocks}
+      />
+    );
   }
 }
 
 
 EditPostContainer.propTypes = {
-  blocks: PropTypes.arrayOf(
-    PropTypes.shape({
-      dialect: PropTypes.string.isRequired,
-      text: PropTypes.string,
-    }),
-  ),
-  selectedPost: PropTypes.shape({
+  post: PropTypes.shape({
     title: PropTypes.string,
+    blocks: PropTypes.arrayOf(
+      PropTypes.shape({
+        dialect: PropTypes.string.isRequired,
+        text: PropTypes.string,
+      }),
+    ),
   }).isRequired,
 
-  addBlock: PropTypes.func.isRequired,
   fetchBlocks: PropTypes.func.isRequired,
-  resetErrorMessage: PropTypes.func.isRequired,
-  updatePostTitle: PropTypes.func.isRequired,
 };
 
-EditPostContainer.defaultProps = {
-  blocks: [],
-};
+export const mapStateToProps = (state, ownProps) => {
+  let selectedPost;
+  if (_.has(ownProps, 'match.params.postId')) {
+    const { match: { params } } = ownProps;
+    selectedPost = findPostById(params.postId)(state);
+  } else {
+    selectedPost = ownProps.selectedPost;
+  }
 
-export const mapStateToProps = state => ({
-  selectedPost: getSelectedPost(state),
-  userId: state.auth.userId,
-  blocks: getBlocks(state),
-  isFetchingBlock: getIsFetchingBlock(state),
-  errorMessage: getPostErrorMessage(state),
-});
+  return {
+    post: selectedPost,
+    userId: state.auth.userId,
+    isFetchingBlock: getIsFetchingBlock(state),
+    errorMessage: getPostErrorMessage(state),
+  };
+};
 
 export const mapDispatchToProps = dispatch => ({
   fetchBlocks(post) {
-    return dispatch(action.fetchBlocks(post));
-  },
-  addBlock(postId, dialect, text, index) {
-    const block = {
-      dialect,
-      text,
-      index,
-    };
-    return dispatch(action.addBlock(postId, block));
-  },
-  updatePostTitle(title) {
-    dispatch(action.updatePostTitle(title));
+    if (post !== undefined) {
+      return dispatch(action.fetchBlocks(post));
+    }
+    return undefined;
   },
 });
 

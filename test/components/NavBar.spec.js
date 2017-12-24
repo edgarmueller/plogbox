@@ -1,11 +1,11 @@
 /* eslint-disable import/first */
-import '../helpers/setup';
+import { mountWithContext } from '../helpers/setup';
 
 import React from 'react';
 import { shallow } from 'enzyme';
-import Avatar from 'material-ui/Avatar';
+import { Avatar, Toolbar } from 'material-ui';
+import { MemoryRouter } from 'react-router';
 import { NavBar } from '../../src/components/NavBar';
-import { Link } from 'react-router-dom';
 
 test('NavBar should render', () => {
   const props = {
@@ -34,8 +34,11 @@ test('NavBar should render for unauthenticated user', () => {
       link: 'test',
     },
   };
-  const enzymeWrapper = shallow(<NavBar {...props} />);
-  // home, sign-up and login buttons for unauthenticated users
-  const flatButtons = enzymeWrapper.find(Link);
-  expect(flatButtons.length).toBe(3);
+  const enzymeWrapper = mountWithContext(
+    <MemoryRouter>
+      <NavBar {...props} />
+    </MemoryRouter>,
+  );
+  const toolbar = enzymeWrapper.find(Toolbar);
+  expect(toolbar.length).toBe(1);
 });

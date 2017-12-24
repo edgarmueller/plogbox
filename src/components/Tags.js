@@ -15,6 +15,7 @@ const styles = theme => ({
 });
 
 export const Tags = ({ post, isEditing, addTag, removeTag, done, suggestedTags, classes }) => {
+
   if (isEditing) {
     // TODO: can we keep the tag ID?
     const suggetsions = suggestedTags.map(tag => ({

@@ -6,7 +6,7 @@ import DownArrow from 'material-ui-icons/KeyboardArrowDown';
 import UpArrow from 'material-ui-icons/KeyboardArrowUp';
 import { Direction } from '../constants';
 
-const handleStyle = {
+const dragHandleStyle = {
   backgroundColor: 'green',
   width: '1rem',
   height: '1rem',
@@ -15,7 +15,7 @@ const handleStyle = {
   cursor: 'move',
 };
 
-export class BlockControl extends React.Component {
+class BlockControl extends React.Component {
 
   constructor(props) {
     super(props);
@@ -26,17 +26,18 @@ export class BlockControl extends React.Component {
 
   render() {
     const {
-      postId,
       block,
-      handlers,
       isFirstBlock,
       isLastBlock,
+      handleDeleteBlock,
+      handleUpdateBlock,
+      handleMoveBlock,
       connectDragSource,
     } = this.props;
 
     return (
       <div style={{ paddingBottom: '0.5em' }}>
-        {connectDragSource(<div style={handleStyle} />)}
+        {connectDragSource(<div style={dragHandleStyle} />)}
         <FormControl style={{ minWidth: '120px' }}>
           <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
           <Select
@@ -45,7 +46,10 @@ export class BlockControl extends React.Component {
             value={this.state.dialect}
             onChange={(ev) => {
               this.setState(() => ({ dialect: ev.target.value }));
-              handlers.updateBlock(block, ev.target.value, block.text);
+              handleUpdateBlock({
+                ...block,
+                dialect: ev.target.value,
+              });
             }}
           >
             <MenuItem value={'markdown'}>Markdown</MenuItem>
@@ -55,7 +59,7 @@ export class BlockControl extends React.Component {
 
         <span style={{ marginLeft: '1em' }}>
           <IconButton
-            onClick={() => handlers.deleteBlock(postId, block)}
+            onClick={() => handleDeleteBlock(block)}
             color="default"
           >
             <ContentDelete />
@@ -63,7 +67,7 @@ export class BlockControl extends React.Component {
           {
             !isFirstBlock ?
               <IconButton
-                onClick={() => handlers.moveBlock(block, Direction.UP)}
+                onClick={() => handleMoveBlock(block, Direction.UP)}
                 color="default"
               >
                 <UpArrow />
@@ -73,7 +77,7 @@ export class BlockControl extends React.Component {
           {
             !isLastBlock ?
               <IconButton
-                onClick={() => handlers.moveBlock(block, Direction.DOWN)}
+                onClick={() => handleMoveBlock(block, Direction.DOWN)}
                 color="default"
               >
                 <DownArrow />
@@ -87,18 +91,15 @@ export class BlockControl extends React.Component {
 }
 
 BlockControl.propTypes = {
-  postId: PropTypes.number.isRequired,
   block: PropTypes.shape({
     dialect: PropTypes.string.isRequired,
     text: PropTypes.string,
   }).isRequired,
-  handlers: PropTypes.shape({
-    moveBlock: PropTypes.func.isRequired,
-    updateBlock: PropTypes.func.isRequired,
-    deleteBlock: PropTypes.func.isRequired,
-  }).isRequired,
   isFirstBlock: PropTypes.bool.isRequired,
   isLastBlock: PropTypes.bool.isRequired,
+  handleDeleteBlock: PropTypes.func.isRequired,
+  handleMoveBlock: PropTypes.func.isRequired,
+  handleUpdateBlock: PropTypes.func.isRequired,
   connectDragSource: PropTypes.func.isRequired,
 };
 

@@ -1,8 +1,11 @@
 import FileReader from 'filereader';
 import PropTypes from 'prop-types';
-import { mount } from 'enzyme';
+import Enzyme, { mount } from 'enzyme';
 import { createMuiTheme } from 'material-ui';
 import { Blob } from 'jsdom/lib/jsdom/living';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 export function mountWithContext(Component) {
   return mount(

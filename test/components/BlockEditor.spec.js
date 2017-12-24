@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
-import { BlockEditor } from '../../src/components/BlockEditor';
+import BlockEditor from '../../src/components/BlockEditor';
 
 test('should render Editor', () => {
   const block = {
@@ -14,12 +14,13 @@ test('should render Editor', () => {
   const AceEditor = require('react-ace').default;
   /* eslint-enable */
 
+  // TODO: use fake props?
   const enzymeWrapper = mountWithContext(
     <BlockEditor
       postId={0}
       block={block}
       onDrop={() => {}}
-      updateText={() => {}}
+      handleUpdateBlock={() => {}}
     />,
   );
 

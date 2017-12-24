@@ -65,8 +65,9 @@ export const mapDispatchToProps = dispatch => ({
             tags: resp.data.data.map(tag => tag.name),
           });
         },
-        () => {
-          // ignore error
+        (error) => {
+          // TODO ignore error?
+          console.warn(error);
         },
       );
   },
