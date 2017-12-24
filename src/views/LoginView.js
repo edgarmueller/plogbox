@@ -66,9 +66,12 @@ class LoginFormContainer extends React.Component {
   }
 
   render() {
-    const { isAuthenticated, handleSubmit } = this.props;
+    const { isAuthenticated, isAuthenticating, handleSubmit } = this.props;
     if (isAuthenticated) {
       return (<Redirect to="/posts" />);
+    }
+    if (isAuthenticating) {
+      return (<p>Logging in...</p>);
     }
     return (
       <div>
@@ -89,6 +92,7 @@ class LoginFormContainer extends React.Component {
 
 LoginFormContainer.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
+  isAuthenticating: PropTypes.bool.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
@@ -100,8 +104,10 @@ LoginFormContainer.defaultProps = {
 
 const mapStateToProps = (state) => {
   const isAuthenticated = state.auth.isAuthenticated || false;
+  const isAuthenticating = state.auth.isAuthenticating || false;
   return {
     isAuthenticated,
+    isAuthenticating,
     errorMessage: getStatusText(state.auth),
   };
 };

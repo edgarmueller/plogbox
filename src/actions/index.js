@@ -42,6 +42,7 @@ import {
   FETCH_BLOCK_SUCCESS, UPDATE_BLOCK_NAME,
   MOVE_BLOCK_TO,
   UPDATE_BLOCK_FAILURE,
+  USER_IS_LOGGING_IN,
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts } from '../reducers';
@@ -185,9 +186,12 @@ export const registerUser = signUpToken => dispatch =>
     );
 
 
-export const loginUser = ({ email, password }) => dispatch =>
-// TODO  rememberMe can not be configured
-  api.loginUser(email, password, true)
+export const loginUser = ({ email, password }) => (dispatch) => {
+  dispatch({
+    type: USER_IS_LOGGING_IN,
+  });
+  // TODO  rememberMe can not be configured
+  return api.loginUser(email, password, true)
     .then(
       (response) => {
         const {
@@ -206,6 +210,7 @@ export const loginUser = ({ email, password }) => dispatch =>
       },
       error => errorHandler(dispatch, error, USER_LOGIN_FAILURE),
     );
+};
 
 export const fetchPosts = () => (dispatch, getState) => {
   if (getIsFetchingPosts(getState())) {
