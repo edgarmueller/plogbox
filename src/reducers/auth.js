@@ -23,6 +23,7 @@ export const auth = (state = INITIAL_STATE, action) => {
     case USER_IS_LOGGING_IN:
       return {
         isAuthenticating: true,
+        isAuthenticated: false,
         statusText: null,
       };
     case USER_LOGIN_SUCCESS:
