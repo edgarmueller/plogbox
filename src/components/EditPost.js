@@ -14,8 +14,6 @@ import ContentAdd from 'material-ui-icons/Add';
 
 import Dialog from 'material-ui/Dialog';
 import PropTypes from 'prop-types';
-
-import * as api from '../api';
 import BlockComponent from './BlockComponent';
 import EditPostButtonBar from './EditPostButtonBarContainer';
 import RenderedBlock from './RenderedBlockContainer';
@@ -29,6 +27,18 @@ const styles = () => ({
   },
 });
 
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+
 const RenderedPost = ({ post, blocks, isFetchingBlock, focusedBlockId }) => {
   return (
     <div>
@@ -36,17 +46,31 @@ const RenderedPost = ({ post, blocks, isFetchingBlock, focusedBlockId }) => {
         blocks.map(block =>
           (
             <RenderedBlock
-              key={block.id}
+              key={block.id || block.tempid}
               postId={post.id}
               isFetchingBlock={isFetchingBlock}
               block={block}
-              isFocused={block.id === focusedBlockId}
+              isFocused={block === focusedBlockId}
             />
           )
         )
       }
     </div>
   );
+};
+
+RenderedPost.propTypes = {
+  blocks: PropTypes.arrayOf(
+    PropTypes.shape({
+      dialect: PropTypes.string.isRequired,
+      text: PropTypes.string,
+    }),
+  ),
+  post: PropTypes.shape({
+    id: PropTypes.number,
+  }).isRequired,
+  isFetchingBlock: PropTypes.bool.isRequired,
+  focusedBlockId: PropTypes.number
 };
 
 class EditPost extends React.Component {
@@ -57,24 +81,19 @@ class EditPost extends React.Component {
       open: false,
       message: '',
       text: '',
-      focusedBlockId: -1,
+      focusedBlockId: undefined,
     };
     this.handleAddBlock = this.handleAddBlock.bind(this);
   }
 
   handleAddBlock() {
-    const { blocks, handleSetBlocks, post } = this.props;
-    api.addBlock(
-      post.id,
-      {
-        dialect: 'markdown',
-        text: '',
-        index: blocks.length,
-      },
-    ).then(
-      resp => handleSetBlocks(blocks.slice().concat(resp.data.data)),
-      error => console.error('TODO: proper error handling', error),
-    );
+    const { blocks, handleSetBlocks } = this.props;
+    handleSetBlocks(blocks.slice().concat({
+      dialect: 'markdown',
+      text: '',
+      index: blocks.length,
+      tempid: guid()
+    }));
   }
 
   render() {
@@ -108,6 +127,7 @@ class EditPost extends React.Component {
                   <EditPostButtonBar
                     post={post}
                     blocks={blocks}
+                    handleSetBlocks={handleSetBlocks}
                   />
                 </Toolbar>
               </AppBar>
@@ -128,7 +148,7 @@ class EditPost extends React.Component {
                   blocks.map((block, index) =>
                       (
                         <BlockComponent
-                          key={block.id}
+                          key={block.id || block.tempid}
                           postId={post.id}
                           block={block}
                           blocks={blocks}

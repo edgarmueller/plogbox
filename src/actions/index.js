@@ -15,7 +15,6 @@ import {
   USER_LOGOUT_SUCCESS,
   ADD_BLOCK,
   ADD_BLOCK_FAILURE,
-  FETCH_BLOCKS_FAILURE,
   DELETE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
   UPDATE_POST_FAILURE,
@@ -32,10 +31,10 @@ import {
   ACTIVATE_ACCOUNT_FAILURE,
   UPDATE_BLOCK_FAILURE,
   USER_IS_LOGGING_IN,
-  SELECT_POST_BY_NAME_FAILURE, FETCH_BLOCKS_REQUEST,
+  SELECT_POST_BY_NAME_FAILURE, FETCH_BLOCKS_REQUEST, UPDATE_POST_REQUEST,
 } from '../constants';
 import * as api from '../api';
-import { getIsFetchingPosts } from '../reducers';
+import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
 
 export function errorHandler(dispatch, error, type) {
   if (error === undefined) {
@@ -92,22 +91,6 @@ export const initPosts = posts => ({
   posts,
 });
 
-// TODO: should only get post id as parameter
-export const fetchBlocks = selectedPost => dispatch =>
-  api.fetchBlocks(selectedPost.id)
-    .then(
-      (resp) => {
-        const blocks = resp.data.data;
-        dispatch({
-          type: FETCH_BLOCKS_SUCCESS,
-          postId: selectedPost.id,
-          blocks,
-        });
-        return blocks;
-      },
-      error => errorHandler(dispatch, error, FETCH_BLOCKS_FAILURE),
-    );
-
 export const findPostByName = postTitle => dispatch =>
   api.searchPost(postTitle)
     .then(
@@ -136,15 +119,18 @@ export const createPost = post => dispatch =>
       },
     );
 
-export const updatePost = (selectedPost, blocks) => (dispatch) => {
-  const promises = blocks.map((block, idx) => {
-    const clonedBlock = _.clone(block);
-    clonedBlock.index = idx;
-    return api.updateBlock(selectedPost.id, clonedBlock);
+// TODO: selectedPost must contain blocks
+export const updatePost = (selectedPost) => (dispatch, getState) => {
+
+  if (getIsUpdatingPost(getState())) {
+    return Promise.resolve();
+  }
+
+  dispatch({
+    type: UPDATE_POST_REQUEST,
   });
 
-  return Promise.all(promises)
-    .then(() => api.updatePost(selectedPost))
+  return api.updatePost(selectedPost)
     .then(
       resp =>
         dispatch({
@@ -367,5 +353,5 @@ export const downloadFile = (postId, fileId) => (dispatch) => {
     );
 };
 
-export const uploadFile = (postId, blockId, file) => api.upload(postId, blockId, file);
+export const uploadFile = (postId, file) => api.upload(postId, file);
 

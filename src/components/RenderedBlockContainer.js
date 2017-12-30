@@ -11,7 +11,7 @@ export class RenderedBlockContainer extends React.Component {
     super(props);
     this.state = {
       isDownloading: false,
-      imagePath: localStorage.getItem(`block_${props.block.id}_image`),
+      imagePath: localStorage.getItem(props.block.text),
     };
   }
 
@@ -21,26 +21,34 @@ export class RenderedBlockContainer extends React.Component {
     if (block.dialect === 'image' &&
       block.text &&
       !this.state.isDownloading &&
-      _.isEmpty(this.state.imagePath)) {
-      // FIXME
-      this.setState({
-        isDownloading: true,
-      });
-      downloadFile(
-        postId,
-        block,
-        () => {
-          this.setState({
-            imagePath: localStorage.getItem(`block_${block.id}_image`),
-            isDownloading: false,
-          });
-        },
-      );
+      this.state.imagePath === null) {
+
+      if (block.dialect === 'image' &&
+        block.text &&
+        !this.state.isDownloading &&
+        this.state.imagePath === null) {
+
+        // FIXME
+        this.setState({
+          isDownloading: true,
+        });
+        downloadFile(
+          postId,
+          block,
+          () => {
+            this.setState({
+              imagePath: localStorage.getItem(block.text),
+              isDownloading: false,
+            });
+          },
+        );
+      }
     }
   }
 
   render() {
     const { block, isFocused } = this.props;
+
     return (<RenderedBlock
       block={block}
       isDownloading={this.state.isDownloading}
@@ -53,7 +61,6 @@ export class RenderedBlockContainer extends React.Component {
 RenderedBlockContainer.propTypes = {
   postId: PropTypes.number.isRequired,
   block: PropTypes.shape({
-    id: PropTypes.number.isRequired,
     dialect: PropTypes.string.isRequired,
     name: PropTypes.string,
     text: PropTypes.string.isRequired,
@@ -79,7 +86,7 @@ export const mapDispatchToProps = dispatch => ({
     const p = dispatch(action.downloadFile(postId, file));
     return p.then(
       (fileData) => {
-        localStorage.setItem(`block_${block.id}_image`, fileData);
+        localStorage.setItem(file, fileData);
         success();
       },
     );

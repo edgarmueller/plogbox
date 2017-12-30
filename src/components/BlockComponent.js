@@ -23,12 +23,17 @@ export class BlockComponent extends React.Component {
     this.handleMoveBlockDown = this.handleMoveBlockDown.bind(this);
   }
 
-  onDrop(postId, block) {
+  onDrop = (postId, block) => {
     return (acceptedFiles) => {
       if (!_.isEmpty(acceptedFiles)) {
-        uploadFile(postId, block.id, _.head(acceptedFiles))
+        uploadFile(postId, _.head(acceptedFiles))
           .then(
-            resp => this.handleUpdateBlock(resp.data.data),
+            resp => {
+              const copy = _.cloneDeep(block);
+              copy.name = _.head(acceptedFiles).name;
+              copy.text = resp.data.data;
+              this.handleUpdateBlock(copy);
+            },
             // TODO
             error => console.error('TODO: proper error handling', error),
           );
@@ -56,11 +61,18 @@ export class BlockComponent extends React.Component {
 
   handleUpdateBlock(block) {
     const { blocks, handleSetBlocks } = this.props;
-    const blockIndex = _.findIndex(blocks, b => b.id === block.id);
+    const blockIndex = _.findIndex(blocks, b => {
+      if (b.id) {
+        return b.id === block.id;
+      }
+      return b.tempid === block.tempid;
+    });
     if (blockIndex !== -1) {
       const copy = blocks.slice();
       copy[blockIndex] = block;
       handleSetBlocks(copy);
+    } else {
+      console.log('no block found')
     }
   }
 
@@ -84,7 +96,6 @@ export class BlockComponent extends React.Component {
 
     return (
       <BlockControlWrapper
-        key={block.id}
         onFocus={onFocus}
         isFocused={isFocused}
         connectDropTarget={connectDropTarget}

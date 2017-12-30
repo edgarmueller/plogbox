@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { Dialog, DialogTitle } from 'material-ui';
 import * as actions from '../actions';
-import { getAllPosts, getIsFetchingPosts, getPostErrorMessage } from '../reducers/index';
+import { getAllPosts, getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
 import '../common/tap';
 import { RESET_ERROR_MESSAGE } from '../constants';
 import PostList from './PostList';
@@ -27,6 +27,13 @@ export class PostListContainer extends React.Component {
     localStorage.removeItem('selectedPostId');
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.isUpdatingPost && !this.props.isUpdatingPost) {
+      // re-fetch in case an update was happening in the background
+      this.props.fetchPosts();
+    }
+  }
+
   setSelectedCell(isEditingTags) {
     this.setState(() => ({ isEditingTags }));
   }
@@ -36,13 +43,14 @@ export class PostListContainer extends React.Component {
       posts,
       errorMessage,
       isFetchingPosts,
+      isUpdatingPost,
       addPost,
       resetErrorMessage,
       handlePostSelected,
       deletePost,
     } = this.props;
 
-    if (isFetchingPosts) {
+    if (isFetchingPosts || isUpdatingPost) {
       return (<p>Loading...</p>);
     }
 
@@ -70,6 +78,7 @@ export class PostListContainer extends React.Component {
 PostListContainer.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object),
   isFetchingPosts: PropTypes.bool,
+  isUpdatingPost: PropTypes.bool,
   errorMessage: PropTypes.string,
   addPost: PropTypes.func.isRequired,
   resetErrorMessage: PropTypes.func.isRequired,
@@ -81,6 +90,7 @@ PostListContainer.propTypes = {
 PostListContainer.defaultProps = {
   posts: [],
   isFetchingPosts: false,
+  isUpdatingPost: false,
   errorMessage: undefined,
 };
 
@@ -92,6 +102,7 @@ const mapStateToProps = (state) => {
     posts,
     errorMessage: getPostErrorMessage(state),
     isFetchingPosts: getIsFetchingPosts(state),
+    isUpdatingPost: getIsUpdatingPost(state),
   };
 };
 

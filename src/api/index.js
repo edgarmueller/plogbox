@@ -47,11 +47,11 @@ export const searchPost = postTitle =>
       getHeaderToken(),
     );
 
-export const updatePost = postId =>
+export const updatePost = post =>
   Axios
     .post(
-      `${BASE_URL}/api/posts/${postId.id}`,
-      postId,
+      `${BASE_URL}/api/posts/${post.id}`,
+      post,
       getHeaderToken(),
     );
 
@@ -104,8 +104,8 @@ export const removeBlock = (postId, block) =>
     getHeaderToken(),
   );
 
-export const upload = (postId, blockId, file) => {
-  const url = `${BASE_URL}/api/posts/${postId}/blocks/${blockId}/upload/${file.name}`;
+export const upload = (postId, file) => {
+  const url = `${BASE_URL}/api/posts/${postId}/upload/${file.name}`;
 
   const data = new FormData();
   data.append(file.name, file);
@@ -118,7 +118,7 @@ export const upload = (postId, blockId, file) => {
 };
 
 export const download = (postId, file) => {
-  const url = `${BASE_URL}/api/posts/${postId}/blocks/file/${file}`;
+  const url = `${BASE_URL}/api/posts/${postId}/file/${file}`;
   return Axios.get(
     url,
     {

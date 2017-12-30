@@ -31,21 +31,17 @@ EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 
 EditPostButtonBarContainer.defaultProps = EditPostButtonBar.defaultProps;
 
-export const mapDispatchToProps = dispatch => ({
-  addBlock(postId, dialect, text) {
-    const block = {
-      dialect,
-      text,
-    };
-    return dispatch(action.addBlock(postId, block));
-  },
+export const mapDispatchToProps = (dispatch, ownProps) => ({
   savePost(selectedPost, blocks, shouldExit) {
+    const post = _.cloneDeep(selectedPost);
+    post.blocks = blocks;
+
     if (shouldExit) {
-      dispatch(action.updatePost(selectedPost, blocks));
+      dispatch(action.updatePost(post));
       return dispatch(routerActions.push('/posts'));
     }
 
-    return dispatch(action.updatePost(selectedPost, blocks));
+    return dispatch(action.updatePost(post));
   },
   exportPost(blocks) {
     fileDownload(JSON.stringify(blocks), 'export.json');
@@ -53,14 +49,15 @@ export const mapDispatchToProps = dispatch => ({
   importPost() {
     document.getElementById('upload').click();
   },
-  upload(postId, file) {
+  // TODO extract to class
+  upload(post, file) {
     // TODO: pull out
     const reader = new FileReader();
     reader.onload = (ev) => {
       const readBlocks = JSON.parse(ev.target.result);
-      _.each(readBlocks, block =>
-        dispatch(action.addBlock(postId, block)),
-      );
+      ownProps.handleSetBlocks(readBlocks);
+      // post.blocks = readBlocks;
+      // action.updatePost(post);
     };
     reader.readAsText(file);
   },

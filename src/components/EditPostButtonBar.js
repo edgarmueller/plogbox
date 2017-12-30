@@ -45,7 +45,7 @@ const EditPostButtonBar =
           id={'upload'}
           type="file"
           style={{ display: 'none' }}
-          onChange={event => upload(event.target.files[0])}
+          onChange={event => upload(post, event.target.files[0])}
         />
       </span>
     );
@@ -60,6 +60,8 @@ EditPostButtonBar.propTypes = {
   importPost: PropTypes.func.isRequired,
   savePost: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
+
+  handleSetBlocks: PropTypes.func.isRequired,
 };
 
 EditPostButtonBar.defaultProps = {

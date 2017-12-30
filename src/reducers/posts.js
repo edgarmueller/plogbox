@@ -14,7 +14,7 @@ import {
   FETCH_POSTS_SUCCESS,
   RESET_ERROR_MESSAGE,
   SELECT_POST_BY_NAME_FAILURE,
-  UPDATE_POST_FAILURE,
+  UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS,
   UPDATE_POST_TITLE,
   USER_LOGIN_FAILURE,
 } from '../constants';
@@ -96,6 +96,12 @@ const isFetchingPost = createFetchingProgressReducer(
   FETCH_POSTS_SUCCESS,
 );
 
+const isUpdatingPost = createFetchingProgressReducer(
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE
+);
+
 export const errorReducer = (state = null, action) => {
   switch (action.type) {
     case FETCH_POSTS_FAILURE:
@@ -115,10 +121,12 @@ export const errorReducer = (state = null, action) => {
 export default combineReducers({
   posts: postsReducer,
   isFetching: isFetchingPost,
+  isUpdating: isUpdatingPost,
   errorMessage: errorReducer,
 });
 
 export const isFetchingPosts = state => state.isFetching;
+export const isUpdating = state => state.isUpdating;
 export const getAllPosts = state => state.posts.all.toArray();
 export const getPostErrorMessage = state => state.errorMessage;
 export const findPostById = postId => state =>

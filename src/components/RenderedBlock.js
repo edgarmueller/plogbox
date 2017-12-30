@@ -36,7 +36,7 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused }) => {
 
 RenderedBlock.propTypes = {
   block: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.number,
     dialect: PropTypes.string.isRequired,
     name: PropTypes.string,
     text: PropTypes.string.isRequired,

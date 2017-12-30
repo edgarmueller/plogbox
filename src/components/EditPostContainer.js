@@ -1,16 +1,15 @@
 import React from 'react';
+import * as _ from 'lodash';
 import PropTypes from 'prop-types';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 import EditPost from './EditPost';
-import * as action from '../actions';
 import {
   findPostById,
   getIsFetchingBlock,
+  getIsUpdatingPost,
   getPostErrorMessage,
 } from '../reducers';
+import withDragDropContext from '../common/withDragDropContext';
 
 class EditPostContainer extends React.Component {
 
@@ -18,18 +17,10 @@ class EditPostContainer extends React.Component {
     super(props);
     this.state = {
       post: props.post,
-      blocks: [],
+      blocks: _.has(props.post, 'blocks') ? props.post.blocks : [],
     };
     this.handleSetBlocks = this.handleSetBlocks.bind(this);
     this.handleUpdatePost = this.handleUpdatePost.bind(this);
-  }
-
-  componentWillMount() {
-    const { fetchBlocks, post } = this.props;
-    if (_.isEmpty(post.blocks)) {
-      fetchBlocks(post)
-        .then(blocks => this.setState({ blocks }));
-    }
   }
 
   handleSetBlocks(blocks) {
@@ -37,6 +28,7 @@ class EditPostContainer extends React.Component {
   }
 
   handleUpdatePost(post) {
+    console.log('updated post', post);
     this.setState({ post });
   }
 
@@ -63,8 +55,6 @@ EditPostContainer.propTypes = {
       }),
     ),
   }).isRequired,
-
-  fetchBlocks: PropTypes.func.isRequired,
 };
 
 export const mapStateToProps = (state, ownProps) => {
@@ -80,20 +70,12 @@ export const mapStateToProps = (state, ownProps) => {
     post: selectedPost,
     userId: state.auth.userId,
     isFetchingBlock: getIsFetchingBlock(state),
+    isUpdatingPost: getIsUpdatingPost(state),
     errorMessage: getPostErrorMessage(state),
   };
 };
 
-export const mapDispatchToProps = dispatch => ({
-  fetchBlocks(post) {
-    if (post !== undefined) {
-      return dispatch(action.fetchBlocks(post));
-    }
-    return undefined;
-  },
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(DragDropContext(HTML5Backend)(EditPostContainer));
+  null,
+)(withDragDropContext(EditPostContainer));

@@ -54,6 +54,7 @@ export class PostList extends React.Component {
       classes,
     } = this.props;
 
+    // TODO: fix key
     return (
       <Card >
         <CardContent className={classes.MuiCardContent}>
@@ -77,7 +78,7 @@ export class PostList extends React.Component {
             <TableBody>
               {
                 posts.map(post => (
-                  <TableRow key={`${post.id}-${post.title}`}>
+                  <TableRow key={`${post.id}-${new Date()}`}>
                     <TableCell>{post.title}</TableCell>
                     <TableCell>{formatDate(post.date)}</TableCell>
                     <TableCell>
