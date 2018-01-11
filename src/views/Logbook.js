@@ -8,6 +8,7 @@ import { DayPickerSingleDateController } from 'react-dates';
 import { Button, Card, CardContent } from 'material-ui';
 import 'react-dates/lib/css/_datepicker.css';
 import * as actions from '../actions';
+import { searchPost } from '../api';
 import { getPostErrorMessage } from '../reducers';
 import EditPost from '../views/EditPostView';
 
@@ -23,15 +24,26 @@ class Logbook extends React.Component {
       currentDate: this.props.date,
       post: undefined,
     };
+    this.findPostByName = this.findPostByName.bind(this);
+  }
+
+  findPostByName(postTitle) {
+    searchPost(postTitle)
+        .then(
+          (resp) => {
+            console.log("RESP", resp)
+            if (resp.data.status === 'success' && resp.data.data.id !== undefined) {            
+              this.setState({ post: resp.data.data });
+            }
+          },
+          error => console.error(error),
+        );
   }
 
   componentWillMount() {
-    this.props.findPostByName(this.state.currentDate)
-      .then(
-        post => this.setState({ post }),
-      );
+    this.findPostByName(this.state.currentDate)      
   }
-
+ 
   render() {
     const { createEntry, errorMessage, navigateTo } = this.props;
 
@@ -82,14 +94,20 @@ class Logbook extends React.Component {
               </div>
               <div style={{ width: '75%' }}>
                 {
-                  this.state.post ?
-                    <EditPost selectedPost={this.state.post} /> :
+                  this.state.post && this.state.post.id ?
                     <div>
-                      <p>No entry for given date</p>
+                      {this.state.post.id}
+                      <EditPost postId={this.state.post.id} />
+                    </div> :
+                    <div>
+                      <p>No entry for given date {this.state.currentDate}</p>
                       <Button
                         onClick={() =>
                           createEntry(this.state.currentDate)
-                            .then(p => this.setState({ post: p }))
+                            .then(p => {
+                              console.log("GOT ", p);
+                              this.setState({ post: p })
+                            })
                         }
                       >
                         Create entry
@@ -107,7 +125,6 @@ class Logbook extends React.Component {
 
 Logbook.propTypes = {
   date: PropTypes.string,
-  findPostByName: PropTypes.func.isRequired,
   createEntry: PropTypes.func.isRequired,
   navigateTo: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
@@ -124,11 +141,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  findPostByName(postName) {
-    return dispatch(actions.findPostByName(postName));
-  },
   async createEntry(date) {
     // TODO: too many requests, should be a single one
+    console.log(">>>", date);
     const post = await dispatch(actions.createPost({
       title: date,
     }));

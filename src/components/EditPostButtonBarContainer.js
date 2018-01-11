@@ -32,19 +32,30 @@ EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 EditPostButtonBarContainer.defaultProps = EditPostButtonBar.defaultProps;
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
-  savePost(selectedPost, blocks, shouldExit) {
+  savePost(selectedPost, shouldExit) {
     const post = _.cloneDeep(selectedPost);
-    post.blocks = blocks;
 
     if (shouldExit) {
-      dispatch(action.updatePost(post));
+      dispatch(action.updatePost(post))
+      .then(post => {
+          console.log("XX", post);
+          ownProps.handleUpdatePost(post);
+        },
+        error => console.error("error occurred", error)
+      )
       return dispatch(routerActions.push('/posts'));
     }
 
-    return dispatch(action.updatePost(post));
+    return dispatch(action.updatePost(post))
+     .then(post => {
+          console.log("ZZ", post);
+          ownProps.handleUpdatePost(post);
+        },
+        error => console.error("error occurred", error)
+      );
   },
-  exportPost(blocks) {
-    fileDownload(JSON.stringify(blocks), 'export.json');
+  exportPost(post) {
+    fileDownload(JSON.stringify(post), 'export.json');
   },
   importPost() {
     document.getElementById('upload').click();

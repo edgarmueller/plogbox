@@ -39,11 +39,11 @@ function guid() {
 }
 
 
-const RenderedPost = ({ post, blocks, isFetchingBlock, focusedBlockId }) => {
+const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => {
   return (
     <div>
       {
-        blocks.map(block =>
+        post.blocks.map(block =>
           (
             <RenderedBlock
               key={block.id || block.tempid}
@@ -60,14 +60,14 @@ const RenderedPost = ({ post, blocks, isFetchingBlock, focusedBlockId }) => {
 };
 
 RenderedPost.propTypes = {
-  blocks: PropTypes.arrayOf(
-    PropTypes.shape({
-      dialect: PropTypes.string.isRequired,
-      text: PropTypes.string,
-    }),
-  ),
   post: PropTypes.shape({
     id: PropTypes.number,
+    blocks: PropTypes.arrayOf(
+      PropTypes.shape({
+        dialect: PropTypes.string.isRequired,
+        text: PropTypes.string,
+      }),
+    ),
   }).isRequired,
   isFetchingBlock: PropTypes.bool.isRequired,
   focusedBlockId: PropTypes.number
@@ -87,11 +87,11 @@ class EditPost extends React.Component {
   }
 
   handleAddBlock() {
-    const { blocks, handleSetBlocks } = this.props;
-    handleSetBlocks(blocks.slice().concat({
+    const { post, handleSetBlocks } = this.props;
+    handleSetBlocks(post.blocks.slice().concat({
       dialect: 'markdown',
       text: '',
-      index: blocks.length,
+      index: post.blocks.length,
       tempid: guid()
     }));
   }
@@ -99,7 +99,6 @@ class EditPost extends React.Component {
   render() {
     const {
       handleSetBlocks,
-      blocks,
       post,
       handleUpdatePost,
       errorMessage,
@@ -126,7 +125,7 @@ class EditPost extends React.Component {
                   />
                   <EditPostButtonBar
                     post={post}
-                    blocks={blocks}
+                    handleUpdatePost={handleUpdatePost}
                     handleSetBlocks={handleSetBlocks}
                   />
                 </Toolbar>
@@ -145,13 +144,13 @@ class EditPost extends React.Component {
               }}
               >
                 {
-                  blocks.map((block, index) =>
+                  post.blocks.map((block, index) =>
                       (
                         <BlockComponent
                           key={block.id || block.tempid}
                           postId={post.id}
                           block={block}
-                          blocks={blocks}
+                          blocks={post.blocks}
                           blockIndex={index}
                           onFocus={() => this.setState({ focusedBlockId: block.id })}
                           isFocused={block.id === this.state.focusedBlockId}
@@ -176,7 +175,7 @@ class EditPost extends React.Component {
               <div style={{ width: '50%' }}>
                 <RenderedPost
                   post={post}
-                  blocks={blocks}
+                  blocks={post.blocks}
                   isFetchingBlock={isFetchingBlock}
                   focusedBlockId={this.state.focusedBlockId}
                 />
@@ -198,15 +197,15 @@ class EditPost extends React.Component {
   }
 }
 
-EditPost.propTypes = {
-  blocks: PropTypes.arrayOf(
-    PropTypes.shape({
-      dialect: PropTypes.string.isRequired,
-      text: PropTypes.string,
-    }),
-  ),
+EditPost.propTypes = { 
   post: PropTypes.shape({
     id: PropTypes.number,
+    blocks: PropTypes.arrayOf(
+      PropTypes.shape({
+        dialect: PropTypes.string.isRequired,
+        text: PropTypes.string,
+      }),
+    ),
   }).isRequired,
   errorMessage: PropTypes.string,
   isFetchingBlock: PropTypes.bool,
@@ -219,7 +218,6 @@ EditPost.propTypes = {
 };
 
 EditPost.defaultProps = {
-  blocks: [],
   errorMessage: '',
   isFetchingBlock: false,
 };

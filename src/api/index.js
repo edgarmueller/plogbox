@@ -32,6 +32,12 @@ export const fetchPosts = () =>
     getHeaderToken(),
   );
 
+export const fetchPostById = (postId) =>
+  Axios.get(
+    `${BASE_URL}/api/posts/${postId}`,
+    getHeaderToken(),
+  );
+
 export const createPost = newPost =>
   Axios
     .put(

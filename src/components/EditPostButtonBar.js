@@ -9,7 +9,6 @@ import ContentSave from 'material-ui-icons/Save';
 const EditPostButtonBar =
   ({
      post,
-     blocks,
      exportPost,
      importPost,
      savePost,
@@ -18,19 +17,19 @@ const EditPostButtonBar =
     (
       <span>
         <Tooltip title="Save this post">
-          <IconButton onClick={() => savePost(post, blocks)}>
+          <IconButton onClick={() => savePost(post)}>
             <ContentSave />
           </IconButton>
         </Tooltip>
 
         <Tooltip title="Save and go back to post list">
-          <IconButton onClick={() => savePost(post, blocks, true)}>
+          <IconButton onClick={() => savePost(post, true)}>
             <NavigationCheck />
           </IconButton>
         </Tooltip>
 
         <Tooltip title="Export thist post as a JSON file">
-          <IconButton onClick={() => exportPost(blocks)}>
+          <IconButton onClick={() => exportPost(post)}>
             <ContentArchive />
           </IconButton>
         </Tooltip>
@@ -51,10 +50,10 @@ const EditPostButtonBar =
     );
 
 EditPostButtonBar.propTypes = {
-  blocks: PropTypes.arrayOf(PropTypes.object),
   // TODO: duplciate prop type definition
   post: PropTypes.shape({
     title: PropTypes.string,
+    blocks: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   exportPost: PropTypes.func.isRequired,
   importPost: PropTypes.func.isRequired,

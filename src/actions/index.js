@@ -35,6 +35,7 @@ import {
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
+import { create } from 'domain';
 
 export function errorHandler(dispatch, error, type) {
   if (error === undefined) {
@@ -108,6 +109,7 @@ export const createPost = post => dispatch =>
     .then(
       (resp) => {
         const createdPost = resp.data.data;
+        console.log("created post", createdPost);
         dispatch({
           type: CREATE_POST_SUCCESS,
           post: createdPost,
@@ -132,11 +134,13 @@ export const updatePost = (selectedPost) => (dispatch, getState) => {
 
   return api.updatePost(selectedPost)
     .then(
-      resp =>
+      resp => {
         dispatch({
           type: UPDATE_POST_SUCCESS,
           post: resp.data.data,
-        }),
+        })
+        return resp.data.data;
+      },
       error => errorHandler(dispatch, error, UPDATE_POST_FAILURE),
     );
 };
