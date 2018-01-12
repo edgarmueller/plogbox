@@ -5,12 +5,17 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import * as routerActions from 'react-router-redux';
 import { DayPickerSingleDateController } from 'react-dates';
-import { Button, Card, CardContent } from 'material-ui';
+import { Button, Card, CardContent, Grid, Typography } from 'material-ui';
 import 'react-dates/lib/css/_datepicker.css';
 import * as actions from '../actions';
 import { searchPost } from '../api';
 import { getPostErrorMessage } from '../reducers';
 import EditPost from '../views/EditPostView';
+
+
+const isSameDate = (date1, date2) => date1.date() === date2.date()
+  && date1.month() === date2.month()
+  && date1.year() === date2.year();
 
 class Logbook extends React.Component {
 
@@ -21,18 +26,21 @@ class Logbook extends React.Component {
     this.state = {
       startDate,
       endDate,
-      currentDate: this.props.date,
+      currentDate: moment(props.date),
       post: undefined,
     };
     this.findPostByName = this.findPostByName.bind(this);
+  }
+
+  componentWillMount() {
+    this.findPostByName(this.state.currentDate.format('YYYYMMDD'));
   }
 
   findPostByName(postTitle) {
     searchPost(postTitle)
         .then(
           (resp) => {
-            console.log("RESP", resp)
-            if (resp.data.status === 'success' && resp.data.data.id !== undefined) {            
+            if (resp.data.status === 'success' && resp.data.data.id !== undefined) {
               this.setState({ post: resp.data.data });
             }
           },
@@ -40,10 +48,6 @@ class Logbook extends React.Component {
         );
   }
 
-  componentWillMount() {
-    this.findPostByName(this.state.currentDate)      
-  }
- 
   render() {
     const { createEntry, errorMessage, navigateTo } = this.props;
 
@@ -62,64 +66,46 @@ class Logbook extends React.Component {
 
 
     return (
-      <div>
-        <Card>
-          <CardContent>
-            <h1>Logbook</h1>
-            <div style={{
-              paddingTop: '1em',
-              paddingLeft: '1em',
-              paddingRight: '1em',
-              display: 'flex',
-            }}
-            >
-              <div style={{
-                width: '25%',
-                marginRight: '1em',
-              }}
-              >
-                <DayPickerSingleDateController
-                  onDateChange={(d) => {
-                    const date = d.format('YYYYMMDD');
-                    this.setState({ currentDate: date });
-                    navigateTo(`/logbook/${date}`);
-                  }}
-                  isDayHighlighted={(d) => {
-                    const currentDate = moment();
-                    return d.date() === currentDate.date()
-                      && d.month() === currentDate.month()
-                      && d.year() === currentDate.year();
-                  }}
-                />
-              </div>
-              <div style={{ width: '75%' }}>
-                {
-                  this.state.post && this.state.post.id ?
-                    <div>
-                      {this.state.post.id}
-                      <EditPost postId={this.state.post.id} />
-                    </div> :
-                    <div>
-                      <p>No entry for given date {this.state.currentDate}</p>
-                      <Button
-                        onClick={() =>
-                          createEntry(this.state.currentDate)
-                            .then(p => {
-                              console.log("GOT ", p);
-                              this.setState({ post: p })
-                            })
-                        }
-                      >
-                        Create entry
-                      </Button>
-                    </div>
+      <Card>
+        <CardContent>
+          <Typography type={'headline'}>Logbook</Typography>
+          <Grid container spacing={16}>
+
+            <Grid item xs={4}>
+              <DayPickerSingleDateController
+                onDateChange={(d) => {
+                  navigateTo(`/logbook/${d.format('YYYYMMDD')}`);
+                }}
+                isDayHighlighted={selectedDate =>
+                  isSameDate(moment(), selectedDate)
+                  || isSameDate(this.state.currentDate, selectedDate)
                 }
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-  );
+              />
+            </Grid>
+
+            <Grid item xs={8}>
+              {
+                this.state.post && this.state.post.id ?
+                  <div>
+                    <EditPost postId={this.state.post.id} />
+                  </div> :
+                  <div>
+                    <p>No entry for given date {this.state.currentDate.format('YYYY-MM-DD')}</p>
+                    <Button
+                      onClick={() =>
+                        createEntry(this.state.currentDate.format('YYYYMMDD'))
+                          .then(p => this.setState({ post: p }))
+                      }
+                    >
+                      Create entry
+                    </Button>
+                  </div>
+              }
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
   }
 }
 
@@ -143,7 +129,6 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = dispatch => ({
   async createEntry(date) {
     // TODO: too many requests, should be a single one
-    console.log(">>>", date);
     const post = await dispatch(actions.createPost({
       title: date,
     }));
