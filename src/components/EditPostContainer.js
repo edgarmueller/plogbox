@@ -1,17 +1,24 @@
 import React from 'react';
-import * as _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import EditPost from './EditPost';
 import {
-  findPostById,
   getIsFetchingBlock,
   getIsUpdatingPost,
   getPostErrorMessage,
 } from '../reducers';
-import { fetchPostById } from '../api';
 import withDragDropContext from '../common/withDragDropContext';
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+// TODO: rename to EditPostContext?
 class EditPostContainer extends React.Component {
 
   constructor(props) {
@@ -21,81 +28,80 @@ class EditPostContainer extends React.Component {
     };
     this.handleSetBlocks = this.handleSetBlocks.bind(this);
     this.handleUpdatePost = this.handleUpdatePost.bind(this);
-    this.fetchPost = this.fetchPost.bind(this);
+    this.handleAddBlock = this.handleAddBlock.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchPost();
+  getChildContext() {
+    return {
+      __editPost__: {
+        handleUpdatePost: this.handleUpdatePost,
+        handleSetBlocks: this.handleSetBlocks,
+        handleAddBlock: this.handleAddBlock,
+        post: this.state.post,
+        // TODO
+        isFetchingBlock: false,
+      },
+    };
   }
 
- /*  componentDidUpdate(prevProps) {
-    if (prevProps.postId !== this.props.postId) {
-      this.fetchPost();
-    }
-  } */
-
-  fetchPost() {
-    const { postId } = this.props;
-    if (postId) {
-      fetchPostById(postId)
-        .then(
-          resp => this.setState({ post: resp.data.data }),
-          error => console.error(error),
-        )
+  componentDidUpdate(prevProps) {
+    if (prevProps.post !== this.props.post) {
+      // TODO: fix warning
+      this.setState({
+        post: this.props.post,
+      });
     }
   }
 
   handleSetBlocks(blocks) {
-    this.setState({ 
+    this.setState({
       post: {
         ...this.state.post,
-        blocks 
-      }
-    });    
+        blocks,
+      },
+    });
   }
 
   handleUpdatePost(post) {
     this.setState({ post });
   }
 
+  handleAddBlock() {
+    const { post } = this.props;
+    this.handleSetBlocks(post.blocks.slice().concat({
+      dialect: 'markdown',
+      text: '',
+      index: post.blocks.length,
+      tempid: guid(),
+    }));
+  }
+
   render() {
-
-    if (this.state.post === undefined) {
-      return (<p>Loading post...</p>);
-    }
-
     return (
-      <EditPost
-        post={this.state.post}
-        handleUpdatePost={this.handleUpdatePost}
-        handleSetBlocks={this.handleSetBlocks}
-      />
+      <div>{this.props.children}</div>
     );
   }
 }
 
 
 EditPostContainer.propTypes = {
-  postId: PropTypes.number.isRequired,
+  post: PropTypes.object,
 };
 
-export const mapStateToProps = (state, ownProps) => {
-  let postId;
-  if (_.has(ownProps, 'match.params.postId')) {
-    const { match: { params } } = ownProps;
-    postId = Number(params.postId);
-  } else {
-    postId = ownProps.postId;
-  }
-
-  return {
-    postId,
-    userId: state.auth.userId,
-    isFetchingBlock: getIsFetchingBlock(state),
-    isUpdatingPost: getIsUpdatingPost(state),
-    errorMessage: getPostErrorMessage(state),
-  };
+EditPostContainer.defaultProps = {
+  post: undefined,
 };
+
+EditPostContainer.childContextTypes = {
+  __editPost__: PropTypes.object.isRequired,
+};
+
+export const mapStateToProps = state => ({
+  userId: state.auth.userId,
+  isFetchingBlock: getIsFetchingBlock(state),
+  isUpdatingPost: getIsUpdatingPost(state),
+  errorMessage: getPostErrorMessage(state),
+});
 
 export default connect(
   mapStateToProps,

@@ -23,6 +23,9 @@ test('Logbook should render', () => {
     blocks: {
       blocks: Immutable.List(),
     },
+    auth: {
+      userId: 0,
+    },
   });
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>

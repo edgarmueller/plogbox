@@ -53,7 +53,6 @@ const loadTokenFromStorage = (dispatch) => {
 const loadSelectedPost = () => {
   const selectedPostId = localStorage.getItem('selectedPostId');
   if (selectedPostId) {
-    console.log('loadSelectedPost', selectedPostId);
     store.dispatch(routerActions.push(`/posts/${selectedPostId}`));
   }
 };

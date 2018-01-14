@@ -1,58 +1,117 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { IconButton, TextField, Tooltip, withStyles } from 'material-ui';
+import NavigationCheck from 'material-ui-icons/Check';
+import ContentArchive from 'material-ui-icons/Archive';
+import ContentUnarchive from 'material-ui-icons/Unarchive';
+import ContentSave from 'material-ui-icons/Save';
+
 import * as _ from 'lodash';
 import { routerActions } from 'react-router-redux';
 import fileDownload from 'react-file-download';
-import Mousetrap from 'mousetrap';
+// import Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
 import EditPostButtonBar from './EditPostButtonBar';
+import { withPost } from '../common/withPost';
 
-export class EditPostButtonBarContainer extends React.Component {
+const styles = () => ({
+  hidden: {
+    display: 'none',
+  },
+});
 
-  componentDidMount() {
-    const {
-      savePostAndExit,
-      blocks,
-      post,
-    } = this.props;
+const EditPostButtonBarContainer = (
+  {
+    post,
+    classes,
+    exportPost,
+    importPost,
+    savePost,
+    upload,
+    showTitle,
+    handleUpdatePost,
+    navigateToPosts,
+  }) => (
+    <span>
+      {
+        showTitle &&
+        <TextField
+          name="title"
+          type="text"
+          label="Post Title"
+          value={post.title}
+          onChange={ev => handleUpdatePost({
+            ...post,
+            title: ev.target.value,
+          })}
+        />
+      }
+      <Tooltip title="Save this post">
+        <IconButton
+          onClick={() => savePost(post)
+            .then(
+              (updatedPost) => {
+                handleUpdatePost(updatedPost);
+              },
+              // TODO: error handling
+              error => console.error('TODO: error occurred', error),
+            )
+          }
+        >
+          <ContentSave />
+        </IconButton>
+      </Tooltip>
 
-    /* istanbul ignore if  */
-    if (process.env.NODE_ENV !== 'test') {
-      Mousetrap.bind(['ctrl+x'], () => savePostAndExit(post, blocks));
-    }
-  }
+      <Tooltip title="Save and go back to post list">
+        <IconButton
+          onClick={
+            () => savePost(post)
+              .then(
+                (updatedPost) => {
+                  handleUpdatePost(updatedPost);
+                  navigateToPosts();
+                },
+                // TODO: error handling
+                error => console.error('TODO: error occurred', error),
+              )
+          }
+        >
+          <NavigationCheck />
+        </IconButton>
+      </Tooltip>
 
-  render() {
-    return (<EditPostButtonBar {...this.props} />);
-  }
-}
+      <Tooltip title="Export this post as a JSON file">
+        <IconButton onClick={() => exportPost(post)}>
+          <ContentArchive />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="Import the blocks of an exported post">
+        <IconButton onClick={() => importPost()}>
+          <ContentUnarchive />
+        </IconButton>
+      </Tooltip>
+
+      <input
+        id={'upload'}
+        type="file"
+        className={classes.hidden}
+        onChange={event => upload(post, event.target.files[0])}
+      />
+    </span>
+  );
 
 EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 
 EditPostButtonBarContainer.defaultProps = EditPostButtonBar.defaultProps;
 
 export const mapDispatchToProps = (dispatch, ownProps) => ({
-  savePost(selectedPost, shouldExit) {
+  navigateToPosts() {
+    dispatch(routerActions.push('/posts'));
+  },
+  savePost(selectedPost) {
     const post = _.cloneDeep(selectedPost);
-
-    if (shouldExit) {
-      dispatch(action.updatePost(post))
-      .then(post => {
-          console.log("XX", post);
-          ownProps.handleUpdatePost(post);
-        },
-        error => console.error("error occurred", error)
-      )
-      return dispatch(routerActions.push('/posts'));
-    }
-
-    return dispatch(action.updatePost(post))
-     .then(post => {
-          console.log("ZZ", post);
-          ownProps.handleUpdatePost(post);
-        },
-        error => console.error("error occurred", error)
-      );
+    return dispatch(action.updatePost(post));
   },
   exportPost(post) {
     fileDownload(JSON.stringify(post), 'export.json');
@@ -77,4 +136,7 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(EditPostButtonBarContainer);
+  null,
+  { pure: false },
+)(withStyles(styles)(withPost(EditPostButtonBarContainer)));
+

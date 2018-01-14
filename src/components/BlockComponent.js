@@ -12,7 +12,7 @@ import { Direction } from '../constants';
 import * as api from '../api';
 import { moveBlockDown, moveBlockUp } from '../utils/blocks';
 
-export class BlockComponent extends React.Component {
+class BlockComponent extends React.Component {
 
   constructor(props) {
     super(props);

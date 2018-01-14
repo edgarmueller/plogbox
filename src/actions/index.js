@@ -109,7 +109,6 @@ export const createPost = post => dispatch =>
     .then(
       (resp) => {
         const createdPost = resp.data.data;
-        console.log("created post", createdPost);
         dispatch({
           type: CREATE_POST_SUCCESS,
           post: createdPost,

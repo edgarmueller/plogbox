@@ -1,21 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Tooltip } from 'material-ui';
+import { IconButton, TextField, Tooltip, withStyles } from 'material-ui';
 import NavigationCheck from 'material-ui-icons/Check';
 import ContentArchive from 'material-ui-icons/Archive';
 import ContentUnarchive from 'material-ui-icons/Unarchive';
 import ContentSave from 'material-ui-icons/Save';
 
+const styles = () => ({
+  hidden: {
+    display: 'none',
+  },
+});
+
 const EditPostButtonBar =
   ({
-     post,
+    post,
+     classes,
      exportPost,
      importPost,
      savePost,
      upload,
-   }) =>
-    (
+     showTitle,
+     handleUpdatePost,
+   }) => {
+
+    if (post === undefined) {
+      return null;
+    }
+
+    return (
       <span>
+        {
+          showTitle &&
+          <TextField
+            name="title"
+            type="text"
+            label="Post Title"
+            value={post.title}
+            onChange={ev => handleUpdatePost({
+              ...post,
+              title: ev.target.value,
+            })}
+          />
+        }
         <Tooltip title="Save this post">
           <IconButton onClick={() => savePost(post)}>
             <ContentSave />
@@ -43,13 +70,15 @@ const EditPostButtonBar =
         <input
           id={'upload'}
           type="file"
-          style={{ display: 'none' }}
+          className={classes.hidden}
           onChange={event => upload(post, event.target.files[0])}
         />
       </span>
     );
+  };
 
 EditPostButtonBar.propTypes = {
+  classes: PropTypes.object.isRequired,
   // TODO: duplciate prop type definition
   post: PropTypes.shape({
     title: PropTypes.string,
@@ -59,12 +88,14 @@ EditPostButtonBar.propTypes = {
   importPost: PropTypes.func.isRequired,
   savePost: PropTypes.func.isRequired,
   upload: PropTypes.func.isRequired,
+  showTitle: PropTypes.bool,
 
-  handleSetBlocks: PropTypes.func.isRequired,
+  handleUpdatePost: PropTypes.func.isRequired,
 };
 
 EditPostButtonBar.defaultProps = {
   blocks: [],
+  showTitle: false,
 };
 
-export default EditPostButtonBar;
+export default withStyles(styles)(EditPostButtonBar);
