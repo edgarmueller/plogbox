@@ -20,86 +20,9 @@ const styles = () => ({
   },
 });
 
-const EditPostButtonBarContainer = (
-  {
-    post,
-    classes,
-    exportPost,
-    importPost,
-    savePost,
-    upload,
-    showTitle,
-    handleUpdatePost,
-    navigateToPosts,
-  }) => (
-    <span>
-      {
-        showTitle &&
-        <TextField
-          name="title"
-          type="text"
-          label="Post Title"
-          value={post.title}
-          onChange={ev => handleUpdatePost({
-            ...post,
-            title: ev.target.value,
-          })}
-        />
-      }
-      <Tooltip title="Save this post">
-        <IconButton
-          onClick={() => savePost(post)
-            .then(
-              (updatedPost) => {
-                handleUpdatePost(updatedPost);
-              },
-              // TODO: error handling
-              error => console.error('TODO: error occurred', error),
-            )
-          }
-        >
-          <ContentSave />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Save and go back to post list">
-        <IconButton
-          onClick={
-            () => savePost(post)
-              .then(
-                (updatedPost) => {
-                  handleUpdatePost(updatedPost);
-                  navigateToPosts();
-                },
-                // TODO: error handling
-                error => console.error('TODO: error occurred', error),
-              )
-          }
-        >
-          <NavigationCheck />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Export this post as a JSON file">
-        <IconButton onClick={() => exportPost(post)}>
-          <ContentArchive />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Import the blocks of an exported post">
-        <IconButton onClick={() => importPost()}>
-          <ContentUnarchive />
-        </IconButton>
-      </Tooltip>
-
-      <input
-        id={'upload'}
-        type="file"
-        className={classes.hidden}
-        onChange={event => upload(post, event.target.files[0])}
-      />
-    </span>
-  );
+export const EditPostButtonBarContainer = (props) => (
+  <EditPostButtonBar {...props} />
+);
 
 EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 

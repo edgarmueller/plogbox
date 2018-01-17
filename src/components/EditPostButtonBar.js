@@ -14,7 +14,7 @@ const styles = () => ({
 
 const EditPostButtonBar =
   ({
-    post,
+     post,
      classes,
      exportPost,
      importPost,
@@ -22,13 +22,9 @@ const EditPostButtonBar =
      upload,
      showTitle,
      handleUpdatePost,
-   }) => {
-
-    if (post === undefined) {
-      return null;
-    }
-
-    return (
+     navigateToPosts,
+   }) =>
+    (
       <span>
         {
           showTitle &&
@@ -44,18 +40,40 @@ const EditPostButtonBar =
           />
         }
         <Tooltip title="Save this post">
-          <IconButton onClick={() => savePost(post)}>
+          <IconButton
+            onClick={() => savePost(post)
+              .then(
+                (updatedPost) => {
+                  handleUpdatePost(updatedPost);
+                },
+                // TODO: error handling
+                error => console.error('TODO: error occurred', error),
+              )
+            }
+          >
             <ContentSave />
           </IconButton>
         </Tooltip>
 
         <Tooltip title="Save and go back to post list">
-          <IconButton onClick={() => savePost(post, true)}>
+          <IconButton
+            onClick={
+              () => savePost(post)
+                .then(
+                  (updatedPost) => {
+                    handleUpdatePost(updatedPost);
+                    navigateToPosts();
+                  },
+                  // TODO: error handling
+                  error => console.error('TODO: error occurred', error),
+                )
+            }
+          >
             <NavigationCheck />
           </IconButton>
         </Tooltip>
 
-        <Tooltip title="Export thist post as a JSON file">
+        <Tooltip title="Export this post as a JSON file">
           <IconButton onClick={() => exportPost(post)}>
             <ContentArchive />
           </IconButton>
@@ -75,7 +93,6 @@ const EditPostButtonBar =
         />
       </span>
     );
-  };
 
 EditPostButtonBar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -90,6 +107,7 @@ EditPostButtonBar.propTypes = {
   upload: PropTypes.func.isRequired,
   showTitle: PropTypes.bool,
 
+  navigateToPosts: PropTypes.func.isRequired,
   handleUpdatePost: PropTypes.func.isRequired,
 };
 

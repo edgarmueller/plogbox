@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
-import { IconButton } from 'material-ui';
+import { IconButton, Tooltip } from 'material-ui';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import sinon from 'sinon';
@@ -15,11 +15,11 @@ import { EditPostButtonBarContainer, mapDispatchToProps } from '../../src/compon
 import EditPostButtonBar from '../../src/components/EditPostButtonBar';
 import { firstPost } from '../helpers/posts';
 import {
-  ADD_BLOCK,
   BASE_URL,
   UPDATE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
 } from '../../src/constants';
+import { mountWithContext } from '../helpers/setup';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -33,10 +33,14 @@ test('save post via save', async () => {
   };
   const mock = new MockAdapter(Axios);
   mock.onPost(`${BASE_URL}/api/posts/0`).reply(200, response);
-  const store = mockStore({});
+  const store = mockStore({
+    posts: {
+      isUpdating: false,
+    },
+  });
   const props = mapDispatchToProps(store.dispatch);
   await props.savePost(firstPost, [], undefined);
-  expect(_.head(store.getActions()).type).toBe(UPDATE_POST_SUCCESS);
+  expect(_.last(store.getActions()).type).toBe(UPDATE_POST_SUCCESS);
 });
 
 test('update post via save may fail', async () => {
@@ -45,24 +49,15 @@ test('update post via save may fail', async () => {
   };
   const mock = new MockAdapter(Axios);
   mock.onPost(`${BASE_URL}/api/posts/0`).reply(403, response);
-  const store = mockStore({ });
+  const store = mockStore({
+    posts: {
+      isUpdating: false,
+    },
+  });
   const props = mapDispatchToProps(store.dispatch);
   await props.savePost(firstPost, []);
   const actions = store.getActions();
-  expect(_.head(actions).type).toBe(UPDATE_POST_FAILURE);
-});
-
-test('add block', async () => {
-  const response = {
-    status: 'success',
-  };
-  const mock = new MockAdapter(Axios);
-  mock.onPut(`${BASE_URL}/api/posts/0/blocks`).reply(200, response);
-  const store = mockStore({ });
-  const props = mapDispatchToProps(store.dispatch);
-  await props.addBlock(firstPost.id, 'markdown', '## Heading');
-  const actions = store.getActions();
-  expect(_.head(actions).type).toBe(ADD_BLOCK);
+  expect(_.last(actions).type).toBe(UPDATE_POST_FAILURE);
 });
 
 test('render container', () => {
@@ -75,35 +70,26 @@ test('render container', () => {
 });
 
 test('trigger savePost', () => {
-  const savePost = sinon.spy();
+  let didSave = false;
+  const savePost = () => {
+    didSave = true;
+    return Promise.resolve(firstPost);
+  }
   const props = fakeProps(componentPath);
-  const wrapper = shallow(
+  const wrapper = mountWithContext(
     <EditPostButtonBar
       {...props}
       savePost={savePost}
     />,
   );
   wrapper.find(IconButton).first().simulate('click');
-  expect(savePost.calledOnce).toBeTruthy();
-});
-
-test('trigger savePost and exit', () => {
-  const savePost = sinon.spy();
-  const props = fakeProps(componentPath);
-  const wrapper = shallow(
-    <EditPostButtonBar
-      {...props}
-      savePost={savePost}
-    />,
-  );
-  wrapper.find(IconButton).at(1).simulate('click');
-  expect(savePost.calledOnce).toBeTruthy();
+  expect(didSave).toBeTruthy();
 });
 
 test('trigger exportPost', () => {
   const props = fakeProps(componentPath);
   const exportPost = sinon.spy();
-  const wrapper = shallow(
+  const wrapper = mountWithContext(
     <EditPostButtonBar
       {...props}
       exportPost={exportPost}
@@ -116,7 +102,7 @@ test('trigger exportPost', () => {
 test('trigger importPost', () => {
   const props = fakeProps(componentPath);
   const importPost = sinon.spy();
-  const wrapper = shallow(
+  const wrapper = mountWithContext(
     <EditPostButtonBar
       {...props}
       importPost={importPost}
@@ -129,7 +115,7 @@ test('trigger importPost', () => {
 test('trigger upload', () => {
   const props = fakeProps(componentPath);
   const upload = sinon.spy();
-  const wrapper = shallow(
+  const wrapper = mountWithContext(
     <EditPostButtonBar
       {...props}
       upload={upload}

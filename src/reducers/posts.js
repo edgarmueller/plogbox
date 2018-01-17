@@ -99,7 +99,7 @@ const isFetchingPost = createFetchingProgressReducer(
 const isUpdatingPost = createFetchingProgressReducer(
   UPDATE_POST_REQUEST,
   UPDATE_POST_SUCCESS,
-  UPDATE_POST_FAILURE
+  UPDATE_POST_FAILURE,
 );
 
 export const errorReducer = (state = null, action) => {

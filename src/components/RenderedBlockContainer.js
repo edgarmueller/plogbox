@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,36 +12,35 @@ export class RenderedBlockContainer extends React.Component {
       isDownloading: false,
       imagePath: localStorage.getItem(props.block.text),
     };
+    this.download = this.download.bind(this);
+  }
+
+  componentWillMount() {
+    this.download();
   }
 
   componentDidUpdate() {
+    this.download();
+  }
+
+  download() {
     const { postId, block, downloadFile } = this.props;
 
     if (block.dialect === 'image' &&
       block.text &&
       !this.state.isDownloading &&
-      this.state.imagePath === null) {
-
-      if (block.dialect === 'image' &&
-        block.text &&
-        !this.state.isDownloading &&
-        this.state.imagePath === null) {
-
-        // FIXME
-        this.setState({
-          isDownloading: true,
-        });
-        downloadFile(
-          postId,
-          block,
-          () => {
-            this.setState({
-              imagePath: localStorage.getItem(block.text),
-              isDownloading: false,
-            });
-          },
-        );
-      }
+      (this.state.imagePath === null || this.state.imagePath === undefined)) {
+      this.setState({ isDownloading: true });
+      downloadFile(
+        postId,
+        block,
+        () => {
+          this.setState({
+            imagePath: localStorage.getItem(block.text),
+            isDownloading: false,
+          });
+        },
+      );
     }
   }
 

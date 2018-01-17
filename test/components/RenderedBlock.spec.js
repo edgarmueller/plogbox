@@ -1,6 +1,5 @@
 /* eslint-disable import/first */
 import { mountWithContext } from '../helpers/setup';
-import sinon from 'sinon';
 import * as _ from 'lodash';
 import Axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -57,9 +56,11 @@ test('should render image', () => {
   const block = {
     id: 0,
     dialect: 'image',
-    name: 'dog.npg',
-    text: 'binary image data would go here',
+    name: 'dog.jpg',
+    text: 'dog.jpg',
   };
+  // add to storage, so that download is not triggered
+  localStorage.setItem(block.text, 'fake data');
 
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>
@@ -116,9 +117,10 @@ test('downloadFile', async () => {
   const response = Promise.resolve({
     data: new File('test/exported-posts.json'),
   });
-  const sandbox = sinon.sandbox.create();
-  sandbox.stub(Axios, 'get').returns(response);
-  // TODO: axios-mock-adapter doesn't return out file response?
+  const mock = new MockAdapter(Axios);
+  mock.onGet(`${BASE_URL}/api/posts/0/blocks`)
+    .reply(200, response);
+
   const props = mapDispatchToProps(store.dispatch);
   await props.downloadFile(
     0,
@@ -128,8 +130,7 @@ test('downloadFile', async () => {
     },
     () => { },
   );
-  expect(localStorage.getItem('block_0_image')).not.toBe(undefined);
-  sandbox.restore();
+  expect(localStorage.getItem('dummy')).not.toBe(undefined);
 });
 
 test('downloadFile failure', async () => {
