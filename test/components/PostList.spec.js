@@ -10,7 +10,7 @@ import AxiosMockAdapter from 'axios-mock-adapter';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { TableBody } from 'material-ui/Table';
-import PostList, { mapDispatchToProps } from '../../src/components/PostListContainer';
+import PostList, { mapDispatchToProps } from '../../src/containers/PostListContainer';
 import { firstPost, posts } from '../helpers/posts';
 import {
   BASE_URL,

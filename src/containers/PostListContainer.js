@@ -9,7 +9,7 @@ import * as actions from '../actions';
 import { getAllPosts, getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
 import '../common/tap';
 import { RESET_ERROR_MESSAGE } from '../constants';
-import PostList from './PostList';
+import PostList from '../components/PostList';
 
 export class PostListContainer extends React.Component {
 

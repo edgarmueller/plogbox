@@ -10,8 +10,8 @@ import 'react-dates/lib/css/_datepicker.css';
 import * as actions from '../actions';
 import { searchPost } from '../api';
 import { getPostErrorMessage } from '../reducers';
-import EditPost from '../components/EditPostContainer';
-import EditPostButtonBar from '../components/EditPostButtonBarContainer';
+import EditPost from '../containers/EditPostContainer';
+import EditPostButtonBar from '../containers/EditPostButtonBarContainer';
 import Editor from '../components/Editor';
 
 

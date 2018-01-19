@@ -4,7 +4,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import path from 'path';
 import fakeProps from 'react-fake-props';
-import { ActivateAccountFormContainer } from '../../src/components/ActivateAccountFormContainer';
+import { ActivateAccountFormContainer } from '../../src/containers/ActivateAccountFormContainer';
 import ActivateAccountForm from '../../src/components/ActivateAccountForm';
 
 const componentPath = path.join(__dirname, '../../src/components/ActivateAccountForm.js');

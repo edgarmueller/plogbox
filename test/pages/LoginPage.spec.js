@@ -2,7 +2,7 @@
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import { Provider } from 'react-redux';
-import LoginFormContainer, { LoginForm } from '../../src/views/LoginView';
+import LoginFormContainer, { LoginForm } from '../../src/pages/LoginPage';
 import { MemoryRouter } from 'react-router';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';

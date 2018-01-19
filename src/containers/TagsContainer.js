@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Tags from './Tags';
+import Tags from '../components/Tags';
 import * as actions from '../actions';
 import * as api from '../api';
 import { SET_TAGS } from '../constants/index';

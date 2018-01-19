@@ -5,19 +5,15 @@ import ContentDelete from 'material-ui-icons/Delete';
 import ContentCreate from 'material-ui-icons/Create';
 import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography, withStyles } from 'material-ui';
 import Table, { TableBody, TableHead, TableRow, TableCell } from 'material-ui/Table';
-import ButtonBar from './ButtonBarContainer';
-import Tags from './TagsContainer';
+import ButtonBar from '../containers/ButtonBarContainer';
+import Tags from '../containers/TagsContainer';
 
 const floatingButtonStyle = {
   float: 'right',
   marginTop: '2.5em',
 };
 
-const styles = theme => ({
-  // root: {
-  //   marginTop: theme.spacing.unit * 3,
-  //   width: '100%',
-  // },
+const styles = () => ({
   flex: {
     flex: 1,
   },

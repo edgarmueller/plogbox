@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-import '../helpers/setup';
+import { mountWithContext } from "../helpers/setup";
 import MockAdapter from 'axios-mock-adapter';
 import React from 'react';
 import Axios from 'axios';
@@ -7,11 +7,11 @@ import * as _ from 'lodash';
 import thunk from 'redux-thunk';
 import { shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
-import { IconButton, Tooltip } from 'material-ui';
+import { IconButton } from 'material-ui';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import sinon from 'sinon';
-import { EditPostButtonBarContainer, mapDispatchToProps } from '../../src/components/EditPostButtonBarContainer';
+import { EditPostButtonBarContainer, mapDispatchToProps } from '../../src/containers/EditPostButtonBarContainer';
 import EditPostButtonBar from '../../src/components/EditPostButtonBar';
 import { firstPost } from '../helpers/posts';
 import {
@@ -19,7 +19,6 @@ import {
   UPDATE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
 } from '../../src/constants';
-import { mountWithContext } from '../helpers/setup';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);

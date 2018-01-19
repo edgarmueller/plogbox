@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import red from 'material-ui/colors/red';
 import * as actions from '../actions';
-import ChangePasswordForm from './ChangePasswordForm';
+import ChangePasswordForm from '../components/ChangePasswordForm';
 
 export class ChangePasswordFormContainer extends React.Component {
 

@@ -3,7 +3,7 @@ import { mountWithContext } from '../helpers/setup';
 import 'react-dates/initialize';
 import React from 'react';
 import Immutable from 'immutable';
-import Logbook from '../../src/views/Logbook';
+import LogbookPage from '../../src/pages/LogbookPage';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter } from 'react-router';
@@ -30,7 +30,7 @@ test('Logbook should render', () => {
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>
       <MemoryRouter>
-        <Logbook
+        <LogbookPage
           handleSubmit={() => {}}
           renderAlert={() => {}}
         />

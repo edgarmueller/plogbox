@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import '../helpers/setup';
 import React from 'react';
-import { EditPostContainer } from '../../src/components/EditPostContainer';
+import { EditPostContainer } from '../../src/containers/EditPostContainer';
 import { firstPost } from '../helpers/posts';
 import { shallow } from 'enzyme';
 

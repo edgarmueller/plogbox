@@ -1,17 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { IconButton, TextField, Tooltip, withStyles } from 'material-ui';
-import NavigationCheck from 'material-ui-icons/Check';
-import ContentArchive from 'material-ui-icons/Archive';
-import ContentUnarchive from 'material-ui-icons/Unarchive';
-import ContentSave from 'material-ui-icons/Save';
-
+import { withStyles } from 'material-ui';
 import * as _ from 'lodash';
 import { routerActions } from 'react-router-redux';
 import fileDownload from 'react-file-download';
 // import Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
-import EditPostButtonBar from './EditPostButtonBar';
+import EditPostButtonBar from '../components/EditPostButtonBar';
 import { withPost } from '../common/withPost';
 
 const styles = () => ({

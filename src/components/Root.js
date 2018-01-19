@@ -7,7 +7,7 @@ import { Route } from 'react-router';
 import App from './App';
 
 // TODO
-import { history } from '../components/configureStore';
+import { history } from '../store/configureStore';
 
 const Root = ({ store }) => {
   const theme = createMuiTheme();

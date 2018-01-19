@@ -5,17 +5,17 @@ import 'react-dates/initialize';
 import 'typeface-roboto/index.css';
 
 import Navigation from './NavBar';
-import PostList from '../components/PostListContainer';
-import EditPostView from '../views/EditPostView';
-import NotFoundPage from '../views/NotFoundView';
-import SignUpView from '../views/SignUpView';
-import Logbook from '../views/Logbook';
-import Login from '../views/LoginView';
-import ProfileView from '../views/ProfileView';
-import ForgotPasswordView from '../views/ForgotPasswordView';
-import ChangePasswordView from '../views/ChangePasswordView';
-import ResetPasswordView from '../views/ResetPasswordView';
-import ActivateAccountView from '../views/ActivateAccountView';
+import PostList from '../containers/PostListContainer';
+import EditPostPage from '../pages/EditPostPage';
+import NotFoundPage from '../pages/NotFoundPage';
+import SignUpPage from '../pages/SignUpPage';
+import LogbookPage from '../pages/LogbookPage';
+import Login from '../pages/LoginPage';
+import ProfilePage from '../pages/ProfilePage';
+import ForgotPasswordPage from '../pages/ForgotPasswordPage';
+import ChangePasswordPage from '../pages/ChangePasswordPage';
+import ResetPasswordPage from '../pages/ResetPasswordPage';
+import ActivateAccountPage from '../pages/ActivateAccountPage';
 import { requireAuth } from '../auth';
 
 
@@ -33,17 +33,17 @@ export const App = () => (
     <Navigation />
     <div id="container" style={containerStyle}>
       <ConnectedSwitch>
-        <Route exact path="/" component={requireAuth(Logbook)} />
-        <Route path="/logbook/:date" component={requireAuth(Logbook)} />
-        <Route path="/sign-up" component={SignUpView} />
+        <Route exact path="/" component={requireAuth(LogbookPage)} />
+        <Route path="/logbook/:date" component={requireAuth(LogbookPage)} />
+        <Route path="/sign-up" component={SignUpPage} />
         <Route path="/login" component={Login} />
-        <Route path="/posts/:postId" component={requireAuth(EditPostView)} />
+        <Route path="/posts/:postId" component={requireAuth(EditPostPage)} />
         <Route path="/posts" component={requireAuth(PostList)} />
-        <Route path="/profile" component={requireAuth(ProfileView)} />
-        <Route path="/password/reset/:token" component={ResetPasswordView} />
-        <Route path="/password/forgot" component={ForgotPasswordView} />
-        <Route path="/password/change" component={requireAuth(ChangePasswordView)} />
-        <Route path="/account/activate/:token" component={ActivateAccountView} />
+        <Route path="/profile" component={requireAuth(ProfilePage)} />
+        <Route path="/password/reset/:token" component={ResetPasswordPage} />
+        <Route path="/password/forgot" component={ForgotPasswordPage} />
+        <Route path="/password/change" component={requireAuth(ChangePasswordPage)} />
+        <Route path="/account/activate/:token" component={ActivateAccountPage} />
         <Route path="*" component={NotFoundPage} />
       </ConnectedSwitch>
     </div>

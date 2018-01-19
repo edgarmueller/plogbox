@@ -35,7 +35,6 @@ import {
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
-import { create } from 'domain';
 
 export function errorHandler(dispatch, error, type) {
   if (error === undefined) {

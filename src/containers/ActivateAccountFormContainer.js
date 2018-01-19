@@ -1,7 +1,7 @@
 import React from 'react';
 import { routerActions } from 'react-router-redux';
 import * as actions from '../actions';
-import ActivateAccountForm from './ActivateAccountForm';
+import ActivateAccountForm from '../components/ActivateAccountForm';
 
 export const ActivateAccountFormContainer =
   ({ activateAccount, isAccountActivated, token, errorMessage }) =>

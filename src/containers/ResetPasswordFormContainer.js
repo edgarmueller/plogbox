@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
 import red from 'material-ui/colors/red';
 import * as actions from '../actions';
-import ResetPasswordForm from './ResetPasswordForm';
+import ResetPasswordForm from '../components/ResetPasswordForm';
 
 export class ResetPasswordFormContainer extends React.Component {
 

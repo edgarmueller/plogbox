@@ -6,7 +6,7 @@ import { shallow } from 'enzyme';
 import path from 'path';
 import fakeProps from 'react-fake-props';
 import ForgotPasswordForm from '../../src/components/ForgotPasswordForm';
-import { ForgotPasswordFormContainer } from '../../src/components/ForgotPasswordFormContainer';
+import { ForgotPasswordFormContainer } from '../../src/containers/ForgotPasswordFormContainer';
 
 const componentPath = path.join(__dirname, '../../src/components/ForgotPasswordForm.js');
 

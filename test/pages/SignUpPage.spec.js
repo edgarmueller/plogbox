@@ -1,11 +1,11 @@
 /* eslint-disable import/first */
-import { mountWithContext }  from '../helpers/setup';
+import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import { Field, reducer as formReducer } from 'redux-form';
 import { combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import auth from '../../src/reducers/auth';
-import SignUpPage from '../../src/views/SignUpView';
+import SignUpPage from '../../src/pages/SignUpPage';
 
 test('Sign-up page should render', async () => {
   let promiseResolve;

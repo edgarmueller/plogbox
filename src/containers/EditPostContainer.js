@@ -19,7 +19,7 @@ function guid() {
 }
 
 // TODO: rename to EditPostContext?
-class EditPostContainer extends React.Component {
+export class EditPostContainer extends React.Component {
 
   constructor(props) {
     super(props);

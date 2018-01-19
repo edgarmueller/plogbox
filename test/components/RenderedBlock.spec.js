@@ -11,7 +11,7 @@ import thunk from 'redux-thunk';
 import ReactMarkdown from 'react-markdown';
 import { Provider } from 'react-redux';
 import { File } from 'file-api';
-import RenderedBlock, { RenderedBlockContainer, mapDispatchToProps } from '../../src/components/RenderedBlockContainer';
+import RenderedBlock, { RenderedBlockContainer, mapDispatchToProps } from '../../src/containers/RenderedBlockContainer';
 import { firstPost, posts } from '../helpers/posts';
 import { BASE_URL } from '../../src/constants';
 

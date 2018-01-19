@@ -9,7 +9,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Chip } from 'material-ui';
-import Tag, { mapDispatchToProps } from '../../src/components/TagsContainer';
+import Tag, { mapDispatchToProps } from '../../src/containers/TagsContainer';
 import { posts } from '../helpers/posts';
 import Autosuggest from 'react-autosuggest';
 import { BASE_URL } from '../../src/constants';

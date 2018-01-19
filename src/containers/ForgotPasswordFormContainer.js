@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as routerActions from 'react-router-redux';
 import { red } from 'material-ui/colors';
-import ForgotPasswordForm from './ForgotPasswordForm';
+import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import * as actions from '../actions';
 
 export class ForgotPasswordFormContainer extends React.Component {

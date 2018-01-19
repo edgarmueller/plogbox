@@ -10,7 +10,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { File } from 'file-api';
 import { IconButton } from 'material-ui';
-import ButtonBar, { mapDispatchToProps } from '../../src/components/ButtonBarContainer';
+import ButtonBar, { mapDispatchToProps } from '../../src/containers/ButtonBarContainer';
 import { firstPost, posts } from '../helpers/posts';
 import {
   BASE_URL,

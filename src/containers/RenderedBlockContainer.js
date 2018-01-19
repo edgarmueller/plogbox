@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';
-import RenderedBlock from './RenderedBlock';
+import RenderedBlock from '../components/RenderedBlock';
 
 export class RenderedBlockContainer extends React.Component {
 

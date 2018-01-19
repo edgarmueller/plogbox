@@ -6,12 +6,12 @@ import { AppContainer } from 'react-hot-loader';
 import * as routerActions from 'react-router-redux';
 
 import './base.css';
-import configureStore from './components/configureStore';
+import configureStore from './store/configureStore';
 import Root from './components/Root';
 import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
 import { testToken } from './api/index';
 import registerServiceWorker from './registerServiceWorker';
-import {fetchPosts} from "./actions";
+import { fetchPosts } from './actions';
 
 
 // ID of the DOM element to mount app on
@@ -77,8 +77,8 @@ const init = (dispatch) => {
         () => {
           render(Root);
           loadSelectedPost();
-        }
-      )
+        },
+      );
   } else {
     render(Root);
   }

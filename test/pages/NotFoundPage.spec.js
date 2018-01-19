@@ -2,7 +2,7 @@
 import '../helpers/setup';
 import React from 'react';
 import { shallow } from 'enzyme';
-import NotFoundPage from '../../src/views/NotFoundView';
+import NotFoundPage from '../../src/pages/NotFoundPage';
 
 test('NotFoundPage should render', () => {
   const wrapper = shallow(<NotFoundPage />);

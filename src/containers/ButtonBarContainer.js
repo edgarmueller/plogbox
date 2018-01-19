@@ -4,7 +4,7 @@ import fileDownload from 'react-file-download';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as api from '../api';
-import ButtonBar from './ButtonBar';
+import ButtonBar from '../components/ButtonBar';
 
 import {
   CREATE_POST_SUCCESS,

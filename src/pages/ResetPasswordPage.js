@@ -4,7 +4,7 @@ import {
   ResetPasswordFormContainer,
   mapDispatchToProps,
   mapStateToProps,
-} from '../components/ResetPasswordFormContainer';
+} from '../containers/ResetPasswordFormContainer';
 
 const form = reduxForm({
   form: 'reset',
