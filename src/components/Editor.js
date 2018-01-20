@@ -3,7 +3,7 @@ import { Button, Grid } from 'material-ui';
 import ContentAdd from 'material-ui-icons/Add';
 import PropTypes from 'prop-types';
 import BlockComponent from './BlockComponent';
-import RenderedBlock from './RenderedBlock';
+import RenderedBlock from '../containers/RenderedBlockContainer';
 import { withPost } from '../common/withPost';
 
 const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
