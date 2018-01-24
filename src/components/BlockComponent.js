@@ -78,8 +78,12 @@ class BlockComponent extends React.Component {
 
   handleDeleteBlock(block) {
     const { blocks, handleSetBlocks, postId } = this.props;
-    api.removeBlock(postId, block)
-      .then(() => handleSetBlocks(_.without(blocks, block)));
+    if (block.id) {
+      api.removeBlock(postId, block)
+        .then(() => handleSetBlocks(_.without(blocks, block)));
+    } else {
+      handleSetBlocks(_.without(blocks, block));
+    }
   }
 
   render() {

@@ -82,10 +82,7 @@ class Editor extends React.Component {
           }
           <Button
             fab
-            onClick={() => {
-              handleAddBlock();
-              console.log('focused block id', this.state.focusedBlockId);
-            }}
+            onClick={() => handleAddBlock() }
             color="default"
           >
             <ContentAdd />

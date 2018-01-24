@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto/index.css';
 import { AppContainer } from 'react-hot-loader';
-import * as routerActions from 'react-router-redux';
 
 import './base.css';
 import configureStore from './store/configureStore';
@@ -50,14 +49,6 @@ const loadTokenFromStorage = (dispatch) => {
   return token;
 };
 
-const loadSelectedPost = () => {
-  const selectedPostId = localStorage.getItem('selectedPostId');
-  if (selectedPostId) {
-    store.dispatch(routerActions.push(`/posts/${selectedPostId}`));
-  }
-};
-
-
 // Render the router
 const render = (Component) => {
   ReactDOM.render(
@@ -76,7 +67,6 @@ const init = (dispatch) => {
       .then(
         () => {
           render(Root);
-          loadSelectedPost();
         },
       );
   } else {
