@@ -70,8 +70,11 @@ class Editor extends React.Component {
                   block={block}
                   blocks={post.blocks}
                   blockIndex={index}
-                  onFocus={() => this.setState({ focusedBlockId: block.id })}
-                  isFocused={block.id === this.state.focusedBlockId}
+                  onFocus={() => this.setState({ focusedBlockId: block.id || block.tempid })}
+                  isFocused={(
+                    block.id === this.state.focusedBlockId
+                    || block.tempid === this.state.focusedBlockId
+                  ) && this.state.focusedBlockId !== undefined}
                   handleSetBlocks={handleSetBlocks}
                 />
               ),
@@ -79,7 +82,10 @@ class Editor extends React.Component {
           }
           <Button
             fab
-            onClick={() => handleAddBlock()}
+            onClick={() => {
+              handleAddBlock();
+              console.log('focused block id', this.state.focusedBlockId);
+            }}
             color="default"
           >
             <ContentAdd />

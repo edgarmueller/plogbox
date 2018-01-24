@@ -68,7 +68,7 @@ export class EditPostContainer extends React.Component {
 
   handleAddBlock() {
     const { post } = this.props;
-    this.handleSetBlocks(post.blocks.slice().concat({
+    this.handleSetBlocks(this.state.post.blocks.slice().concat({
       dialect: 'markdown',
       text: '',
       index: post.blocks.length,
