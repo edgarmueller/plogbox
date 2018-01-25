@@ -10,6 +10,21 @@ const styles = () => ({
   hidden: {
     display: 'none',
   },
+  inputInkbar: {
+    color: 'white',
+    '&:after': {
+      backgroundColor: '#fff',
+    },
+  },
+  textFieldFormLabel: {
+    color: '#121212',
+  },
+  textFieldInput: {
+    color: '#121212',
+    '&:focus': {
+      color: '#ffffff',
+    },
+  },
 });
 
 const EditPostButtonBar =
@@ -37,6 +52,16 @@ const EditPostButtonBar =
               ...post,
               title: ev.target.value,
             })}
+            InputLabelProps={{
+              shrink: true,
+              className: classes.textFieldFormLabel,
+            }}
+            InputProps={{
+              classes: {
+                inkbar: classes.inputInkbar,
+                input: classes.textFieldInput,
+              },
+            }}
           />
         }
         <Tooltip title="Save this post">
