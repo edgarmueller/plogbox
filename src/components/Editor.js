@@ -88,7 +88,8 @@ class Editor extends React.Component {
             <ContentAdd />
           </Button>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={1}/>
+        <Grid item xs={7}>
           <RenderedPost
             post={post}
             blocks={post.blocks}
