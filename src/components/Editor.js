@@ -16,7 +16,10 @@ const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
               postId={post.id}
               isFetchingBlock={isFetchingBlock}
               block={block}
-              isFocused={block === focusedBlockId}
+              isFocused={
+                (block.id === focusedBlockId || block.tempid === focusedBlockId)
+                && focusedBlockId !== undefined
+              }
             />
           ),
         )

@@ -1,13 +1,25 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui';
 
 const md = require('markdown-it')();
 const mk = require('markdown-it-katex');
 
 md.use(mk);
 
-const RenderedBlock = ({ block, isDownloading, imagePath, isFocused }) => {
+const styles = () => ({
+  highlighted: {
+    border: 'solid 1px #ff4081',
+    padding: '0.5em',
+  },
+  notHighlighted: {
+    border: 'solid 1px #fff',
+    padding: '0.5em',
+  },
+});
+
+const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {
@@ -17,7 +29,7 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused }) => {
 
         return (
           <img
-            style={{ border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff' }}
+            className={isFocused ? classes.highlighted : classes.notHighlighted}
             src={imagePath}
             alt={imagePath}
           />
@@ -27,7 +39,7 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused }) => {
       return (<div>No image selected yet</div>);
     default:
       return (
-        <div style={{ border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff' }}>
+        <div className={isFocused ? classes.highlighted : classes.notHighlighted}>
           <ReactMarkdown id={block.id} source={md.render(block.text)} />
         </div>
       );
@@ -51,4 +63,4 @@ RenderedBlock.defaultProps = {
   imagePath: undefined,
 };
 
-export default RenderedBlock;
+export default withStyles(styles)(RenderedBlock);
