@@ -91,8 +91,9 @@ class Logbook extends React.Component {
             <AppBar position="static" color={'accent'}>
               <Toolbar>
                 <Typography
-                  type={'headline'}
+                  type="headline"
                   className={classes.headline}
+                  color="inherit"
                 >
                   Logbook
                 </Typography>
