@@ -1,14 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui';
 
-const BlockControlWrapper = ({ connectDropTarget, isFocused, onFocus, children }) =>
+const styles = () => ({
+  highlighted: {
+    border: 'solid 1px #ff4081',
+    padding: '0.5em',
+  },
+  notHighlighted: {
+    border: 'solid 1px #fff',
+    padding: '0.5em',
+  },
+});
+
+const BlockControlWrapper = ({ connectDropTarget, isFocused, onFocus, children, classes }) =>
   connectDropTarget(
     <div
       onFocus={onFocus}
-      style={{
-        border: isFocused ? 'solid 1px #00ff00' : 'solid 1px #ffffff',
-        padding: '0.5em',
-      }}
+      className={isFocused ? classes.highlighted : classes.notHighlighted}
     >
       {children}
     </div>,
@@ -20,4 +29,4 @@ BlockControlWrapper.propTypes = {
   connectDropTarget: PropTypes.func.isRequired,
 };
 
-export default BlockControlWrapper;
+export default withStyles(styles)(BlockControlWrapper);
