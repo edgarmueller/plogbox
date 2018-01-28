@@ -42,7 +42,7 @@ RenderedPost.propTypes = {
 };
 
 
-class Editor extends React.Component {
+export class Editor extends React.Component {
 
   constructor(props) {
     super(props);

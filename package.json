@@ -9,8 +9,9 @@
     "build": "react-scripts build",
     "test": "cross-env NODE_ENV=test jest",
     "eject": "react-scripts eject",
-    "test-only": "cross-env NODE_ENV=test jest --no-cache test/components/EditPostContainer.spec.js",
-    "test-with-coverage": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info |coveralls",
+    "test-only": "cross-env NODE_ENV=test jest --no-cache test/components/Editor.spec.js",
+    "test-with-coverage": "cross-env NODE_ENV=test jest --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js",
+    "test-with-coveralls": "cross-env NODE_ENV=test jest --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js && cat ./coverage/lcov.info | coveralls",
     "report": "nyc report --reporter=html",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rimraf build",
@@ -26,15 +27,6 @@
     "url": "https://github.com/edgarmueller/plog-frontend/issues"
   },
   "homepage": "http://plog-frontend.herokuapp.com/",
-  "ava": {
-    "verbose": true,
-    "require": [
-      "babel-polyfill",
-      "babel-register",
-      "ignore-styles"
-    ],
-    "babel": "inherit"
-  },
   "jest": {
     "transform": {
       "^.+\\.jsx?$": "./node_modules/babel-jest"
@@ -53,6 +45,7 @@
     "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
+      "!src/registerServiceWorker.js",
       "!**/node_modules/**",
       "!**/build/**",
       "!**/test/**",
@@ -60,7 +53,8 @@
       "!**/vendor/**",
       "!**/coverage/**",
       "!**/__mocks__/**"
-    ]
+    ],
+    "coverageReporters": ["json", "lcov", "html"]
   },
   "nyc": {
     "all": true,
