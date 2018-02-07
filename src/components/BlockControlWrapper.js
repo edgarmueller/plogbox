@@ -13,10 +13,11 @@ const styles = () => ({
   },
 });
 
-const BlockControlWrapper = ({ connectDropTarget, isFocused, onFocus, children, classes }) =>
+const BlockControlWrapper = ({ connectDropTarget, isFocused, onFocus, onBlur, children, classes }) =>
   connectDropTarget(
     <div
       onFocus={onFocus}
+      onBlur={onBlur}
       className={isFocused ? classes.highlighted : classes.notHighlighted}
     >
       {children}
@@ -25,6 +26,7 @@ const BlockControlWrapper = ({ connectDropTarget, isFocused, onFocus, children, 
 
 BlockControlWrapper.propTypes = {
   onFocus: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
   isFocused: PropTypes.bool.isRequired,
   connectDropTarget: PropTypes.func.isRequired,
 };

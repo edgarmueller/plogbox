@@ -63,7 +63,7 @@ export class Editor extends React.Component {
 
     return (
       <Grid container spacing={0} style={{ paddintgTop: '1em' }}>
-        <Grid item xs={4}>
+        <Grid item xs={5}>
           {
             post.blocks.map((block, index) =>
               (
@@ -74,6 +74,7 @@ export class Editor extends React.Component {
                   blocks={post.blocks}
                   blockIndex={index}
                   onFocus={() => this.setState({ focusedBlockId: block.id || block.tempid })}
+                  onBlur={() => this.setState({ focusedBlockId: undefined })}
                   isFocused={(
                     block.id === this.state.focusedBlockId
                     || block.tempid === this.state.focusedBlockId
@@ -91,8 +92,8 @@ export class Editor extends React.Component {
             <ContentAdd />
           </Button>
         </Grid>
-        <Grid item xs={1}/>
-        <Grid item xs={7}>
+        <Grid item xs={1} />
+        <Grid item xs={6}>
           <RenderedPost
             post={post}
             blocks={post.blocks}

@@ -93,6 +93,7 @@ class BlockComponent extends React.Component {
       blocks,
       blockIndex,
       onFocus,
+      onBlur,
       isFocused,
       connectDragSource,
       connectDropTarget,
@@ -101,6 +102,7 @@ class BlockComponent extends React.Component {
     return (
       <BlockControlWrapper
         onFocus={onFocus}
+        onBlur={onBlur}
         isFocused={isFocused}
         connectDropTarget={connectDropTarget}
       >
@@ -135,6 +137,7 @@ BlockComponent.propTypes = {
   blocks: PropTypes.array,
   blockIndex: PropTypes.number,
   onFocus: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
   isFocused: PropTypes.bool.isRequired,
   handleSetBlocks: PropTypes.func.isRequired,
 };
