@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui';
+import { IconButton, Snackbar, withStyles } from 'material-ui';
+import CloseIcon from 'material-ui-icons/Close';
 import * as _ from 'lodash';
 import { routerActions } from 'react-router-redux';
 import fileDownload from 'react-file-download';
-// import Mousetrap from 'mousetrap';
+import Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
 import EditPostButtonBar from '../components/EditPostButtonBar';
 import { withPost } from '../common/withPost';
@@ -15,9 +16,77 @@ const styles = () => ({
   },
 });
 
-export const EditPostButtonBarContainer = (props) => (
-  <EditPostButtonBar {...props} />
-);
+export class EditPostButtonBarContainer extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  componentDidMount() {
+    const {
+      savePost,
+      post,
+    } = this.props;
+
+    /* istanbul ignore if  */
+    if (process.env.NODE_ENV !== 'test') {
+      Mousetrap.bind(['ctrl+x'], () => {
+        console.log('did call save!!');
+        this.handleClick();
+        savePost(post);
+      });
+    }
+  }
+
+  handleClick() {
+    this.setState({ open: true });
+  }
+
+  handleClose(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ open: false });
+  }
+
+  render() {
+    return (
+      <div>
+        <EditPostButtonBar {...this.props} />
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={this.state.open}
+          autoHideDuration={2000}
+          onClose={this.handleClose}
+          SnackbarContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">Post saved</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </div>
+    );
+  }
+}
+
 
 EditPostButtonBarContainer.propTypes = EditPostButtonBar.propTypes;
 
