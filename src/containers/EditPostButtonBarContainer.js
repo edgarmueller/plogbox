@@ -23,27 +23,23 @@ export class EditPostButtonBarContainer extends React.Component {
     this.state = {
       open: false,
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount() {
-    const {
-      savePost,
-      post,
-    } = this.props;
+    const { savePost } = this.props;
 
     /* istanbul ignore if  */
     if (process.env.NODE_ENV !== 'test') {
       Mousetrap.bind(['ctrl+x'], () => {
-        console.log('did call save!!');
-        this.handleClick();
-        savePost(post);
+        this.handleOpen();
+        savePost(this.props.post);
       });
     }
   }
 
-  handleClick() {
+  handleOpen() {
     this.setState({ open: true });
   }
 
@@ -56,6 +52,7 @@ export class EditPostButtonBarContainer extends React.Component {
   }
 
   render() {
+
     return (
       <div>
         <EditPostButtonBar {...this.props} />
