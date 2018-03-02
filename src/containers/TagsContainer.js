@@ -14,13 +14,6 @@ export class TagsContainer extends React.Component {
     });
   }
 
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.isEditingTags && !this.props.isEditingTags) {
-      this.props.fetchSuggestedTags();
-    }
-  }
-
   render() {
     const { post, addTag, removeTag, suggestedTags, isEditing, done } = this.props;
 
