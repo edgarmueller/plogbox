@@ -8,8 +8,9 @@ import { Dialog, DialogTitle } from 'material-ui';
 import * as actions from '../actions';
 import { getAllPosts, getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
 import '../common/tap';
-import { RESET_ERROR_MESSAGE } from '../constants';
+import { RESET_ERROR_MESSAGE, SET_TAGS } from '../constants';
 import PostList from '../components/PostList';
+import * as api from '../api';
 
 export class PostListContainer extends React.Component {
 
@@ -23,6 +24,8 @@ export class PostListContainer extends React.Component {
 
   componentWillMount() {
     this.props.fetchPosts();
+    // fetch global list of tags
+    this.props.fetchSuggestedTags();
     // clear any previously selected post
     localStorage.removeItem('selectedPostId');
   }
@@ -83,6 +86,7 @@ PostListContainer.propTypes = {
   addPost: PropTypes.func.isRequired,
   resetErrorMessage: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
+  fetchSuggestedTags: PropTypes.func.isRequired,
   handlePostSelected: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
 };
@@ -129,6 +133,21 @@ export const mapDispatchToProps = dispatch => ({
   handlePostSelected(post) {
     dispatch(routerActions.push(`/posts/${post.id}`));
     localStorage.setItem('selectedPostId', post.id);
+  },
+  fetchSuggestedTags() {
+    api.fetchTags()
+      .then(
+        (resp) => {
+          dispatch({
+            type: SET_TAGS,
+            tags: resp.data.data.map(tag => tag.name),
+          });
+        },
+        (error) => {
+          // TODO ignore error?
+          console.warn(error);
+        },
+      );
   },
 });
 

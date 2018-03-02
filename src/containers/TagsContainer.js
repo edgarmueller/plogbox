@@ -8,7 +8,6 @@ import { SET_TAGS } from '../constants/index';
 export class TagsContainer extends React.Component {
 
   componentWillMount() {
-    this.props.fetchSuggestedTags();
     this.setState({
       isEditing: false,
     });
@@ -48,22 +47,7 @@ export const mapDispatchToProps = dispatch => ({
   },
   removeTag(postId, tag) {
     dispatch(actions.removeTag(postId, tag.id));
-  },
-  fetchSuggestedTags() {
-    api.fetchTags()
-      .then(
-        (resp) => {
-          dispatch({
-            type: SET_TAGS,
-            tags: resp.data.data.map(tag => tag.name),
-          });
-        },
-        (error) => {
-          // TODO ignore error?
-          console.warn(error);
-        },
-      );
-  },
+  }
 });
 
 export default connect(
