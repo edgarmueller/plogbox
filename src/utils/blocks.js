@@ -36,5 +36,4 @@ export const moveBlockDown = (blocks, block) => {
  * @param blocks the List of blocks to be sorted
  * @return the sorted List as determined by the index property
  */
-  // TODO: make use of this
-export const sortBlocks = blocks => blocks.sortBy(b => b.index);
+export const sortBlocks = blocks => _.sortBy(blocks, b => b.index);

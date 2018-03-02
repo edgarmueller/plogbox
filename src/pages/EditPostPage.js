@@ -19,6 +19,7 @@ import EditPostAppBar from '../containers/EditPostButtonBarContainer';
 import Editor from '../components/Editor';
 import withDragDropContext from '../common/withDragDropContext';
 import { fetchPostById } from '../api';
+import { sortBlocks } from '../utils/blocks';
 
 export class EditPostPage extends React.Component {
 
@@ -43,9 +44,10 @@ export class EditPostPage extends React.Component {
         .then(
           (resp) => {
             if (resp.data.status === 'success') {
-              this.setState({ post: resp.data.data });
+              const fetchedPost = resp.data.data;
+              fetchedPost.blocks = sortBlocks(fetchedPost.blocks);
+              this.setState({ post: fetchedPost });
             } else {
-              console.log('resp', resp.data.messages.join());
               this.setState({ error: resp.data.messages.join() });
             }
           },
