@@ -95,6 +95,11 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   },
   savePost(selectedPost) {
     const post = _.cloneDeep(selectedPost);
+    // update indices upon save
+    post.blocks = post.blocks.map((block, index) => {
+      block.index = index;
+      return block;
+    });
     return dispatch(action.updatePost(post));
   },
   exportPost(post) {
