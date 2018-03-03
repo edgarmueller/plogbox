@@ -49,6 +49,7 @@ const BlockEditor = ({ postId, block, onDrop, handleUpdateBlock }) => {
       value={block.text}
       minLines={1}
       maxLines={Infinity}
+      fontSize={16}
       keyboardHandler={'emacs'}
     />
   );
