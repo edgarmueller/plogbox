@@ -5,6 +5,9 @@ import NavigationCheck from 'material-ui-icons/Check';
 import ContentArchive from 'material-ui-icons/Archive';
 import ContentUnarchive from 'material-ui-icons/Unarchive';
 import ContentSave from 'material-ui-icons/Save';
+import EditorIcon from 'material-ui-icons/ModeEdit';
+import RenderedDocumentIcon from 'material-ui-icons/Description';
+import SideBySideIcon from 'material-ui-icons/BorderVertical';
 
 const styles = () => ({
   hidden: {
@@ -38,6 +41,9 @@ const EditPostButtonBar =
      showTitle,
      handleUpdatePost,
      navigateToPosts,
+     handleClickOpenEditor,
+     handleClickOpenRenderedView,
+     handleClickOpenBoth,
    }) =>
     (
       <span>
@@ -110,6 +116,22 @@ const EditPostButtonBar =
           </IconButton>
         </Tooltip>
 
+        <Tooltip title={'Toggle side-by-side view'}>
+          <IconButton onClick={handleClickOpenBoth} className={classes.sideBySideButton}>
+            <SideBySideIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={'Show Editor'}>
+          <IconButton onClick={handleClickOpenEditor} className={classes.editorButton}>
+            <EditorIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={'Show Rendered Document'}>
+          <IconButton onClick={handleClickOpenRenderedView} className={classes.viewButton}>
+            <RenderedDocumentIcon />
+          </IconButton>
+        </Tooltip>
+
         <input
           id={'upload'}
           type="file"
@@ -120,7 +142,9 @@ const EditPostButtonBar =
     );
 
 EditPostButtonBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.shape({
+    textFieldFormLabel: PropTypes.string,
+  }).isRequired,
   // TODO: duplciate prop type definition
   post: PropTypes.shape({
     title: PropTypes.string,
@@ -134,11 +158,17 @@ EditPostButtonBar.propTypes = {
 
   navigateToPosts: PropTypes.func.isRequired,
   handleUpdatePost: PropTypes.func.isRequired,
+  handleClickOpenEditor: PropTypes.func.isRequired,
+  handleClickOpenRenderedView: PropTypes.func.isRequired,
+  handleClickOpenBoth: PropTypes.func.isRequired,
 };
 
 EditPostButtonBar.defaultProps = {
   blocks: [],
   showTitle: false,
+  showBoth: true,
+  showRenderedView: false,
+  showEditor: false,
 };
 
 export default withStyles(styles)(EditPostButtonBar);

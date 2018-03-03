@@ -25,10 +25,16 @@ export class EditPostContainer extends React.Component {
     super(props);
     this.state = {
       post: props.post,
+      showEditor: false,
+      showRenderedView: false,
+      showBoth: true,
     };
     this.handleSetBlocks = this.handleSetBlocks.bind(this);
     this.handleUpdatePost = this.handleUpdatePost.bind(this);
     this.handleAddBlock = this.handleAddBlock.bind(this);
+    this.handleClickOpenEditor = this.handleClickOpenEditor.bind(this);
+    this.handleClickOpenRenderedView = this.handleClickOpenRenderedView.bind(this);
+    this.handleClickOpenBoth = this.handleClickOpenBoth.bind(this);
   }
 
   getChildContext() {
@@ -37,7 +43,13 @@ export class EditPostContainer extends React.Component {
         handleUpdatePost: this.handleUpdatePost,
         handleSetBlocks: this.handleSetBlocks,
         handleAddBlock: this.handleAddBlock,
+        handleClickOpenEditor: this.handleClickOpenEditor,
+        handleClickOpenRenderedView: this.handleClickOpenRenderedView,
+        handleClickOpenBoth: this.handleClickOpenBoth,
         post: this.state.post,
+        showBoth: this.state.showBoth,
+        showRenderedView: this.state.showRenderedView,
+        showEditor: this.state.showEditor,
         // TODO
         isFetchingBlock: false,
       },
@@ -51,6 +63,30 @@ export class EditPostContainer extends React.Component {
         post: this.props.post,
       });
     }
+  }
+
+  handleClickOpenEditor() {
+    this.setState({
+      showEditor: true,
+      showRenderedView: false,
+      showBoth: false,
+    });
+  }
+
+  handleClickOpenRenderedView() {
+    this.setState({
+      showEditor: false,
+      showRenderedView: true,
+      showBoth: false,
+    });
+  }
+
+  handleClickOpenBoth() {
+    this.setState({
+      showEditor: false,
+      showRenderedView: false,
+      showBoth: true,
+    });
   }
 
   handleSetBlocks(blocks) {
