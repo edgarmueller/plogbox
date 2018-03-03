@@ -99,8 +99,11 @@ PostListContainer.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const posts = _.filter(getAllPosts(state), post =>
-    !_.some(post.tags, tag => tag.name === 'journal'),
+  const posts = _.sortBy(
+    _.filter(getAllPosts(state), post =>
+      !_.some(post.tags, tag => tag.name === 'journal'),
+    ),
+    post => post.title,
   );
   return {
     posts,
