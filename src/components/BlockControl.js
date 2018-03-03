@@ -4,16 +4,8 @@ import { FormControl, IconButton, Input, InputLabel, MenuItem, Select } from 'ma
 import ContentDelete from 'material-ui-icons/Delete';
 import DownArrow from 'material-ui-icons/KeyboardArrowDown';
 import UpArrow from 'material-ui-icons/KeyboardArrowUp';
+import DragHandleIcon from 'material-ui-icons/DragHandle';
 import { Direction } from '../constants';
-
-const dragHandleStyle = {
-  backgroundColor: 'green',
-  width: '1rem',
-  height: '1rem',
-  display: 'inline-block',
-  marginRight: '0.75rem',
-  cursor: 'move',
-};
 
 class BlockControl extends React.Component {
 
@@ -37,7 +29,7 @@ class BlockControl extends React.Component {
 
     return (
       <div style={{ paddingBottom: '0.5em' }}>
-        {connectDragSource(<div style={dragHandleStyle} />)}
+        {connectDragSource(<span style={{ cursor: 'move' }}><DragHandleIcon /></span>)}
         <FormControl style={{ minWidth: '120px' }}>
           <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
           <Select
