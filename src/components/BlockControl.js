@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, IconButton, Input, InputLabel, MenuItem, Select } from 'material-ui';
+import { IconButton, Input, MenuItem, Select } from 'material-ui';
 import ContentDelete from 'material-ui-icons/Delete';
 import DownArrow from 'material-ui-icons/KeyboardArrowDown';
 import UpArrow from 'material-ui-icons/KeyboardArrowUp';
@@ -28,28 +28,41 @@ class BlockControl extends React.Component {
     } = this.props;
 
     return (
-      <div style={{ paddingBottom: '0.5em' }}>
-        {connectDragSource(<span style={{ cursor: 'move' }}><DragHandleIcon /></span>)}
-        <FormControl style={{ minWidth: '120px' }}>
-          <InputLabel htmlFor="block-dialect">Block Dialect</InputLabel>
-          <Select
-            autoWidth
-            input={<Input name="dialect" id="block-dialect" />}
-            value={this.state.dialect}
-            onChange={(ev) => {
-              this.setState(() => ({ dialect: ev.target.value }));
-              handleUpdateBlock({
-                ...block,
-                dialect: ev.target.value,
-              });
+      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+        {
+          connectDragSource(
+            <span style={{
+              cursor: 'move',
+              margin: 'auto',
+              marginLeft: 0,
+              marginRight: '0.5em',
             }}
-          >
-            <MenuItem value={'markdown'}>Markdown</MenuItem>
-            <MenuItem value={'image'}>Image</MenuItem>
-          </Select>
-        </FormControl>
+            >
+              <DragHandleIcon />
+            </span>,
+          )
+        }
+        <Select
+          input={<Input name="dialect" id="block-dialect" />}
+          value={this.state.dialect}
+          onChange={(ev) => {
+            this.setState(() => ({ dialect: ev.target.value }));
+            handleUpdateBlock({
+              ...block,
+              dialect: ev.target.value,
+            });
+          }}
+          style={{
+            margin: 'auto',
+            marginLeft: 0,
+            marginRight: 0,
+          }}
+        >
+          <MenuItem value={'markdown'}>Markdown</MenuItem>
+          <MenuItem value={'image'}>Image</MenuItem>
+        </Select>
 
-        <span style={{ marginLeft: '1em' }}>
+        <span>
           <IconButton
             onClick={() => handleDeleteBlock(block)}
             color="default"

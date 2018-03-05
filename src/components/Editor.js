@@ -56,7 +56,7 @@ const BlockEditors = (
     onBlur,
   }) =>
   (
-    <div>
+    <div style={{ backgroundColor: '#9e9e9e4f' }}>
       {
         post.blocks.map((block, index) =>
           (
@@ -177,7 +177,7 @@ export class Editor extends React.Component {
 
         <Collapse in={showBoth} unmountOnExit>
           <Grid container spacing={16}>
-            <Grid item xs={5} style={{ paddingBottom: '1.5em', paddingLeft: '1em' }}>
+            <Grid item xs={6} style={{ paddingBottom: '1.5em', paddingLeft: '1em' }}>
               <BlockEditors
                 post={post}
                 handleSetBlocks={handleSetBlocks}
@@ -187,7 +187,6 @@ export class Editor extends React.Component {
                 focusedBlockId={this.state.focusedBlockId}
               />
             </Grid>
-            <Grid item xs={1} />
             <Grid item xs={6}>
               <RenderedPost
                 post={post}

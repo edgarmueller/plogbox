@@ -4,12 +4,15 @@ import { withStyles } from 'material-ui';
 
 const styles = () => ({
   highlighted: {
-    border: 'solid 1px #ff4081',
-    padding: '0.5em',
+    backgroundColor: 'rgba(158, 158, 158, 0.14)',
+    paddingBottom: '15px',
+    paddingLeft: '15px',
+    paddingRight: '15px',
   },
   notHighlighted: {
-    border: 'solid 1px #fff',
-    padding: '0.5em',
+    paddingBottom: '15px',
+    paddingLeft: '15px',
+    paddingRight: '15px',
   },
 });
 
