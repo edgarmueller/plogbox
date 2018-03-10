@@ -1,7 +1,6 @@
 import React from 'react';
 import * as _ from 'lodash';
 import ReactDOM from 'react-dom';
-import 'typeface-roboto/index.css';
 import { AppContainer } from 'react-hot-loader';
 
 import './base.css';
