@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   Toolbar,
+  withStyles,
 } from 'material-ui';
 import EditPost from '../containers/EditPostContainer';
 import EditPostAppBar from '../containers/EditPostButtonBarContainer';
@@ -20,6 +21,28 @@ import Editor from '../components/Editor';
 import withDragDropContext from '../common/withDragDropContext';
 import { fetchPostById } from '../api';
 import { sortBlocks } from '../utils/blocks';
+
+const styles = {
+  appBar: {
+    backgroundColor: '#fbddcf',
+    borderBottom: '1px solid #ebebeb',
+    boxShadow: 'none',
+    borderTopLeftRadius: '1em',
+    borderTopRightRadius: '1em',
+  },
+  card: {
+    background: 'none',
+    boxShadow: 'none',
+    borderRadius: '0.25em',
+  },
+  cardContent: {
+    backgroundColor: '#fff',
+    // use theme's spacing?
+    padding: '8px 0 0 0',
+    borderBottomLeftRadius: '1em',
+    borderBottomRightRadius: '1em',
+  },
+};
 
 export class EditPostPage extends React.Component {
 
@@ -63,6 +86,8 @@ export class EditPostPage extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
       <div>
         <Dialog open={this.state.error !== undefined} onClose={this.handleClose}>
@@ -79,13 +104,13 @@ export class EditPostPage extends React.Component {
         {
           this.state.post ?
             <EditPost post={this.state.post}>
-              <AppBar position="static" color={'accent'}>
-                <Toolbar>
-                  <EditPostAppBar showTitle />
-                </Toolbar>
-              </AppBar>
-              <Card>
-                <CardContent>
+              <Card className={classes.card}>
+                <AppBar position="sticky" className={classes.appBar}>
+                  <Toolbar>
+                    <EditPostAppBar showTitle />
+                  </Toolbar>
+                </AppBar>
+                <CardContent className={classes.cardContent}>
                   <Editor />
                 </CardContent>
               </Card>
@@ -99,6 +124,7 @@ export class EditPostPage extends React.Component {
 
 EditPostPage.propTypes = {
   postId: PropTypes.number,
+  classes: PropTypes.shape({}).isRequired,
 };
 
 EditPostPage.defaultProps = {
@@ -123,5 +149,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     null,
-  )(withDragDropContext(EditPostPage)),
+  )(withDragDropContext(withStyles(styles)(EditPostPage))),
 );
