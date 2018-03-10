@@ -5,6 +5,7 @@ import ContentDelete from 'material-ui-icons/Delete';
 import DownArrow from 'material-ui-icons/KeyboardArrowDown';
 import UpArrow from 'material-ui-icons/KeyboardArrowUp';
 import DragHandleIcon from 'material-ui-icons/DragHandle';
+import MouseOverVisibleSpan from './MouseOverVisibleSpan';
 import { Direction } from '../constants';
 
 class BlockControl extends React.Component {
@@ -28,7 +29,9 @@ class BlockControl extends React.Component {
     } = this.props;
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'flex-start' }}
+      >
         {
           connectDragSource(
             <span style={{
@@ -62,7 +65,7 @@ class BlockControl extends React.Component {
           <MenuItem value={'image'}>Image</MenuItem>
         </Select>
 
-        <span>
+        <MouseOverVisibleSpan>
           <IconButton
             onClick={() => handleDeleteBlock(block)}
             color="default"
@@ -89,7 +92,7 @@ class BlockControl extends React.Component {
               </IconButton> :
               <span>&nbsp;</span>
           }
-        </span>
+        </MouseOverVisibleSpan>
       </div>
     );
   }
