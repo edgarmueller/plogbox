@@ -6,7 +6,7 @@
     "react/no-multi-comp": [1, { "ignoreStateless": true }],
     "linebreak-style": "off",
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "import/no-named-as-default": 0
+    "import/no-named-as-default": "off"
   },
   "env": {
     "browser": true,
