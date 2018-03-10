@@ -1,50 +1,29 @@
 import React from 'react';
-import {Button, Collapse, Grid, withStyles} from 'material-ui';
+import { Button, Collapse, Grid, withStyles } from 'material-ui';
 import ContentAdd from 'material-ui-icons/Add';
 import PropTypes from 'prop-types';
 import BlockComponent from './BlockComponent';
-import RenderedBlock from '../containers/RenderedBlockContainer';
 import { withPost } from '../common/withPost';
+import RenderedPost from './RenderedPost';
 
 const floatingButtonStyle = {
   float: 'right',
-  marginTop: '2.5em',
+  color: '#333435',
+  border: '2px solid #ABAFB2',
+  backgroundColor: '#fff',
+  boxShadow: 'none',
+  button: {
+    '&:hover': {
+      backgroundColor: '#c2e9fb',
+      color: '#fff',
+    },
+    '&:active': {
+      backgroundColor: '#c2e9fb',
+      color: '#fff',
+    },
+  },
 };
 
-const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
-  <div>
-    {
-      post.blocks.map(block =>
-        (
-          <RenderedBlock
-            key={block.id || block.tempid}
-            postId={post.id}
-            isFetchingBlock={isFetchingBlock}
-            block={block}
-            isFocused={
-              (block.id === focusedBlockId || block.tempid === focusedBlockId)
-              && focusedBlockId !== undefined
-            }
-          />
-        ),
-      )
-    }
-  </div>
-);
-
-RenderedPost.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number,
-    blocks: PropTypes.arrayOf(
-      PropTypes.shape({
-        dialect: PropTypes.string.isRequired,
-        text: PropTypes.string,
-      }),
-    ),
-  }).isRequired,
-  isFetchingBlock: PropTypes.bool.isRequired,
-  focusedBlockId: PropTypes.number,
-};
 
 const BlockEditors = (
   {
@@ -56,7 +35,7 @@ const BlockEditors = (
     onBlur,
   }) =>
   (
-    <div style={{ backgroundColor: '#9e9e9e4f' }}>
+    <div>
       {
         post.blocks.map((block, index) =>
           (
@@ -78,9 +57,8 @@ const BlockEditors = (
         )
       }
       <Button
-        fab
+        variant="fab"
         onClick={() => handleAddBlock()}
-        color="primary"
         style={floatingButtonStyle}
       >
         <ContentAdd />
@@ -103,6 +81,10 @@ BlockEditors.propTypes = {
   handleAddBlock: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,
+};
+
+BlockEditors.defaultProps = {
+  focusedBlockId: undefined,
 };
 
 const styles = theme => ({
@@ -187,7 +169,7 @@ export class Editor extends React.Component {
                 focusedBlockId={this.state.focusedBlockId}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{ paddingRight: '1em' }}>
               <RenderedPost
                 post={post}
                 blocks={post.blocks}
@@ -224,6 +206,7 @@ Editor.defaultProps = {
   showEditor: false,
   showRenderedView: false,
   showBoth: true,
+  isFetchingBlock: false,
 };
 
 export default withPost(withStyles(styles)(Editor));

@@ -54,7 +54,7 @@ export class PostList extends React.Component {
     return (
       <Card >
         <CardContent className={classes.MuiCardContent}>
-          <AppBar position="static" color={'accent'}>
+          <AppBar className={classes.appBar} position="static">
             <Toolbar>
               <Typography type="headline" color="inherit">
                 Select a post
@@ -107,7 +107,7 @@ export class PostList extends React.Component {
           </Table>
 
           <Button
-            fab
+            variant="fab"
             style={floatingButtonStyle}
             onClick={addPost}
             color="primary"

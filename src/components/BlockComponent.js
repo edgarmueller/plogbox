@@ -21,14 +21,15 @@ class BlockComponent extends React.Component {
     this.handleMoveBlock = this.handleMoveBlock.bind(this);
     this.handleMoveBlockUp = this.handleMoveBlockUp.bind(this);
     this.handleMoveBlockDown = this.handleMoveBlockDown.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
-  onDrop = (postId, block) => {
+  onDrop(postId, block) {
     return (acceptedFiles) => {
       if (!_.isEmpty(acceptedFiles)) {
         uploadFile(postId, _.head(acceptedFiles))
           .then(
-            resp => {
+            (resp) => {
               const copy = _.cloneDeep(block);
               copy.name = _.head(acceptedFiles).name;
               copy.text = resp.data.data;
@@ -61,18 +62,18 @@ class BlockComponent extends React.Component {
 
   handleUpdateBlock(block) {
     const { blocks, handleSetBlocks } = this.props;
-    const blockIndex = _.findIndex(blocks, b => {
-      if (b.id) {
-        return b.id === block.id;
+    const blockIndex = _.findIndex(blocks, block => {
+      if (block.id) {
+        return block.id === block.id;
       }
-      return b.tempid === block.tempid;
+      return block.tempid === block.tempid;
     });
     if (blockIndex !== -1) {
       const copy = blocks.slice();
       copy[blockIndex] = block;
       handleSetBlocks(copy);
     } else {
-      console.log('no block found')
+      console.error('No block found.');
     }
   }
 

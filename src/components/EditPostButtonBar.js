@@ -52,7 +52,7 @@ const EditPostButtonBar =
           <TextField
             name="title"
             type="text"
-            label="Post Title"
+            placeholder="Enter post title"
             value={post.title}
             onChange={ev => handleUpdatePost({
               ...post,
@@ -64,7 +64,6 @@ const EditPostButtonBar =
             }}
             InputProps={{
               classes: {
-                inkbar: classes.inputInkbar,
                 input: classes.textFieldInput,
               },
             }}

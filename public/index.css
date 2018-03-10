@@ -1,0 +1,40 @@
+#root {
+    /*background-image: linear-gradient(to right,  #ace0f9 0%, #fff1eb 100%);*/
+    background-color: #f6f6f6;
+    /*min-height: 100%;*/
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    border-bottom: 1px solid #ebebeb;
+}
+
+footer {
+    color: #6a6969;
+    margin: 0;
+    padding: 0.5em;
+}
+
+p {
+    margin-bottom: 0.5em
+}
