@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Chip from 'material-ui/Chip';
 import Avatar from 'material-ui/Avatar';
-import { AppBar, Button, Toolbar } from 'material-ui';
+import { AppBar, Toolbar } from 'material-ui';
 import { withStyles } from 'material-ui/styles';
 import SvgIconFace from 'material-ui-icons/Face';
 import { connect } from 'react-redux';
