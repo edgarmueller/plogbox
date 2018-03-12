@@ -62,11 +62,11 @@ class BlockComponent extends React.Component {
 
   handleUpdateBlock(block) {
     const { blocks, handleSetBlocks } = this.props;
-    const blockIndex = _.findIndex(blocks, block => {
-      if (block.id) {
-        return block.id === block.id;
+    const blockIndex = _.findIndex(blocks, (b) => {
+      if (b.id) {
+        return b.id === block.id;
       }
-      return block.tempid === block.tempid;
+      return b.tempid === block.tempid;
     });
     if (blockIndex !== -1) {
       const copy = blocks.slice();

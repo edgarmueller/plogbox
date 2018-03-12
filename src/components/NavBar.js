@@ -40,6 +40,8 @@ const styles = () => ({
       backgroundColor: '#c2e9fb',
       color: '#fff',
     },
+    letterSpacing: '0.065em',
+    fontFamily: "'Montserrat', sans-serif",
   },
   logo: {
     // display: 'inline-flex',
@@ -54,6 +56,8 @@ const styles = () => ({
     fontSize: '0.8125em',
     fontWeight: 'bold',
     marginLeft: 'auto',
+    textDecoration: 'none',
+    fontFamily: "'Montserrat', sans-serif",
   },
 });
 
@@ -90,9 +94,9 @@ export const NavBar = (
               LOGOUT
             </RadiumLink>
 
-            <span className={classes.logo}>
+            <RadiumLink className={classes.logo} to="/" >
               _plog
-            </span>
+            </RadiumLink>
           </Toolbar>
         </AppBar>
       </nav>
@@ -101,25 +105,23 @@ export const NavBar = (
 
   return (
     <nav>
-      <AppBar position="static" color={'primary'}>
+      <AppBar className={classes.appBar} position="static" >
         <Toolbar >
-          <RadiumLink
-            to="/"
-            className={classes.link}
-          >
-            <Button>plog</Button>
-          </RadiumLink>
           <RadiumLink
             to="/sign-up"
             className={classes.link}
           >
-            <Button>Sign up</Button>
+            SIGN UP
           </RadiumLink>
           <RadiumLink
             to="/login"
             className={classes.link}
           >
-            <Button>Login</Button>
+            LOGIN
+          </RadiumLink>
+
+          <RadiumLink className={classes.logo} to="/">
+            _plog
           </RadiumLink>
         </Toolbar>
       </AppBar>

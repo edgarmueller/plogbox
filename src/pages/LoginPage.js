@@ -83,7 +83,7 @@ class LoginFormContainer extends React.Component {
       return (<p>Logging in...</p>);
     }
     return (
-      <div>
+      <div style={{ marginTop: '1em' }}>
         <LoginForm
           handleSubmit={handleSubmit}
           handleFormSubmit={this.handleFormSubmit}

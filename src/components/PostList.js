@@ -8,17 +8,48 @@ import Table, { TableBody, TableHead, TableRow, TableCell } from 'material-ui/Ta
 import ButtonBar from '../containers/ButtonBarContainer';
 import Tags from '../containers/TagsContainer';
 
-const floatingButtonStyle = {
-  float: 'right',
-  marginTop: '2.5em',
-};
-
 const styles = () => ({
+  // TODO duplicate styles appBar, card & cardContent, see EditPostPage
+  appBar: {
+    backgroundColor: '#90A4AE',
+    borderBottom: '1px solid #ebebeb',
+    boxShadow: 'none',
+    borderTopLeftRadius: '1em',
+    borderTopRightRadius: '1em',
+  },
+  card: {
+    background: 'none',
+    boxShadow: 'none',
+    borderRadius: '0.25em',
+    padding: 0,
+  },
+  cardContent: {
+    backgroundColor: '#fff',
+    // TODO use theme's spacing?
+    padding: '8px 0 0 0',
+    borderBottomLeftRadius: '1em',
+    borderBottomRightRadius: '1em',
+  },
+  floatingButtonStyle: {
+    float: 'right',
+    color: '#333435',
+    border: '2px solid #ABAFB2',
+    backgroundColor: '#fff',
+    boxShadow: 'none',
+    button: {
+      '&:hover': {
+        backgroundColor: '#c2e9fb',
+        color: '#fff',
+      },
+      '&:active': {
+        backgroundColor: '#c2e9fb',
+        color: '#fff',
+      },
+    },
+    marginTop: '1.5em'
+  },
   flex: {
     flex: 1,
-  },
-  MuiCardContent: {
-    padding: 0,
   },
 });
 
@@ -52,16 +83,16 @@ export class PostList extends React.Component {
 
     // TODO: fix key
     return (
-      <Card >
-        <CardContent className={classes.MuiCardContent}>
-          <AppBar className={classes.appBar} position="static">
-            <Toolbar>
-              <Typography type="headline" color="inherit">
-                Select a post
-              </Typography>
-              <ButtonBar />
-            </Toolbar>
-          </AppBar>
+      <Card className={classes.card}>
+        <AppBar className={classes.appBar} position="static">
+          <Toolbar>
+            <Typography type="headline">
+              SELECT A POST
+            </Typography>
+            <ButtonBar />
+          </Toolbar>
+        </AppBar>
+        <CardContent className={classes.cardContent}>
           <Table>
             <TableHead>
               <TableRow>
@@ -108,7 +139,7 @@ export class PostList extends React.Component {
 
           <Button
             variant="fab"
-            style={floatingButtonStyle}
+            className={classes.floatingButtonStyle}
             onClick={addPost}
             color="primary"
           >

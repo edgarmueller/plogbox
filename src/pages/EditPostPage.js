@@ -24,7 +24,7 @@ import { sortBlocks } from '../utils/blocks';
 
 const styles = {
   appBar: {
-    backgroundColor: '#fbddcf',
+    backgroundColor: '#90A4AE',
     borderBottom: '1px solid #ebebeb',
     boxShadow: 'none',
     borderTopLeftRadius: '1em',

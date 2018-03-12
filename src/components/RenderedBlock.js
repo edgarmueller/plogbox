@@ -10,14 +10,14 @@ md.use(mk);
 
 const styles = () => ({
   highlighted: {
-    border: '2px solid #c2e9fb',
+    border: '1px solid #c2e9fb',
     borderRadius: '0.25em',
     paddingTop: '8px',
     paddingLeft: '8px',
     paddingBottom: '8px',
   },
   notHighlighted: {
-    border: '2px solid #fff',
+    border: '1px solid #fff',
     borderRadius: '0.25em',
     paddingTop: '8px',
     paddingLeft: '8px',

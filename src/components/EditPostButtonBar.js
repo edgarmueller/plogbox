@@ -13,12 +13,6 @@ const styles = () => ({
   hidden: {
     display: 'none',
   },
-  inputInkbar: {
-    color: 'white',
-    '&:after': {
-      backgroundColor: '#fff',
-    },
-  },
   textFieldFormLabel: {
     color: '#121212',
   },

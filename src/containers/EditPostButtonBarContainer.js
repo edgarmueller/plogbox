@@ -52,7 +52,6 @@ export class EditPostButtonBarContainer extends React.Component {
   }
 
   render() {
-
     return (
       <div>
         <EditPostButtonBar {...this.props} />
@@ -115,8 +114,6 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
     reader.onload = (ev) => {
       const readBlocks = JSON.parse(ev.target.result);
       ownProps.handleSetBlocks(readBlocks);
-      // post.blocks = readBlocks;
-      // action.updatePost(post);
     };
     reader.readAsText(file);
   },

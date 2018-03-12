@@ -47,9 +47,9 @@ const BlockEditor = ({ postId, block, onDrop, handleUpdateBlock }) => {
       editorProps={{ $blockScrolling: true }}
       width={'100%'}
       value={block.text}
-      minLines={1}
+      minLines={2}
       maxLines={Infinity}
-      fontSize={14}
+      fontSize={16}
       keyboardHandler={'emacs'}
     />
   );
