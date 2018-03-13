@@ -23,29 +23,25 @@ const styles = () => ({
   link: {
     textDecoration: 'none',
     color: '#333435',
-    paddingTop: '1em',
     paddingLeft: '2em',
     paddingRight: '2em',
-    paddingBottom: '1em',
-    borderRadius: '16px',
-    border: '2px solid #c2e9fb',
-    height: '32px',
+    borderRadius: '28px',
+    border: '2px solid #80CBC4',
+    height: '28px',
     display: 'inline-flex',
     alignItems: 'center',
     marginLeft: '1em',
     marginRight: '1em',
-    fontSize: '0.8125em',
     fontWeight: 'bold',
     '&:hover': {
-      backgroundColor: '#c2e9fb',
+      backgroundColor: '#80CBC4',
       color: '#fff',
     },
+    textTransform: 'uppercase',
+    fontSize: '10px',
     letterSpacing: '0.065em',
-    fontFamily: "'Montserrat', sans-serif",
   },
   logo: {
-    // display: 'inline-flex',
-    // justifyContent: 'flex-end',
     color: '#333435',
     borderRadius: '16px',
     paddingLeft: '2em',
@@ -80,7 +76,7 @@ export const NavBar = (
               className={classes.link}
               to="/posts"
             >
-                POSTS
+                Posts
             </RadiumLink>
             <div>
               <Chip
@@ -91,7 +87,7 @@ export const NavBar = (
               </Chip>
             </div>
             <RadiumLink className={classes.link} onClick={logout} to={'/'}>
-              LOGOUT
+              Logout
             </RadiumLink>
 
             <RadiumLink className={classes.logo} to="/" >

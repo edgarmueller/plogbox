@@ -11,21 +11,20 @@ import Tags from '../containers/TagsContainer';
 const styles = () => ({
   // TODO duplicate styles appBar, card & cardContent, see EditPostPage
   appBar: {
-    backgroundColor: '#90A4AE',
+    backgroundColor: '#fff',
     borderBottom: '1px solid #ebebeb',
-    boxShadow: 'none',
-    borderTopLeftRadius: '1em',
-    borderTopRightRadius: '1em',
+    width: '100%',
+    borderBottomLeftRadius: '0.5em',
+    borderBottomRightRadius: '0.5em',
   },
   card: {
+    color: '#6a6969',
     background: 'none',
     boxShadow: 'none',
-    borderRadius: '0.25em',
-    padding: 0,
   },
   cardContent: {
-    backgroundColor: '#fff',
-    // TODO use theme's spacing?
+    // use theme's spacing?
+    color: '#6a6969',
     padding: '8px 0 0 0',
     borderBottomLeftRadius: '1em',
     borderBottomRightRadius: '1em',
@@ -33,20 +32,9 @@ const styles = () => ({
   floatingButtonStyle: {
     float: 'right',
     color: '#333435',
-    border: '2px solid #ABAFB2',
     backgroundColor: '#fff',
-    boxShadow: 'none',
-    button: {
-      '&:hover': {
-        backgroundColor: '#c2e9fb',
-        color: '#fff',
-      },
-      '&:active': {
-        backgroundColor: '#c2e9fb',
-        color: '#fff',
-      },
-    },
-    marginTop: '1.5em'
+    marginBottom: '1em',
+    marginTop: '1.5em',
   },
   flex: {
     flex: 1,
@@ -83,7 +71,7 @@ export class PostList extends React.Component {
 
     // TODO: fix key
     return (
-      <Card className={classes.card}>
+      <div>
         <AppBar className={classes.appBar} position="static">
           <Toolbar>
             <Typography type="headline">
@@ -92,61 +80,63 @@ export class PostList extends React.Component {
             <ButtonBar />
           </Toolbar>
         </AppBar>
-        <CardContent className={classes.cardContent}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Edit or Delete</TableCell>
-                <TableCell>Tags</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                posts.map(post => (
-                  <TableRow key={`${post.id}-${new Date()}`}>
-                    <TableCell>{post.title}</TableCell>
-                    <TableCell>{formatDate(post.date)}</TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={() => handlePostSelected(post)}
-                        color="default"
-                      >
-                        <ContentCreate />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => deletePost(post)}
-                        color="default"
-                      >
-                        <ContentDelete />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell onClick={() => this.setHighlightedPost(post)}>
-                      <Tags
-                        post={post}
-                        isEditing={
-                          this.state.post !== undefined && this.state.post.id === post.id
-                        }
-                        done={() => this.setHighlightedPost(undefined)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
+        <Card className={classes.card}>
+          <CardContent className={classes.cardContent}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Edit or Delete</TableCell>
+                  <TableCell>Tags</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  posts.map(post => (
+                    <TableRow key={`${post.id}-${new Date()}`}>
+                      <TableCell>{post.title}</TableCell>
+                      <TableCell>{formatDate(post.date)}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handlePostSelected(post)}
+                          color="default"
+                        >
+                          <ContentCreate />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => deletePost(post)}
+                          color="default"
+                        >
+                          <ContentDelete />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell onClick={() => this.setHighlightedPost(post)}>
+                        <Tags
+                          post={post}
+                          isEditing={
+                            this.state.post !== undefined && this.state.post.id === post.id
+                          }
+                          done={() => this.setHighlightedPost(undefined)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                }
+              </TableBody>
+            </Table>
 
-          <Button
-            variant="fab"
-            className={classes.floatingButtonStyle}
-            onClick={addPost}
-            color="primary"
-          >
-            <ContentAdd />
-          </Button>
-        </CardContent>
-      </Card>
+            <Button
+              variant="fab"
+              className={classes.floatingButtonStyle}
+              onClick={addPost}
+              color="primary"
+            >
+              <ContentAdd />
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 }

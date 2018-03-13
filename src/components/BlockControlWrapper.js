@@ -4,22 +4,20 @@ import { withStyles } from 'material-ui';
 
 const styles = () => ({
   highlighted: {
-    border: '1px solid #c2e9fb',
     color: '#333435',
-    borderRadius: '0.5em',
+    backgroundColor: '#fff',
+    borderRadius: '0.25em',
     paddingBottom: '8px',
     paddingLeft: '4px',
     paddingRight: '8px',
-    marginBottom: '0.25em',
+    marginBottom: '0.35em',
   },
   notHighlighted: {
-    marginBottom: '0.25em',
     color: '#333435',
-    border: '1px solid #ABAFB2',
-    borderRadius: '0.5em',
     paddingBottom: '8px',
     paddingLeft: '4px',
     paddingRight: '8px',
+    marginBottom: '0.35em',
   },
 });
 

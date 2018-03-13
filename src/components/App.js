@@ -20,7 +20,7 @@ import { requireAuth } from '../auth';
 
 
 const containerStyle = {
-  width: '80%',
+  width: '70%',
   margin: 'auto',
 };
 

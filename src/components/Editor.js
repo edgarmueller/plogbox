@@ -9,19 +9,9 @@ import RenderedPost from './RenderedPost';
 const floatingButtonStyle = {
   float: 'right',
   color: '#333435',
-  border: '2px solid #ABAFB2',
   backgroundColor: '#fff',
-  boxShadow: 'none',
-  button: {
-    '&:hover': {
-      backgroundColor: '#c2e9fb',
-      color: '#fff',
-    },
-    '&:active': {
-      backgroundColor: '#c2e9fb',
-      color: '#fff',
-    },
-  },
+  marginTop: '1.5em',
+  marginBottom: '1em',
 };
 
 const BlockEditors = (
@@ -57,6 +47,7 @@ const BlockEditors = (
       }
       <Button
         variant="fab"
+        mini
         onClick={() => handleAddBlock()}
         style={floatingButtonStyle}
       >
@@ -137,36 +128,49 @@ export class Editor extends React.Component {
     return (
       <div>
         <Collapse in={showEditor} unmountOnExit>
-          <BlockEditors
-            post={post}
-            handleSetBlocks={handleSetBlocks}
-            handleAddBlock={handleAddBlock}
-            onFocus={block => this.setState({ focusedBlockId: block.id || block.tempid })}
-            onBlur={() => this.setState({ focusedBlockId: undefined })}
-            focusedBlockId={this.state.focusedBlockId}
-          />
+          <div style={{ margin: 'auto', width: '70%' }}>
+            <BlockEditors
+              post={post}
+              handleSetBlocks={handleSetBlocks}
+              handleAddBlock={handleAddBlock}
+              onFocus={block => this.setState({ focusedBlockId: block.id || block.tempid })}
+              onBlur={() => this.setState({ focusedBlockId: undefined })}
+              focusedBlockId={this.state.focusedBlockId}
+            />
+          </div>
         </Collapse>
 
         <Collapse in={showRenderedView} unmountOnExit>
-          <RenderedPost
-            post={post}
-            blocks={post.blocks}
-            isFetchingBlock={isFetchingBlock}
-            focusedBlockId={this.state.focusedBlockId}
-          />
+          <div style={{ margin: 'auto', width: '70%' }}>
+            <RenderedPost
+              post={post}
+              blocks={post.blocks}
+              isFetchingBlock={isFetchingBlock}
+              focusedBlockId={this.state.focusedBlockId}
+            />
+          </div>
         </Collapse>
 
         <Collapse in={showBoth} unmountOnExit>
           <Grid container spacing={16}>
-            <Grid item xs={6} style={{ paddingBottom: '1.5em', paddingLeft: '1em' }}>
-              <BlockEditors
-                post={post}
-                handleSetBlocks={handleSetBlocks}
-                handleAddBlock={handleAddBlock}
-                onFocus={block => this.setState({ focusedBlockId: block.id || block.tempid })}
-                onBlur={() => this.setState({ focusedBlockId: undefined })}
-                focusedBlockId={this.state.focusedBlockId}
-              />
+            <Grid item xs={6}>
+              <div style={{
+                paddingBottom: '1.5em',
+                paddingLeft: '1em',
+                backgroundColor: '#fff',
+                borderRadius: '0.25em',
+                boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
+              }}
+              >
+                <BlockEditors
+                  post={post}
+                  handleSetBlocks={handleSetBlocks}
+                  handleAddBlock={handleAddBlock}
+                  onFocus={block => this.setState({ focusedBlockId: block.id || block.tempid })}
+                  onBlur={() => this.setState({ focusedBlockId: undefined })}
+                  focusedBlockId={this.state.focusedBlockId}
+                />
+              </div>
             </Grid>
             <Grid item xs={6} style={{ paddingRight: '1em' }}>
               <RenderedPost

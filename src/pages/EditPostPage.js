@@ -24,19 +24,17 @@ import { sortBlocks } from '../utils/blocks';
 
 const styles = {
   appBar: {
-    backgroundColor: '#90A4AE',
+    backgroundColor: '#fff',
     borderBottom: '1px solid #ebebeb',
-    boxShadow: 'none',
-    borderTopLeftRadius: '1em',
-    borderTopRightRadius: '1em',
+    width: '100%',
+    borderBottomLeftRadius: '0.5em',
+    borderBottomRightRadius: '0.5em',
   },
   card: {
     background: 'none',
     boxShadow: 'none',
-    borderRadius: '0.25em',
   },
   cardContent: {
-    backgroundColor: '#fff',
     // use theme's spacing?
     padding: '8px 0 0 0',
     borderBottomLeftRadius: '1em',
@@ -104,12 +102,12 @@ export class EditPostPage extends React.Component {
         {
           this.state.post ?
             <EditPost post={this.state.post}>
+              <AppBar position="sticky" className={classes.appBar}>
+                <Toolbar>
+                  <EditPostAppBar showTitle />
+                </Toolbar>
+              </AppBar>
               <Card className={classes.card}>
-                <AppBar position="sticky" className={classes.appBar}>
-                  <Toolbar>
-                    <EditPostAppBar showTitle />
-                  </Toolbar>
-                </AppBar>
                 <CardContent className={classes.cardContent}>
                   <Editor />
                 </CardContent>
