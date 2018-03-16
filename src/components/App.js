@@ -13,7 +13,6 @@ import SignUpPage from '../pages/SignUpPage';
 import Login from '../pages/LoginPage';
 import ProfilePage from '../pages/ProfilePage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
-import ChangePasswordPage from '../pages/ChangePasswordPage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 import ActivateAccountPage from '../pages/ActivateAccountPage';
 import { requireAuth } from '../auth';
@@ -49,7 +48,6 @@ export const App = () => (
           <Route path="/profile" component={requireAuth(ProfilePage)} />
           <Route path="/password/reset/:token" component={ResetPasswordPage} />
           <Route path="/password/forgot" component={ForgotPasswordPage} />
-          <Route path="/password/change" component={requireAuth(ChangePasswordPage)} />
           <Route path="/account/activate/:token" component={ActivateAccountPage} />
           <Route path="/" component={requireAuth(PostList)} />
           <Route path="*" component={NotFoundPage} />
