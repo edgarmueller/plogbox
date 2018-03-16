@@ -6,6 +6,7 @@ import {
   USER_IS_LOGGING_IN,
   ACTIVATE_ACCOUNT_FAILURE,
   ACTIVATE_ACCOUNT_SUCCESS,
+  RESET_PASSWORD_FAILURE,
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -30,7 +31,7 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         isAuthenticating: false,
         isAuthenticated: action.token !== undefined,
-        statusText: 'You have been logged in successfully.',
+        statusText: undefined,
         status: action.status,
         token: action.token,
         user: action.user,
@@ -67,11 +68,17 @@ export const auth = (state = INITIAL_STATE, action) => {
         user: null,
         userId: null,
       };
+    case RESET_PASSWORD_FAILURE:
+      return {
+        ...state,
+        statusText: action.statusText,
+        status: action.status,
+      };
     case USER_LOGOUT_SUCCESS:
       return {
         isAuthenticating: false,
         isAuthenticated: false,
-        statusText: 'You have been logged out successfully.',
+        statusText: undefined,
         status: action.status,
         token: null,
         user: null,
