@@ -1,39 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import red from 'material-ui/colors/red';
 import * as actions from '../actions';
 import ChangePasswordForm from '../components/ChangePasswordForm';
+import { getStatusText } from '../reducers/auth';
 
 export class ChangePasswordFormContainer extends React.Component {
 
   constructor() {
     super();
-    this.renderAlert = this.renderAlert.bind(this);
-  }
-
-  // TODO: dup code (where?)
-  // how is error message set?
-  renderAlert() {
-    if (this.props.errorMessage) {
-      return (
-        <div style={{ marginTop: '1em' }}>
-          <span style={{ color: red }}>
-            {this.props.errorMessage}
-          </span>
-        </div>
-      );
-    }
-
-    return undefined;
   }
 
   render() {
-    const { handleSubmit, changePassword } = this.props;
+    const { changePassword, errorMessage } = this.props;
     return (
-      <ChangePasswordForm
-        handleSubmit={handleSubmit}
-        onSubmit={changePassword}
-        renderAlert={this.renderAlert}
+      <ChangePasswordForm 
+        errorMessage={errorMessage}
+        changePassword={changePassword} 
       />
     );
   }
@@ -44,9 +28,19 @@ ChangePasswordFormContainer.propTypes = {
   ...ChangePasswordForm.propTypes,
 };
 
+export const mapStateToProps = state => ({
+  errorMessage: getStatusText(state.auth),
+});
+
 export const mapDispatchToProps = dispatch => ({
-  changePassword(formProps) {
-    dispatch(actions.changePassword(formProps.currentPassword, formProps.newPassword));
+  changePassword(currentPassword, newPassword) {
+    dispatch(actions.changePassword(currentPassword, newPassword));
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChangePasswordFormContainer);
+
 

@@ -1,53 +1,32 @@
 import React from 'react';
 import { AppBar, Button, Card, CardContent, Toolbar, Typography, withStyles } from 'material-ui';
 import PropTypes from 'prop-types';
+import { appBar, button, card, cardContent, header } from '../common/styles';
+import ChangePasswordForm from '../containers/ChangePasswordFormContainer';
 
 const styles = () => ({
-  // TODO duplicate styles appBar, card & cardContent, see EditPostPage
-  appBar: {
-    backgroundColor: '#fbddcf',
-    borderBottom: '1px solid #ebebeb',
-    boxShadow: 'none',
-    borderTopLeftRadius: '1em',
-    borderTopRightRadius: '1em',
-  },
-  card: {
-    background: 'none',
-    boxShadow: 'none',
-    borderRadius: '0.25em',
-    padding: 0,
-  },
-  cardContent: {
-    backgroundColor: '#fff',
-    // use theme's spacing?
-    padding: '8px 0 0 0',
-    borderBottomLeftRadius: '1em',
-    borderBottomRightRadius: '1em',
-  },
+  appBar,
+  button,
+  card,
+  cardContent,
+  header,
 });
 
 export const ProfilePage = ({ classes, navigateTo }) => (
-  <Card className={classes.card}>
+  <div>
     <AppBar className={classes.appBar} position="static">
-      <Toolbar>
-        <Typography type="headline">
-          PROFILE SETTINGS
-        </Typography>
+      <Toolbar className={classes.header}>
+        PROFILE SETTINGS
       </Toolbar>
     </AppBar>
-    <CardContent className={classes.cardContent}>
-      <p>
-        You can change your password anytime. To do so, click the button below
-      </p>
-      <Button
-        onClick={() => navigateTo('/password/change')}
-        color={'primary'}
-      >
-        Change password
-      </Button>
-    </CardContent>
-  </Card>
-  );
+    <Card className={classes.card}>
+      <CardContent className={classes.cardContent}>
+        <p>You can change your password anytime. To do so, enter your current password and then your new password twice.</p>
+        <ChangePasswordForm />
+      </CardContent>
+    </Card>
+  </div>
+);
 
 ProfilePage.propTypes = {
   classes: PropTypes.shape({}).isRequired,

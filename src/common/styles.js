@@ -1,14 +1,13 @@
 export const button = {
   textDecoration: 'none',
   color: '#333435',
-  paddingLeft: '2em',
-  paddingRight: '2em',
+  paddingLeft: '1em',
+  paddingRight: '1em',
   borderRadius: '28px',
   border: '2px solid #80CBC4',
-  height: '28px',
+  height: '24px',
   display: 'inline-flex',
   alignItems: 'center',
-  marginLeft: '1em',
   marginRight: '1em',
   fontWeight: 'bold',
   '&:hover': {
@@ -18,4 +17,33 @@ export const button = {
   textTransform: 'uppercase',
   fontSize: '10px',
   letterSpacing: '0.065em',
+  fontFamily: "'Montserrat', sans-serif",
+};
+
+export const appBar = {
+  backgroundColor: '#fff',
+  borderBottom: '1px solid #ebebeb',
+  width: '100%',
+  borderBottomLeftRadius: '0.5em',
+  borderBottomRightRadius: '0.5em',
+  fontFamily: "'Montserrat', sans-serif",
+}
+
+export const card = {
+  marginTop: '1em',
+  color: '#6a6969',
+  // use theme's spacing?
+  padding: '8px',
+  background: '#fff',
+  borderRadius: '0.5em',
+  fontSize: '0.85em'
+};
+
+export const header = {
+  fontFamily: "'Montserrat', sans-serif", 
+  color: '#6a6969',
+}
+ 
+export const cardContent = {
+  padding: '0'
 };
