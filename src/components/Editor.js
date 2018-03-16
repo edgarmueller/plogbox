@@ -26,24 +26,25 @@ const BlockEditors = (
   (
     <div>
       {
-        post.blocks.map((block, index) =>
-          (
-            <BlockComponent
-              key={block.id || block.tempid}
-              postId={post.id}
-              block={block}
-              blocks={post.blocks}
-              blockIndex={index}
-              onFocus={() => onFocus(block)}
-              onBlur={onBlur}
-              isFocused={(
-                block.id === focusedBlockId
-                || block.tempid === focusedBlockId
-              ) && focusedBlockId !== undefined}
-              handleSetBlocks={handleSetBlocks}
-            />
-          ),
-        )
+        post.blocks.length > 0 ?
+          post.blocks.map((block, index) =>
+            (
+              <BlockComponent
+                key={block.id || block.tempid}
+                postId={post.id}
+                block={block}
+                blocks={post.blocks}
+                blockIndex={index}
+                onFocus={() => onFocus(block)}
+                onBlur={onBlur}
+                isFocused={(
+                  block.id === focusedBlockId
+                  || block.tempid === focusedBlockId
+                ) && focusedBlockId !== undefined}
+                handleSetBlocks={handleSetBlocks}
+              />
+            ),
+          ) : <p style={{ paddingTop: '1em' }}>No blocks created yet.</p>
       }
       <Button
         variant="fab"
