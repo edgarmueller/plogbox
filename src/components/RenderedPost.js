@@ -13,7 +13,7 @@ const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
             isFetchingBlock={isFetchingBlock}
             block={block}
             isFocused={
-              (block.id === focusedBlockId || block.tempid === focusedBlockId)
+              (block.id == focusedBlockId || block.tempid == focusedBlockId)
               && focusedBlockId !== undefined
             }
           />
@@ -34,7 +34,7 @@ RenderedPost.propTypes = {
     ),
   }).isRequired,
   isFetchingBlock: PropTypes.bool.isRequired,
-  focusedBlockId: PropTypes.number,
+  focusedBlockId: PropTypes.string,
 };
 
 RenderedPost.defaultProps = {
