@@ -54,7 +54,7 @@ export class PostListContainer extends React.Component {
     } = this.props;
 
     if (isFetchingPosts || isUpdatingPost) {
-      return (<p>Loading...</p>);
+      return (<p style={{ paddingTop: '1em' }}>Loading posts...</p>);
     }
 
     return (

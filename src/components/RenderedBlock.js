@@ -30,7 +30,7 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) 
     case 'image':
       if (block.text) {
         if (isDownloading) {
-          return (<div id={block.text}>Loading...</div>);
+          return (<div id={block.text} style={{ paddingTop: '1em' }}>Loading post...</div>);
         }
 
         return (

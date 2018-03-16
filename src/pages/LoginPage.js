@@ -51,7 +51,7 @@ class LoginPage extends React.Component {
     }
 
     if (isAuthenticating) {
-      return (<p>Logging in...</p>);
+      return (<p style={{ paddingTop: '1em' }}>Logging in...</p>);
     }
     return (
       <CenteredWhiteDiv>
