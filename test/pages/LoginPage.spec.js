@@ -2,7 +2,8 @@
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
 import { Provider } from 'react-redux';
-import LoginFormContainer, { LoginForm } from '../../src/pages/LoginPage';
+import { LoginForm } from '../../src/components/LoginForm';
+import LoginFormContainer from '../../src/pages/LoginPage';
 import { MemoryRouter } from 'react-router';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
@@ -21,8 +22,8 @@ test('login form should render', async () => {
     },
   });
   const props = {
-    handleSubmit() {
-    },
+    handleSubmit() { },
+    location: {}
   };
   const enzymeWrapper = mountWithContext(
     <Provider store={store}>

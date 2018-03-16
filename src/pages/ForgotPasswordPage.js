@@ -7,7 +7,7 @@ import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import * as actions from '../actions';
 import CenteredWhiteDiv from '../components/CenteredWhiteDiv';
 
-export class ForgotPasswordFormPage extends React.Component {
+export class ForgotPasswordPage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -49,12 +49,12 @@ export class ForgotPasswordFormPage extends React.Component {
   }
 }
 
-ForgotPasswordFormPage.propTypes = {
+ForgotPasswordPage.propTypes = {
   forgotPassword: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
 };
 
-ForgotPasswordFormPage.defaultProps = {
+ForgotPasswordPage.defaultProps = {
   errorMessage: undefined,
 };
 
@@ -70,4 +70,4 @@ export const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(ForgotPasswordFormPage);
+)(ForgotPasswordPage);

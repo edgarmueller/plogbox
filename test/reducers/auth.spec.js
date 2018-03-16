@@ -64,7 +64,7 @@ test('logout successfully', () => {
   const before = {
     isAuthenticating: false,
     isAuthenticated: true,
-    statusText: 'You have been logged in successfully.',
+    statusText: undefined,
     token,
     user: 'foo@example.org',
     userId: 0,
@@ -78,7 +78,7 @@ test('logout successfully', () => {
   // assert
   expect(after.isAuthenticating).toBeFalsy();
   expect(after.isAuthenticated).toBeFalsy();
-  expect(after.statusText).toBe('You have been logged out successfully.');
+  expect(after.statusText).toBe(undefined);
   expect(after.token).toBeNull();
   expect(after.user).toBeNull();
   expect(after.userId).toBeNull();

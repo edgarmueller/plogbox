@@ -9,6 +9,12 @@ import { Editor } from '../../src/components/Editor';
 Enzyme.configure({ adapter: new Adapter() });
 
 test('Render Editor', () => {
-  const wrapper = shallow(<Editor post={firstPost} />);
+  const wrapper = shallow(
+    <Editor 
+      post={firstPost} 
+      handleSetBlocks={() => {}}
+      handleAddBlock={() => {}}
+    />
+  );
   expect(wrapper.find(Grid).length).toBe(3);
 });
