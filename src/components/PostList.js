@@ -7,28 +7,13 @@ import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography, wit
 import Table, { TableBody, TableHead, TableRow, TableCell } from 'material-ui/Table';
 import ButtonBar from '../containers/ButtonBarContainer';
 import Tags from '../containers/TagsContainer';
+import { appBar, card, cardContent, header } from '../common/styles'
 
 const styles = () => ({
-  // TODO duplicate styles appBar, card & cardContent, see EditPostPage
-  appBar: {
-    backgroundColor: '#fff',
-    borderBottom: '1px solid #ebebeb',
-    width: '100%',
-    borderBottomLeftRadius: '0.5em',
-    borderBottomRightRadius: '0.5em',
-  },
-  card: {
-    color: '#6a6969',
-    background: 'none',
-    boxShadow: 'none',
-  },
-  cardContent: {
-    // use theme's spacing?
-    color: '#6a6969',
-    padding: '8px 0 0 0',
-    borderBottomLeftRadius: '1em',
-    borderBottomRightRadius: '1em',
-  },
+  appBar,
+  card,
+  cardContent,
+  header,
   floatingButtonStyle: {
     float: 'right',
     color: '#333435',
@@ -73,10 +58,8 @@ export class PostList extends React.Component {
     return (
       <div>
         <AppBar className={classes.appBar} position="static">
-          <Toolbar>
-            <Typography type="headline">
+          <Toolbar className={classes.header}>
               SELECT A POST
-            </Typography>
             <ButtonBar />
           </Toolbar>
         </AppBar>
