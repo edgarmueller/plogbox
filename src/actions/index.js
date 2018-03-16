@@ -188,7 +188,7 @@ export const registerUser = signUpToken => dispatch =>
     );
 
 
-export const loginUser = ({ email, password }) => (dispatch) => {
+export const loginUser = (email, password) => (dispatch) => {
   dispatch({
     type: USER_IS_LOGGING_IN,
   });

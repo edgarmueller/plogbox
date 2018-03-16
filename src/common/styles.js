@@ -1,0 +1,21 @@
+export const button = {
+  textDecoration: 'none',
+  color: '#333435',
+  paddingLeft: '2em',
+  paddingRight: '2em',
+  borderRadius: '28px',
+  border: '2px solid #80CBC4',
+  height: '28px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  marginLeft: '1em',
+  marginRight: '1em',
+  fontWeight: 'bold',
+  '&:hover': {
+    backgroundColor: '#80CBC4',
+    color: '#fff',
+  },
+  textTransform: 'uppercase',
+  fontSize: '10px',
+  letterSpacing: '0.065em',
+};

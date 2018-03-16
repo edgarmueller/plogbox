@@ -139,8 +139,6 @@ NavBar.defaultProps = {
   user: undefined,
 };
 
-// These props come from the application's
-// state when it is started
 const mapStateToProps = state => ({
   isAuthenticated: getIsAuthenticated(state),
   user: state.auth.user,

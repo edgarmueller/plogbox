@@ -1,27 +1,62 @@
 import React from 'react';
-import { Field } from 'redux-form';
-import { Button } from 'material-ui';
+import { Button, TextField, withStyles } from 'material-ui';
 import PropTypes from 'prop-types';
-import { renderTextField } from '../utils/helpers';
+import { button as buttonStyle } from '../common/styles';
 
-const ForgotPasswordForm = ({ handleSubmit, handleFormSubmit, renderAlert }) => (
-  <form onSubmit={handleSubmit(handleFormSubmit)}>
-    <div>
-      <Field name="email" component={renderTextField} label="Email" />
-    </div>
-    <div>
-      <Button type="submit" label="Reset password" />
-    </div>
-    <div>
-      {renderAlert()}
-    </div>
-  </form>
-);
-
-ForgotPasswordForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleFormSubmit: PropTypes.func.isRequired,
-  renderAlert: PropTypes.func.isRequired,
+const styles = {
+  button: {
+    ...buttonStyle,
+    marginLeft: '2em',
+  },
 };
 
-export default ForgotPasswordForm;
+class ForgotPasswordForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      mail: undefined,
+    };
+    this.handleUpdateMail = this.handleUpdateMail.bind(this);
+  }
+
+  handleUpdateMail(mail) {
+    this.setState({
+      mail,
+    });
+  }
+
+  render() {
+    const { handleFormSubmit, renderAlert, classes } = this.props;
+
+    return (
+      <form onSubmit={handleFormSubmit}>
+        <div>
+          <TextField
+            name="email"
+            label="Mail Address"
+            onChange={event => this.handleUpdateMail(event.target.value)}
+          />
+          <Button
+            type="button"
+            className={classes.button}
+            onClick={() => handleFormSubmit(this.state.mail)}
+          >
+            Reset password
+          </Button>
+        </div>
+        <div>
+          {renderAlert()}
+        </div>
+      </form>
+    );
+  }
+}
+
+ForgotPasswordForm.propTypes = {
+  handleFormSubmit: PropTypes.func.isRequired,
+  renderAlert: PropTypes.func.isRequired,
+  classes: PropTypes.shape({}).isRequired,
+};
+
+export default withStyles(styles)(ForgotPasswordForm);
