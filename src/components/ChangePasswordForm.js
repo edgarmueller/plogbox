@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import { Button, TextField, withStyles } from 'material-ui';
 import red from 'material-ui/colors/red';
 import PropTypes from 'prop-types';
-import { renderPasswordTextField } from '../utils/helpers';
 import { button } from '../common/styles';
 
 const styles = {
@@ -82,8 +81,7 @@ class ChangePasswordForm extends React.Component {
   }
 
   render() {
-    const { classes, handleSubmit, changePassword, errorMessage } = this.props;
-    console.log("error message", errorMessage)
+    const { classes, changePassword, errorMessage } = this.props;
     return (
       <div>
         <div>

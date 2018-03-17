@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Button, Card, CardContent, Toolbar, Typography, withStyles } from 'material-ui';
+import { AppBar, Card, CardContent, Toolbar, withStyles } from 'material-ui';
 import PropTypes from 'prop-types';
 import { appBar, button, card, cardContent, header } from '../common/styles';
 import ChangePasswordForm from '../containers/ChangePasswordFormContainer';

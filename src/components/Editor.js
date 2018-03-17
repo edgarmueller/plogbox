@@ -67,7 +67,7 @@ BlockEditors.propTypes = {
       }),
     ),
   }).isRequired,
-  focusedBlockId: PropTypes.number,
+  focusedBlockId: PropTypes.string,
   handleSetBlocks: PropTypes.func.isRequired,
   handleAddBlock: PropTypes.func.isRequired,
   onFocus: PropTypes.func.isRequired,

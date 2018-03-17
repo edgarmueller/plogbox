@@ -1,16 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import red from 'material-ui/colors/red';
 import * as actions from '../actions';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import { getStatusText } from '../reducers/auth';
 
 export class ChangePasswordFormContainer extends React.Component {
-
-  constructor() {
-    super();
-  }
 
   render() {
     const { changePassword, errorMessage } = this.props;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ContentAdd from 'material-ui-icons/Add';
 import ContentDelete from 'material-ui-icons/Delete';
 import ContentCreate from 'material-ui-icons/Create';
-import { AppBar, Button, Card, CardContent, IconButton, Toolbar, Typography, withStyles } from 'material-ui';
+import { AppBar, Button, Card, CardContent, IconButton, Toolbar, withStyles } from 'material-ui';
 import Table, { TableBody, TableHead, TableRow, TableCell } from 'material-ui/Table';
 import ButtonBar from '../containers/ButtonBarContainer';
 import Tags from '../containers/TagsContainer';
