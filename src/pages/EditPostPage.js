@@ -113,7 +113,7 @@ export class EditPostPage extends React.Component {
                 </CardContent>
               </Card>
             </EditPost> :
-            <p>Loading post...</p>
+            <p style={{ paddingTop: '1em' }}>Loading post...</p>
         }
       </div>
     );

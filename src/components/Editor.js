@@ -103,6 +103,13 @@ const styles = theme => ({
       left: theme.spacing.unit * 3,
     },
   },
+  whiteBackground: {
+    paddingBottom: '1.5em',
+    paddingLeft: '1em',
+    backgroundColor: '#fff',
+    borderRadius: '0.25em',
+    boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
+  }
 });
 
 export class Editor extends React.Component {
@@ -115,8 +122,12 @@ export class Editor extends React.Component {
   }
 
   render() {
-    const { post, handleSetBlocks, isFetchingBlock, handleAddBlock } = this.props;
     const {
+      classes, 
+      post, 
+      handleSetBlocks, 
+      isFetchingBlock, 
+      handleAddBlock,
       showEditor,
       showRenderedView,
       showBoth,
@@ -129,7 +140,7 @@ export class Editor extends React.Component {
     return (
       <div>
         <Collapse in={showEditor} unmountOnExit>
-          <div style={{ margin: 'auto', width: '70%' }}>
+          <div style={{ margin: 'auto', width: '70%' }} className={classes.whiteBackground}>
             <BlockEditors
               post={post}
               handleSetBlocks={handleSetBlocks}
@@ -142,12 +153,12 @@ export class Editor extends React.Component {
         </Collapse>
 
         <Collapse in={showRenderedView} unmountOnExit>
-          <div style={{ margin: 'auto', width: '70%' }}>
+          <div style={{ margin: 'auto', width: '70%' }} className={classes.whiteBackground}>
             <RenderedPost
               post={post}
               blocks={post.blocks}
               isFetchingBlock={isFetchingBlock}
-              focusedBlockId={this.state.focusedBlockId}
+              focusedBlockId={this.state.focusedBlockId !== undefined ? this.state.focusedBlockId.toString() : undefined}
             />
           </div>
         </Collapse>
@@ -155,14 +166,7 @@ export class Editor extends React.Component {
         <Collapse in={showBoth} unmountOnExit>
           <Grid container spacing={16}>
             <Grid item xs={6}>
-              <div style={{
-                paddingBottom: '1.5em',
-                paddingLeft: '1em',
-                backgroundColor: '#fff',
-                borderRadius: '0.25em',
-                boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
-              }}
-              >
+              <div className={classes.whiteBackground} >
                 <BlockEditors
                   post={post}
                   handleSetBlocks={handleSetBlocks}
@@ -174,12 +178,14 @@ export class Editor extends React.Component {
               </div>
             </Grid>
             <Grid item xs={6} style={{ paddingRight: '1em' }}>
-              <RenderedPost
-                post={post}
-                blocks={post.blocks}
-                isFetchingBlock={isFetchingBlock}
-                focusedBlockId={this.state.focusedBlockId}
-              />
+              <div className={classes.whiteBackground}>
+                <RenderedPost
+                  post={post}
+                  blocks={post.blocks}
+                  isFetchingBlock={isFetchingBlock}
+                  focusedBlockId={this.state.focusedBlockId}
+                />
+              </div>
             </Grid>
           </Grid>
         </Collapse>
