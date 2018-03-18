@@ -14,6 +14,9 @@ test('Render Editor', () => {
       post={firstPost} 
       handleSetBlocks={() => {}}
       handleAddBlock={() => {}}
+      classes={{
+        whiteBackground: 'whiteBackground',
+      }}
     />
   );
   expect(wrapper.find(Grid).length).toBe(3);
