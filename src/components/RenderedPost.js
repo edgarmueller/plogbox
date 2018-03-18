@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RenderedBlock from './RenderedBlock';
+import RenderedBlock from '../containers/RenderedBlockContainer';
 
 const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
   <div>
