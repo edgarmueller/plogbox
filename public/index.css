@@ -12,7 +12,7 @@
 html {
     height: 100%;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -30,7 +30,6 @@ main {
 
 footer {
     color: #6a6969;
-    margin: 0;
     padding: 0.5em;
 }
 

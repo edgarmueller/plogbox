@@ -17,7 +17,6 @@ export const button = {
   textTransform: 'uppercase',
   fontSize: '10px',
   letterSpacing: '0.065em',
-  fontFamily: "'Montserrat', sans-serif",
 };
 
 export const appBar = {
@@ -26,7 +25,6 @@ export const appBar = {
   width: '100%',
   borderBottomLeftRadius: '0.5em',
   borderBottomRightRadius: '0.5em',
-  fontFamily: "'Montserrat', sans-serif",
 }
 
 export const card = {
