@@ -13,15 +13,19 @@ const styles = () => ({
     color: '#cf556c',
     paddingTop: '8px',
     paddingLeft: '1.5em',
+    paddingRight: '1.5em',
     paddingBottom: '8px',
     marginBottom: '0.35em',
+    lineHeight: '1.35'
   },
   notHighlighted: {
     color: '#333435',
     paddingTop: '8px',
     paddingLeft: '1.5em',
+    paddingRight: '1.5em',
     paddingBottom: '8px',
     marginBottom: '0.35em',
+    lineHeight: '1.35'
   },
 });
 
@@ -46,7 +50,7 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) 
     default:
       return (
         <div className={isFocused ? classes.highlighted : classes.notHighlighted}>
-          <ReactMarkdown id={block.id} source={md.render(block.text)} />
+          <ReactMarkdown id={block.id} source={md.render(block.text)} escapeHtml={false}/>
         </div>
       );
   }
