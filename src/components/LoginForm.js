@@ -31,7 +31,6 @@ const styles = {
 };
 
 export class LoginForm extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -62,14 +61,14 @@ export class LoginForm extends React.Component {
         <TextField
           required
           type="text"
-          label={'Mail Address'}
+          label="Mail Address"
           onChange={this.handleUpdateUser}
         />
         <br />
         <TextField
           required
           type="password"
-          label={'Password'}
+          label="Password"
           onChange={this.handleUpdatePassword}
         />
         <br />
@@ -79,7 +78,7 @@ export class LoginForm extends React.Component {
             Forgot password?
           </RadiumLink>
           <Button
-            type="button"
+            type="submit"
             className={classes.button}
             onClick={() => handleFormSubmit(this.state.user, this.state.password)}
           >
