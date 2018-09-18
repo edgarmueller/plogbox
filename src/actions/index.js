@@ -8,8 +8,6 @@ import {
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_BLOCKS_SUCCESS,
-  SIGN_UP_USER_SUCCESS,
-  SIGN_UP_USER_FAILURE,
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
@@ -31,7 +29,7 @@ import {
   ACTIVATE_ACCOUNT_FAILURE,
   UPDATE_BLOCK_FAILURE,
   USER_IS_LOGGING_IN,
-  SELECT_POST_BY_NAME_FAILURE, FETCH_BLOCKS_REQUEST, UPDATE_POST_REQUEST,
+  FETCH_BLOCKS_REQUEST, UPDATE_POST_REQUEST,
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
@@ -91,18 +89,6 @@ export const initPosts = posts => ({
   posts,
 });
 
-export const findPostByName = postTitle => dispatch =>
-  api.searchPost(postTitle)
-    .then(
-      (resp) => {
-        if (resp.data.status === 'success') {
-          return resp.data.data;
-        }
-        return undefined;
-      },
-      error => errorHandler(dispatch, error, SELECT_POST_BY_NAME_FAILURE),
-    );
-
 export const createPost = post => dispatch =>
   api.createPost(post)
     .then(
@@ -120,8 +106,7 @@ export const createPost = post => dispatch =>
     );
 
 // TODO: selectedPost must contain blocks
-export const updatePost = (selectedPost) => (dispatch, getState) => {
-
+export const updatePost = selectedPost => (dispatch, getState) => {
   if (getIsUpdatingPost(getState())) {
     return Promise.resolve();
   }
@@ -132,11 +117,11 @@ export const updatePost = (selectedPost) => (dispatch, getState) => {
 
   return api.updatePost(selectedPost)
     .then(
-      resp => {
+      (resp) => {
         dispatch({
           type: UPDATE_POST_SUCCESS,
           post: resp.data.data,
-        })
+        });
         return resp.data.data;
       },
       error => errorHandler(dispatch, error, UPDATE_POST_FAILURE),
@@ -155,38 +140,22 @@ export const deletePost = post => dispatch =>
 //
 // Auth actions --
 //
-export const logoutUser = () => dispatch =>
-  api.logoutUser()
-    .then(
-      (resp) => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        dispatch({
-          type: USER_LOGOUT_SUCCESS,
-          statusText: 'You have logged out successfully.',
-          status: resp.status,
-        });
-        dispatch(routerActions.push('login'));
-      },
-    );
+export const logoutUser = () => (dispatch) => {
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    dispatch({
+      type: USER_LOGOUT_SUCCESS,
+    });
+    dispatch(routerActions.push('login'));
+  };
 
-/**
- * Action for signing up an user.
- *
- * @param signUpToken the sign-up token
- */
-export const registerUser = signUpToken => dispatch =>
-  api.registerUser(signUpToken)
-    .then(
-      () => {
-        dispatch({
-          type: SIGN_UP_USER_SUCCESS,
-        });
-        dispatch(routerActions.push('/'));
-      },
-      error => errorHandler(dispatch, error, SIGN_UP_USER_FAILURE),
-    );
-
+  // logout in any case
+  return api.logoutUser().then(
+    () => logout(),
+    () => logout(),
+  );
+};
 
 export const loginUser = (email, password) => (dispatch) => {
   dispatch({
@@ -334,23 +303,21 @@ export const downloadFile = (postId, fileId) => (dispatch) => {
   });
   return api.download(postId, fileId)
     .then(
-      resp => new Promise(
-        (resolve, reject) => {
-          const reader = new FileReader();
-          const loadEnd = () => {
-            dispatch({
-              type: FETCH_BLOCKS_SUCCESS,
-            });
-            resolve(reader.result);
-          };
-          if (process.env.NODE_ENV === 'test') {
-            reader.on('loadend', loadEnd);
-          } else {
-            reader.onloadend = loadEnd;
-          }
-          reader.readAsDataURL(resp.data);
-        },
-      ),
+      resp => new Promise((resolve) => {
+        const reader = new FileReader();
+        const loadEnd = () => {
+          dispatch({
+            type: FETCH_BLOCKS_SUCCESS,
+          });
+          resolve(reader.result);
+        };
+        if (process.env.NODE_ENV === 'test') {
+          reader.on('loadend', loadEnd);
+        } else {
+          reader.onloadend = loadEnd;
+        }
+        reader.readAsDataURL(resp.data);
+      }),
       error => errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
     );
 };
