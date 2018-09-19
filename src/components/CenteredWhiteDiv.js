@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui';
+import * as Props from '../common/CommonPropTypes';
 
 const styles = {
   whiteCard: {
@@ -22,8 +23,12 @@ const CenteredWhiteDiv = ({ children, classes }) => (
 );
 
 CenteredWhiteDiv.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  children: Props.children,
   classes: PropTypes.shape({}).isRequired,
 };
+
+CenteredWhiteDiv.defaultProps = {
+  children: Props.childrenDefault,
+}
 
 export default withStyles(styles)(CenteredWhiteDiv);
