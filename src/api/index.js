@@ -32,7 +32,7 @@ export const fetchPosts = () =>
     getHeaderToken(),
   );
 
-export const fetchPostById = (postId) =>
+export const fetchPostById = postId =>
   Axios.get(
     `${BASE_URL}/api/posts/${postId}`,
     getHeaderToken(),
@@ -43,13 +43,6 @@ export const createPost = newPost =>
     .put(
       `${BASE_URL}/api/posts`,
       newPost,
-      getHeaderToken(),
-    );
-
-export const searchPost = postTitle =>
-  Axios
-    .get(
-      `${BASE_URL}/api/posts/search/${postTitle}`,
       getHeaderToken(),
     );
 
@@ -89,11 +82,14 @@ export const logoutUser = () => Axios
     getHeaderToken(),
   );
 
-export const registerUser = signUpToken =>
+export const registerUser = (email, password) =>
   Axios
     .post(
       `${BASE_URL}/sign-up`,
-      signUpToken,
+      {
+        email,
+        password,
+      },
       getHeaderToken(),
     );
 
@@ -137,15 +133,6 @@ export const download = (postId, file) => {
   );
 };
 
-export const updateBlock = (postId, block) => {
-  const url = `${BASE_URL}/api/posts/${postId}/blocks/${block.id}`;
-  return Axios.post(
-    url,
-    block,
-    getHeaderToken(),
-  );
-};
-
 export const addTag = (postId, tag) => {
   const url = `${BASE_URL}/tags/${postId}`;
   return Axios.post(
@@ -171,11 +158,11 @@ export const fetchTags = () => {
   );
 };
 
-export const testToken = token => Axios
-    .get(
-      `${BASE_URL}/is-signed-in`,
-      { headers: { 'X-Auth-Token': token } },
-    );
+export const testToken = token =>
+  Axios.get(
+    `${BASE_URL}/is-signed-in`,
+    { headers: { 'X-Auth-Token': token } },
+  );
 
 export const forgotPassword = (email) => {
   const url = `${BASE_URL}/api/password/forgot`;
@@ -212,6 +199,4 @@ export const changePassword = (currentPassword, newPassword) => {
 };
 
 export const activateAccount = token =>
-  Axios.get(
-    `${BASE_URL}/api/account/activate/${token}`,
-  );
+  Axios.get(`${BASE_URL}/api/account/activate/${token}`);
