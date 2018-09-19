@@ -1,25 +1,48 @@
 import React from 'react';
-import * as _ from 'lodash';
 import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui';
+import { errorStyle } from '../common/styles';
+import CenteredWhiteDiv from './CenteredWhiteDiv';
+import * as CommonPropTypes from '../common/CommonPropTypes';
+
+const styles = {
+  error: errorStyle,
+};
 
 class ActivateAccountForm extends React.Component {
+  state = {
+    success: undefined,
+    errorMsg: undefined,
+  };
 
   componentDidMount() {
-    this.props.activateAccount();
+    this.props.activateAccount()
+      .then(
+        () => this.setState({
+          success: true,
+          errorMsg: undefined,
+        }),
+        error => this.setState({
+          success: false,
+          errorMsg: error.response.data.messages.join(''),
+        }),
+      );
   }
 
   render() {
-    const { isAccountActivated, errorMessage } = this.props;
+    const { classes } = this.props;
 
-    if (!_.isEmpty(errorMessage)) {
-      return (
-        <p>{errorMessage}</p>
-      );
-    }
-
-    if (isAccountActivated) {
+    if (this.state.success) {
       return (
         <p>Your account has been activated</p>
+      );
+    } else if (this.state.success === false) {
+      return (
+        <CenteredWhiteDiv>
+          <p className={classes.error}>
+            <strong>An error occurred while activating your account</strong>: {this.state.errorMsg}
+          </p>
+        </CenteredWhiteDiv>
       );
     }
 
@@ -30,14 +53,8 @@ class ActivateAccountForm extends React.Component {
 }
 
 ActivateAccountForm.propTypes = {
-  isAccountActivated: PropTypes.bool,
-  errorMessage: PropTypes.string,
   activateAccount: PropTypes.func.isRequired,
+  classes: CommonPropTypes.classes.isRequired,
 };
 
-ActivateAccountForm.defaultProps = {
-  isAccountActivated: null,
-  errorMessage: undefined,
-};
-
-export default ActivateAccountForm;
+export default withStyles(styles)(ActivateAccountForm);
