@@ -3,12 +3,13 @@ import Radium from 'radium';
 import { Link } from 'react-router-dom';
 import { Button, TextField, withStyles } from 'material-ui';
 import PropTypes from 'prop-types';
-import { button } from '../common/styles';
+import { button, formButtonBar } from '../common/styles';
 
 const RadiumLink = Radium(Link);
 
 const styles = {
   button,
+  formButtonBar,
   forgotPassword: {
     textDecoration: 'none',
     color: '#333435',
@@ -57,7 +58,7 @@ export class LoginForm extends React.Component {
     const { classes, handleFormSubmit, renderAlert } = this.props;
 
     return (
-      <form>
+      <form onSubmit={() => handleFormSubmit(this.state.user, this.state.password)}>
         <TextField
           required
           type="text"
@@ -73,17 +74,16 @@ export class LoginForm extends React.Component {
         />
         <br />
 
-        <p style={{ display: 'flex', marginTop: '1em' }}>
-          <RadiumLink to="/password/forgot" className={classes.forgotPassword}>
-            Forgot password?
-          </RadiumLink>
+        <p className={classes.formButtonBar}>
           <Button
             type="submit"
             className={classes.button}
-            onClick={() => handleFormSubmit(this.state.user, this.state.password)}
           >
             Login
           </Button>
+          <RadiumLink to="/password/forgot" className={classes.forgotPassword}>
+            Forgot password?
+          </RadiumLink>
         </p>
 
         {renderAlert()}

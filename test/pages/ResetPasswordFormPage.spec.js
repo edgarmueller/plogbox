@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 import '../helpers/setup';
 import React from 'react';
-import { Field } from 'redux-form';
+import { TextField } from 'material-ui';
 import { shallow } from 'enzyme';
 import path from 'path';
 import fakeProps from 'react-fake-props';
@@ -13,7 +13,7 @@ const componentPath = path.join(__dirname, '../../src/components/ResetPasswordFo
 test('ResetPasswordView should render', () => {
   const props = fakeProps(componentPath);
   const enzymeWrapper = shallow(<ResetPasswordForm {...props} />);
-  const fields = enzymeWrapper.find(Field);
+  const fields = enzymeWrapper.find(TextField);
   expect(fields.length).toBe(2);
 });
 

@@ -1,9 +1,9 @@
 /* eslint-disable import/first */
 import { mountWithContext } from '../helpers/setup';
 import React from 'react';
-import { Field, reducer as formReducer } from 'redux-form';
 import { combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { TextField } from 'material-ui';
 import auth from '../../src/reducers/auth';
 import SignUpPage from '../../src/pages/SignUpPage';
 
@@ -13,7 +13,7 @@ test('Sign-up page should render', async () => {
     promiseResolve = resolve;
   });
   let fields = 0;
-  const store = createStore(combineReducers({ form: formReducer, auth }));
+  const store = createStore(combineReducers({ auth }));
   const props = {
     handleSubmit() {
     },
@@ -24,7 +24,7 @@ test('Sign-up page should render', async () => {
       <SignUpPage {...props} />
     </Provider>,
   );
-  fields = enzymeWrapper.find(Field).length;
+  fields = enzymeWrapper.find(TextField).length;
   promiseResolve();
   await promise;
   expect(fields > 0).toBeTruthy();

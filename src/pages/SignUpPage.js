@@ -1,34 +1,53 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
 import { routerActions } from 'react-router-redux';
-import { Button, FormLabel } from 'material-ui';
+import { Button, TextField, withStyles } from 'material-ui';
 import red from 'material-ui/colors/red';
 import PropTypes from 'prop-types';
-import { registerUser } from '../actions/index';
-import { renderPasswordTextField, renderTextField } from '../utils/helpers';
+import * as api from '../api';
 import '../common/tap';
+import CenteredWhiteDiv from '../components/CenteredWhiteDiv';
+import { button, formButtonBar } from '../common/styles';
 
-const form = reduxForm({
-  form: 'sign-up',
-});
+const styles = {
+  button,
+  formButtonBar,
+};
 
 export class SignUpPage extends React.Component {
+  state = {
+    errorMessage: undefined,
+  };
 
-  constructor() {
-    super();
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-  }
+  handleFormSubmit = (ev) => {
+    ev.preventDefault();
+    console.log('current state', this.state);
+    api.registerUser(this.state.email, this.state.password)
+      .then(
+        () => {
+          this.setState({
+            errorMessage: undefined,
+          });
+        },
+        (error) => {
+          this.setState({
+            errorMessage: error.response.data.message,
+          });
+        },
+      );
+  };
 
-  handleFormSubmit(formProps) {
-    this.props.registerUser(formProps);
-  }
+  handleFieldUpdate = (ev) => {
+    this.setState({
+      [ev.target.name]: ev.target.value,
+    });
+  };
 
-  renderAlert() {
-    if (this.props.errorMessage) {
+  renderAlert = () => {
+    if (this.state.errorMessage) {
       return (
         <div style={{ marginTop: '1em' }}>
-          <span style={{ color: red }}>
+          <span style={{ color: red[400] }}>
             {this.props.errorMessage}
           </span>
         </div>
@@ -39,48 +58,61 @@ export class SignUpPage extends React.Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { classes } = this.props;
 
     return (
-      <form onSubmit={handleSubmit(this.handleFormSubmit)}>
-        <div>
-          <FormLabel component="legend">Mail</FormLabel>
-          <Field
-            name="email"
-            component={renderTextField}
-            type="text"
-          />
-        </div>
-        <div>
-          <FormLabel component="legend">Password</FormLabel>
-          <Field
-            name="password"
-            component={renderPasswordTextField}
-            type="password"
-          />
-        </div>
-        <div>
-          <FormLabel component="legend">Repeat Password</FormLabel>
-          <Field
-            name="password-repeat"
-            component={renderPasswordTextField}
-            type="password"
-          />
-        </div>
-        <Button type="submit" color="primary" >Register</Button>
-        <div>
+      <CenteredWhiteDiv>
+        <h2 style={{ paddingTop: '1em' }}>Welcome to _plog</h2>
+        <form onSubmit={this.handleFormSubmit}>
+          <div>
+            <TextField
+              required
+              label="Mail"
+              name="email"
+              onChange={this.handleFieldUpdate}
+              type="text"
+            />
+          </div>
+          <div>
+            <TextField
+              required
+              label="Password"
+              name="password"
+              onChange={this.handleFieldUpdate}
+              type="password"
+            />
+          </div>
+          <div>
+            <TextField
+              required
+              label="Repeat password"
+              name="password-repeat"
+              onChange={this.handleFieldUpdate}
+              type="password"
+            />
+          </div>
+          <p className={classes.formButtonBar}>
+            <Button
+              type="submit"
+              color="primary"
+              className={classes.button}
+            >
+              Register
+            </Button>
+          </p>
+
           {this.renderAlert()}
-        </div>
-      </form>
+        </form>
+      </CenteredWhiteDiv>
     );
   }
 }
 
 SignUpPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
+  classes: PropTypes.shape({
+    button: PropTypes.string,
+  }).isRequired,
   errorMessage: PropTypes.string,
-  registerUser: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
 };
 
 SignUpPage.defaultProps = {
@@ -99,6 +131,6 @@ const mapStateToProps = (state) => {
 
 export default connect(
   mapStateToProps,
-  { registerUser, replace: routerActions.replace },
-)(form(SignUpPage));
+  { replace: routerActions.replace },
+)(withStyles(styles)(SignUpPage));
 

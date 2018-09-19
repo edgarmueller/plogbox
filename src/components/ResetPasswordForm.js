@@ -1,24 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'redux-form';
-import { Button } from 'material-ui';
-import { renderPasswordTextField } from '../utils/helpers';
+import { Button, TextField } from 'material-ui';
 
 const ResetPasswordForm = ({ handleSubmit, onSubmit, renderAlert }) => (
 
   <form onSubmit={handleSubmit(onSubmit)}>
     <div>
-      <Field
+      <TextField
         name="password"
-        component={renderPasswordTextField}
         type="password"
         label="Password"
       />
     </div>
     <div>
-      <Field
+      <TextField
         name="password-repeat"
-        component={renderPasswordTextField}
         type="password"
         label="Repeat Password"
       />

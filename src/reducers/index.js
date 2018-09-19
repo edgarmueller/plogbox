@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
 
 import tagReducer from './tags';
@@ -12,11 +11,10 @@ const app = combineReducers({
   blocks,
   auth: authReducer,
 
-    // form
-  form: formReducer,
+  // form
   tags: tagReducer,
 
-    // routing
+  // routing
   routing: routerReducer,
 });
 
