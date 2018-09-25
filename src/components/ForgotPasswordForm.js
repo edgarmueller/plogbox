@@ -1,36 +1,52 @@
 import React from 'react';
 import { Button, TextField, withStyles } from 'material-ui';
-import PropTypes from 'prop-types';
-import { button as buttonStyle } from '../common/styles';
+import { button as buttonStyle, errorStyle } from '../common/styles';
+import * as CommonPropTypes from '../common/CommonPropTypes';
+import * as api from '../api';
 
 const styles = {
   button: {
     ...buttonStyle,
     marginLeft: '2em',
   },
+  error: errorStyle,
 };
 
 class ForgotPasswordForm extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      mail: undefined,
-    };
-    this.handleUpdateMail = this.handleUpdateMail.bind(this);
-  }
+  state = {
+    mail: undefined,
+    error: undefined,
+    success: undefined,
+  };
 
-  handleUpdateMail(mail) {
+  handleUpdateMail = (mail) => {
     this.setState({
       mail,
     });
-  }
+  };
+
+  handleFormSubmit = (ev) => {
+    console.log('forget pw', ev);
+    ev.preventDefault();
+    api.forgotPassword(this.state.mail)
+      .then(
+        () => this.setState({
+          success: true,
+          error: undefined,
+        }),
+        error => this.setState({
+          success: false,
+          error: error.response.data.messages.join(''),
+        }),
+      );
+  };
 
   render() {
-    const { handleFormSubmit, renderAlert, classes } = this.props;
+    const { classes } = this.props;
 
     return (
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={this.handleFormSubmit}>
         <div>
           <TextField
             name="email"
@@ -38,25 +54,31 @@ class ForgotPasswordForm extends React.Component {
             onChange={event => this.handleUpdateMail(event.target.value)}
           />
           <Button
-            type="button"
+            type="submit"
             className={classes.button}
-            onClick={() => handleFormSubmit(this.state.mail)}
           >
             Reset password
           </Button>
         </div>
-        <div>
-          {renderAlert()}
-        </div>
+        {
+          this.state.success &&
+            <div className={classes.success}>
+              A mail with further instructions has been sent to the given mail address.
+            </div>
+        }
+        {
+          this.state.error &&
+          <div className={classes.error}>
+            {this.state.error}
+          </div>
+        }
       </form>
     );
   }
 }
 
 ForgotPasswordForm.propTypes = {
-  handleFormSubmit: PropTypes.func.isRequired,
-  renderAlert: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}).isRequired,
+  classes: CommonPropTypes.classes.isRequired,
 };
 
 export default withStyles(styles)(ForgotPasswordForm);

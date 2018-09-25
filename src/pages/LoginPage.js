@@ -4,38 +4,13 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 import { routerActions } from 'react-router-redux';
-import red from 'material-ui/colors/red';
-import { loginUser } from '../actions/index';
+import * as actions from '../actions/index';
 import '../common/tap';
 import { getStatusText } from '../reducers/auth';
 import LoginForm from '../components/LoginForm';
 import CenteredWhiteDiv from '../components/CenteredWhiteDiv';
 
 class LoginPage extends React.Component {
-
-  constructor() {
-    super();
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.renderAlert = this.renderAlert.bind(this);
-  }
-
-  handleFormSubmit(mail, password) {
-    this.props.loginUser(mail, password);
-  }
-
-  renderAlert() {
-    if (this.props.errorMessage) {
-      return (
-        <div style={{ marginTop: '1em' }}>
-          <span style={{ color: red[400] }}>
-            {this.props.errorMessage}
-          </span>
-        </div>
-      );
-    }
-
-    return undefined;
-  }
 
   render() {
     const { isAuthenticated, isAuthenticating, location } = this.props;
@@ -50,16 +25,16 @@ class LoginPage extends React.Component {
       return (<Redirect to={`${_.isEmpty(redirectUrl) ? '/posts' : redirectUrl}`} />);
     }
 
-    if (isAuthenticating) {
-      return (<p style={{ paddingTop: '1em' }}>Logging in...</p>);
-    }
     return (
       <CenteredWhiteDiv>
         <h2 style={{ paddingTop: '1em' }}>Welcome to _plog</h2>
         <LoginForm
-          handleFormSubmit={this.handleFormSubmit}
-          renderAlert={this.renderAlert}
+          loginUser={this.props.loginUser}
         />
+        {
+          isAuthenticating &&
+          (<p style={{ paddingTop: '1em' }}>Logging you in...</p>)
+        }
       </CenteredWhiteDiv>
     );
   }
@@ -69,12 +44,7 @@ LoginPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   isAuthenticating: PropTypes.bool.isRequired,
   loginUser: PropTypes.func.isRequired,
-  errorMessage: PropTypes.string,
   location: PropTypes.shape({}).isRequired,
-};
-
-LoginPage.defaultProps = {
-  errorMessage: undefined,
 };
 
 const mapStateToProps = (state) => {
@@ -87,10 +57,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = {
-  loginUser,
+const mapDispatchToProps = dispatch => ({
+  loginUser(email, password) {
+    return dispatch(actions.loginUser(email, password));
+  },
   replace: routerActions.replace,
-};
+});
 
 export default connect(
   mapStateToProps,

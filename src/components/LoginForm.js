@@ -3,12 +3,13 @@ import Radium from 'radium';
 import { Link } from 'react-router-dom';
 import { Button, TextField, withStyles } from 'material-ui';
 import PropTypes from 'prop-types';
-import { button, formButtonBar } from '../common/styles';
+import { button, errorStyle, formButtonBar } from '../common/styles';
 
 const RadiumLink = Radium(Link);
 
 const styles = {
   button,
+  error: errorStyle,
   formButtonBar,
   forgotPassword: {
     textDecoration: 'none',
@@ -32,33 +33,46 @@ const styles = {
 };
 
 export class LoginForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: undefined,
-      password: undefined,
-    };
-    this.handleUpdateUser = this.handleUpdateUser.bind(this);
-    this.handleUpdatePassword = this.handleUpdatePassword.bind(this);
-  }
+  state = {
+    user: undefined,
+    password: undefined,
+    success: undefined,
+    error: undefined,
+  };
 
-  handleUpdateUser(event) {
+  handleUpdateUser = (event) => {
     this.setState({
       user: event.target.value,
     });
   }
 
-  handleUpdatePassword(event) {
+  handleUpdatePassword = (event) => {
     this.setState({
       password: event.target.value,
     });
   }
 
+  handleSubmit = (ev) => {
+    console.log('call me!!', this.props.loginUser);
+    ev.preventDefault();
+    this.props.loginUser(this.state.user, this.state.password)
+      .then(error => {
+          if (error) {
+            console.log("LOGIN ERROR!", error.response.data);
+            this.setState({
+              success: false,
+              error: error.response.data.messages.join('')
+            })
+          }
+        }
+      );
+  }
+
   render() {
-    const { classes, handleFormSubmit, renderAlert } = this.props;
+    const { classes } = this.props;
 
     return (
-      <form onSubmit={() => handleFormSubmit(this.state.user, this.state.password)}>
+      <form onSubmit={this.handleSubmit}>
         <TextField
           required
           type="text"
@@ -85,16 +99,21 @@ export class LoginForm extends React.Component {
             Forgot password?
           </RadiumLink>
         </p>
-
-        {renderAlert()}
+        {
+          this.state.error &&
+          (
+            <div className={classes.error}>
+              {this.state.error}
+            </div>
+          )
+        }
       </form>
     );
   }
 }
 
 LoginForm.propTypes = {
-  handleFormSubmit: PropTypes.func.isRequired,
-  renderAlert: PropTypes.func.isRequired,
+  loginUser: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 
