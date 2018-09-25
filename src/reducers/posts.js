@@ -102,27 +102,10 @@ const isUpdatingPost = createFetchingProgressReducer(
   UPDATE_POST_FAILURE,
 );
 
-export const errorReducer = (state = null, action) => {
-  switch (action.type) {
-    case FETCH_POSTS_FAILURE:
-    case DELETE_POST_FAILURE:
-    case UPDATE_POST_FAILURE:
-    case SELECT_POST_BY_NAME_FAILURE:
-    case USER_LOGIN_FAILURE:
-    case ADD_TAG_FAILURE:
-      return action.statusText;
-    case RESET_ERROR_MESSAGE:
-      return null;
-    default:
-      return null;
-  }
-};
-
 export default combineReducers({
   posts: postsReducer,
   isFetching: isFetchingPost,
   isUpdating: isUpdatingPost,
-  errorMessage: errorReducer,
 });
 
 export const isFetchingPosts = state => state.isFetching;

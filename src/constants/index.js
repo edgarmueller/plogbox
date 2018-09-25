@@ -27,45 +27,18 @@ export const ADD_TAG_SUCCESS = 'ADD_TAG_SUCCESS';
 export const ADD_TAG_FAILURE = 'ADD_TAG_FAILURE';
 export const DELETE_TAG_SUCCESS = 'DELETE_TAG_SUCCESS';
 export const DELETE_TAG_FAILURE = 'DELETE_TAG_FAILURE';
-export const FETCH_TAGS_FAILURE = 'FETCH_TAGS_FAILURE';
 export const SET_TAGS = 'SET_TAGS';
 
 // blocks
-export const ADD_BLOCK = 'ADD_BLOCK';
-export const ADD_BLOCK_FAILURE = 'ADD_BLOCK_FAILURE';
-export const REMOVE_BLOCK_SUCCESS = 'REMOVE_BLOCK_SUCCESS';
-export const REMOVE_BLOCK_FAILURE = 'REMOVE_BLOCK_FAILURE';
-export const MOVE_BLOCK_UP = 'MOVE_BLOCK_UP';
-export const MOVE_BLOCK_DOWN = 'MOVE_BLOCK_DOWN';
-export const MOVE_BLOCK_TO = 'MOVE_BLOCK_TO';
 export const UPDATE_BLOCK_FAILURE = 'UPDATE_BLOCK_FAILURE';
 
 export const FETCH_BLOCKS_REQUEST = 'FETCH_BLOCK_REQUEST';
 export const FETCH_BLOCKS_FAILURE = 'FETCH_BLOCKS_FAILURE';
 export const FETCH_BLOCKS_SUCCESS = 'FETCH_BLOCKS_SUCCESS';
 
-// sign up
-export const FORGOT_PASSWORD_REQUEST = 'forgot_password_request';
-export const RESET_PASSWORD_REQUEST = 'reset_password_request';
-export const SIGN_UP_USER_SUCCESS = 'SIGN_UP_USER_SUCCESS';
-export const SIGN_UP_USER_FAILURE = 'SIGN_UP_USER_FAILURE';
-export const IS_SIGNING_UP = 'IS_SIGNING_UP';
-export const ACTIVATE_ACCOUNT_SUCCESS = 'ACTIVATE_ACCOUNT_SUCCESS';
-export const ACTIVATE_ACCOUNT_FAILURE = 'ACTIVATE_ACCOUNT_FAILURE';
-
-// forgot password
-export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';
-export const FORGOT_PASSWORD_FAILURE = 'FORGOT_PASSWORD_FAILURE';
-
-// reset password
-export const RESET_PASSWORD_SUCCESS = 'RESET_PASSWORD_SUCCESS';
-export const RESET_PASSWORD_FAILURE = 'RESET_PASSWORD_FAILURE';
-
-export const ERROR_PASSWORDS_DONT_DIFFER = 'ERROR_PASSWORDS_DONT_DIFFER';
 
 export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://plog-backend.herokuapp.com' : 'http://localhost:9000';
 
-// TODO: move to constants
 export const Direction = Object.freeze({
   UP: Symbol('up'),
   DOWN: Symbol('down'),

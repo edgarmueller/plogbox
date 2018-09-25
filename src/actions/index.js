@@ -11,8 +11,6 @@ import {
   USER_LOGIN_FAILURE,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
-  ADD_BLOCK,
-  ADD_BLOCK_FAILURE,
   DELETE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
   UPDATE_POST_FAILURE,
@@ -20,13 +18,6 @@ import {
   ADD_TAG_FAILURE,
   DELETE_TAG_SUCCESS,
   DELETE_TAG_FAILURE,
-  FORGOT_PASSWORD_SUCCESS,
-  FORGOT_PASSWORD_FAILURE,
-  RESET_PASSWORD_SUCCESS,
-  RESET_PASSWORD_FAILURE,
-  ERROR_PASSWORDS_DONT_DIFFER,
-  ACTIVATE_ACCOUNT_SUCCESS,
-  ACTIVATE_ACCOUNT_FAILURE,
   UPDATE_BLOCK_FAILURE,
   USER_IS_LOGGING_IN,
   FETCH_BLOCKS_REQUEST, UPDATE_POST_REQUEST,
@@ -178,8 +169,14 @@ export const loginUser = (email, password) => (dispatch) => {
           user,
           userId,
         });
+        return undefined;
       },
-      error => errorHandler(dispatch, error, USER_LOGIN_FAILURE),
+      (error) => {
+        dispatch({
+          type: USER_LOGIN_FAILURE,
+        });
+        return error;
+      }
     );
 };
 
@@ -199,19 +196,6 @@ export const fetchPosts = () => (dispatch, getState) => {
       error => errorHandler(dispatch, error, FETCH_POSTS_FAILURE),
     );
 };
-
-export const addBlock = (postId, block) => dispatch =>
-  api.addBlock(postId, block)
-    .then(
-      (resp) => {
-        dispatch({
-          type: ADD_BLOCK,
-          block: resp.data.data,
-        });
-        return resp.data.data;
-      },
-      error => errorHandler(dispatch, error, ADD_BLOCK_FAILURE),
-    );
 
 export const addTag = (postId, tag) => dispatch =>
   api.addTag(postId, tag)
@@ -242,59 +226,6 @@ export const removeTag = (postId, tagId) => dispatch =>
       (error) => {
         errorHandler(dispatch, error, DELETE_TAG_FAILURE);
       },
-    );
-
-export const forgotPassword = email => dispatch =>
-  api.forgotPassword(email)
-    .then(
-      () => {
-        dispatch({
-          type: FORGOT_PASSWORD_SUCCESS,
-        });
-      },
-      (error) => {
-        errorHandler(dispatch, error, FORGOT_PASSWORD_FAILURE);
-      },
-    );
-
-export const resetPassword = token => newPassword => dispatch =>
-  api.resetPassword(token, newPassword)
-    .then(
-      () => {
-        dispatch({
-          type: RESET_PASSWORD_SUCCESS,
-        });
-      },
-      error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
-    );
-
-export const changePassword = (currentPassword, newPassword) => (dispatch) => {
-  if (currentPassword === newPassword) {
-    dispatch({
-      type: ERROR_PASSWORDS_DONT_DIFFER,
-    });
-
-    // TODO
-    return;
-  }
-
-  api.changePassword(currentPassword, newPassword)
-    .then(
-      () => {
-        dispatch({
-          type: RESET_PASSWORD_SUCCESS,
-        });
-        dispatch(logoutUser());
-      },
-      error => errorHandler(dispatch, error, RESET_PASSWORD_FAILURE),
-    );
-};
-
-export const activateAccount = token => dispatch =>
-  api.activateAccount(token)
-    .then(
-      () => dispatch({ type: ACTIVATE_ACCOUNT_SUCCESS }),
-      error => errorHandler(dispatch, error, ACTIVATE_ACCOUNT_FAILURE),
     );
 
 export const downloadFile = (postId, fileId) => (dispatch) => {
