@@ -3,24 +3,26 @@ import * as Immutable from 'immutable';
 import { combineReducers } from 'redux';
 import { createFetchingProgressReducer } from './common';
 import {
-  ADD_TAG_FAILURE,
   ADD_TAG_SUCCESS,
   CREATE_POST_SUCCESS,
-  DELETE_POST_FAILURE,
   DELETE_POST_SUCCESS,
   DELETE_TAG_SUCCESS,
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
-  RESET_ERROR_MESSAGE,
-  SELECT_POST_BY_NAME_FAILURE,
-  UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS,
+  SELECT_POST,
+  SELECT_POSTS_BY_TAG,
+  UPDATE_POST_FAILURE,
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
   UPDATE_POST_TITLE,
-  USER_LOGIN_FAILURE,
 } from '../constants';
 
 export const postsReducer = (state = {
   all: Immutable.List(),
+  // TODO these should be derived
+  selected: Immutable.List(),
+  selectedPost: undefined,
 }, action) => {
   switch (action.type) {
     case FETCH_POSTS_SUCCESS:
@@ -72,6 +74,13 @@ export const postsReducer = (state = {
         }),
       };
 
+    case UPDATE_POST_SUCCESS:
+      const idx = state.all.findIndex(p => p === action.post.id);
+      return {
+        ...state,
+        all: state.all.update(idx, () => action.post),
+      };
+
     case DELETE_TAG_SUCCESS: {
       const postIdx = state.all.findIndex(p => p.id === action.postId);
       const tags = state.all.get(postIdx).tags;
@@ -85,6 +94,27 @@ export const postsReducer = (state = {
         }),
       };
     }
+
+    case SELECT_POST: {
+      return {
+        ...state,
+        selectedPost: action.post,
+      };
+    }
+
+    case SELECT_POSTS_BY_TAG: {
+      if (action.tag === '') {
+        return {
+          ...state,
+          selected: state.all.filter(p => p.tags.length === 0),
+        };
+      }
+      return {
+        ...state,
+        selected: state.all.filter(p => p.tags.indexOf(action.tag) !== -1),
+      };
+    }
+
     default:
       return state;
   }
@@ -111,6 +141,9 @@ export default combineReducers({
 export const isFetchingPosts = state => state.isFetching;
 export const isUpdating = state => state.isUpdating;
 export const getAllPosts = state => state.posts.all.toArray();
+export const getSelectedPosts = state => state.posts.selected.toArray();
 export const getPostErrorMessage = state => state.errorMessage;
 export const findPostById = postId => state =>
   state.posts.all.find(post => Number(post.id) === Number(postId));
+export const findPostByTag = tag => state =>
+  state.posts.all.find(post => post.tags.indexOf(tag) !== -1);
