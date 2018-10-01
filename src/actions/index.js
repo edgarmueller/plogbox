@@ -20,7 +20,14 @@ import {
   DELETE_TAG_FAILURE,
   UPDATE_BLOCK_FAILURE,
   USER_IS_LOGGING_IN,
-  FETCH_BLOCKS_REQUEST, UPDATE_POST_REQUEST,
+  FETCH_BLOCKS_REQUEST,
+  UPDATE_POST_REQUEST,
+  FETCH_TAGS_REQUEST,
+  FETCH_TAGS_SUCCESS,
+  FETCH_TAGS_FAILURE,
+  ADD_TAG_REQUEST,
+  SELECT_POSTS_BY_TAG,
+  SELECT_POST,
 } from '../constants';
 import * as api from '../api';
 import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
@@ -78,6 +85,16 @@ export function errorHandler(dispatch, error, type) {
 export const initPosts = posts => ({
   type: FETCH_POSTS_SUCCESS,
   posts,
+});
+
+export const selectPost = post => ({
+  type: SELECT_POST,
+  post,
+});
+
+export const selectPostsByTag = tag => ({
+  type: SELECT_POSTS_BY_TAG,
+  tag,
 });
 
 export const createPost = post => dispatch =>
@@ -176,7 +193,7 @@ export const loginUser = (email, password) => (dispatch) => {
           type: USER_LOGIN_FAILURE,
         });
         return error;
-      }
+      },
     );
 };
 
@@ -197,8 +214,11 @@ export const fetchPosts = () => (dispatch, getState) => {
     );
 };
 
-export const addTag = (postId, tag) => dispatch =>
-  api.addTag(postId, tag)
+export const addTagToPost = (postId, tag) => (dispatch) => {
+  dispatch({
+    type: ADD_TAG_REQUEST,
+  });
+  return api.addTagToPost(postId, tag)
     .then(
       // TODO: response unused
       (resp) => {
@@ -212,6 +232,7 @@ export const addTag = (postId, tag) => dispatch =>
         errorHandler(dispatch, error, ADD_TAG_FAILURE);
       },
     );
+};
 
 export const removeTag = (postId, tagId) => dispatch =>
   api.removeTag(postId, tagId)
@@ -255,3 +276,22 @@ export const downloadFile = (postId, fileId) => (dispatch) => {
 
 export const uploadFile = (postId, file) => api.upload(postId, file);
 
+
+export const fetchTags = () => (dispatch) => {
+  dispatch({
+    type: FETCH_TAGS_REQUEST,
+  });
+  return api.fetchTags()
+    .then(
+      (resp) => {
+        dispatch({
+          type: FETCH_TAGS_SUCCESS,
+          tags: resp.data.data.map(tag => tag.name),
+        });
+      },
+      error => dispatch({
+        type: FETCH_TAGS_FAILURE,
+        error: error.response.data.messages.join(' '),
+      }),
+    );
+};
