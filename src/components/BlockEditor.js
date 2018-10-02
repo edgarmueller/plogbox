@@ -1,25 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DropZone from 'react-dropzone';
+import 'brace';
+import 'brace/mode/markdown';
+import 'brace/theme/solarized_dark';
+import 'brace/keybinding/emacs';
+import AceEditor from 'react-ace';
 
-const Editor = (props) => {
-  if (typeof window !== 'undefined') {
-    /* eslint-disable */
-    const AceEditor = require('react-ace').default;
-
-    require('brace');
-    require('brace/mode/markdown');
-    require('brace/theme/github');
-    require('brace/keybinding/emacs');
-    /* eslint-enable */
-
-    return <AceEditor {...props} />;
-  }
-
-  return null;
-};
-
-const BlockEditor = ({ postId, block, onDrop, handleUpdateBlock }) => {
+const BlockEditor = ({
+  postId, block, onDrop, handleUpdateBlock,
+}) => {
   if (block.dialect === 'image') {
     return (
       <DropZone
@@ -36,21 +26,21 @@ const BlockEditor = ({ postId, block, onDrop, handleUpdateBlock }) => {
   }
 
   return (
-    <Editor
+    <AceEditor
       mode="markdown"
-      theme="github"
+      theme="solarized_dark"
       onChange={text => handleUpdateBlock({
         ...block,
         text,
       })}
       name={`${block.id}_editor`}
       editorProps={{ $blockScrolling: true }}
-      width={'100%'}
+      width="70%"
       value={block.text}
       minLines={2}
       maxLines={Infinity}
       fontSize={16}
-      keyboardHandler={'emacs'}
+      keyboardHandler="emacs"
     />
   );
 };
