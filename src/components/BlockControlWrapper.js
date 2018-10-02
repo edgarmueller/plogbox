@@ -7,32 +7,31 @@ const styles = () => ({
     color: '#333435',
     backgroundColor: '#fff',
     borderRadius: '0.25em',
-    paddingBottom: '8px',
-    paddingLeft: '4px',
-    paddingRight: '8px',
-    marginBottom: '0.35em',
   },
   notHighlighted: {
     color: '#333435',
+  },
+  block: {
     paddingBottom: '8px',
     paddingLeft: '4px',
     paddingRight: '8px',
     marginBottom: '0.35em',
+    width: '100%',
   },
 });
 
 const BlockControlWrapper = (
-  { connectDropTarget, isFocused, onFocus, onBlur, children, classes },
-) =>
-  connectDropTarget(
-    <div
-      onFocus={onFocus}
-      onBlur={onBlur}
-      className={isFocused ? classes.highlighted : classes.notHighlighted}
-    >
-      {children}
-    </div>,
-  );
+  {
+    connectDropTarget, isFocused, onFocus, onBlur, children, classes,
+  }) => connectDropTarget(
+  <div
+    onFocus={onFocus}
+    onBlur={onBlur}
+    className={[isFocused ? classes.highlighted : classes.notHighlighted, classes.block].join(' ')}
+  >
+    {children}
+  </div>,
+);
 
 BlockControlWrapper.propTypes = {
   onFocus: PropTypes.func.isRequired,
