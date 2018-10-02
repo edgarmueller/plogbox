@@ -11,25 +11,31 @@ md.use(mk);
 const styles = () => ({
   highlighted: {
     color: '#cf556c',
-    paddingTop: '8px',
-    paddingLeft: '1.5em',
-    paddingRight: '1.5em',
-    paddingBottom: '8px',
-    marginBottom: '0.35em',
-    lineHeight: '1.35'
   },
   notHighlighted: {
     color: '#333435',
+
+  },
+  renderedBlock: {
     paddingTop: '8px',
     paddingLeft: '1.5em',
     paddingRight: '1.5em',
     paddingBottom: '8px',
     marginBottom: '0.35em',
-    lineHeight: '1.35'
+    lineHeight: '1.35',
+  },
+  img: {
+    display: 'block',
+    margin: '0 auto',
+    paddingLeft: 0,
+    paddingRight: 0,
+    width: '95%',
   },
 });
 
-const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) => {
+const RenderedBlock = ({
+  block, isDownloading, imagePath, isFocused, classes,
+}) => {
   switch (block.dialect) {
     case 'image':
       if (block.text) {
@@ -39,9 +45,8 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) 
 
         return (
           <img
-            className={isFocused ? classes.highlighted : classes.notHighlighted}
+            className={[isFocused ? classes.highlighted : classes.notHighlighted, classes.block, classes.img].join(' ')}
             src={imagePath}
-            alt={imagePath}
           />
         );
       }
@@ -49,8 +54,8 @@ const RenderedBlock = ({ block, isDownloading, imagePath, isFocused, classes }) 
       return (<div>No image selected yet</div>);
     default:
       return (
-        <div className={isFocused ? classes.highlighted : classes.notHighlighted}>
-          <ReactMarkdown id={block.id} source={md.render(block.text)} escapeHtml={false}/>
+        <div className={[isFocused ? classes.highlighted : classes.notHighlighted, classes.block].join(' ')}>
+          <ReactMarkdown id={block.id} source={md.render(block.text)} escapeHtml={false} />
         </div>
       );
   }
