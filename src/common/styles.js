@@ -6,20 +6,42 @@ export const button = {
   paddingLeft: '1em',
   paddingRight: '1em',
   borderRadius: '28px',
-  border: '2px solid #80CBC4',
+  border: '2px solid #90a2eb',
   height: '24px',
   display: 'inline-flex',
   alignItems: 'center',
   marginRight: '1em',
   fontWeight: 'bold',
   '&:hover': {
-    backgroundColor: '#80CBC4',
+    backgroundColor: '#90a2eb',
     color: '#fff',
   },
   textTransform: 'uppercase',
   fontSize: '10px',
   letterSpacing: '0.065em',
 };
+
+export const link = {
+  textDecoration: 'none',
+  color: '#333435',
+  paddingLeft: '2em',
+  paddingRight: '2em',
+  borderRadius: '28px',
+  border: '2px solid #90a2eb',
+  height: '28px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  marginLeft: '1em',
+  marginRight: '1em',
+  fontWeight: 'bold',
+  '&:hover': {
+    backgroundColor: '#90a2eb',
+    color: '#fff',
+  },
+  textTransform: 'uppercase',
+  fontSize: '10px',
+  letterSpacing: '0.065em',
+}
 
 export const formButtonBar = {
   display: 'flex',
@@ -29,19 +51,20 @@ export const formButtonBar = {
 export const appBar = {
   backgroundColor: '#fff',
   borderBottom: '1px solid #ebebeb',
-  width: '100%',
+  width: '80%',
+  margin: 'auto',
   borderBottomLeftRadius: '0.5em',
   borderBottomRightRadius: '0.5em',
 };
 
 export const card = {
-  marginTop: '1em',
   color: '#6a6969',
   // use theme's spacing?
   padding: '8px',
   background: '#fff',
-  borderRadius: '0.5em',
+  // borderRadius: '0.5em',
   fontSize: '0.85em',
+  margin: 'auto',
 };
 
 export const header = {
@@ -55,5 +78,15 @@ export const cardContent = {
 
 export const errorStyle = {
   color: red[400],
+  paddingTop: '1em',
+};
+
+export const inProgressStyle = {
+  color: 'blue',
+  paddingTop: '1em',
+};
+
+export const successStyle = {
+  color: 'green',
   paddingTop: '1em',
 };

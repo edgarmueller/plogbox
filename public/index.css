@@ -1,7 +1,8 @@
 #root {
     /*background-image: linear-gradient(to right,  #ace0f9 0%, #fff1eb 100%);*/
-    background-color: #e0e0e0;
-    /*min-height: 100%;*/
+    /*background-image: linear-gradient(to right top, #329dcb, #60a1df, #90a2eb, #bea1ee, #e99fe6);*/
+    min-height: 100%;
+    background-color: #424242;
 }
 
 * {
@@ -23,9 +24,10 @@ body {
     flex-direction: column;
 }
 
-main {
-    flex: 1;
-    border-bottom: 1px solid #ebebeb;
+.root {
+    flex-grow: 1;
+    z-index: 1;
+    display: flex;
 }
 
 footer {
