@@ -6,26 +6,14 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import { Dialog, DialogTitle } from 'material-ui';
 import * as actions from '../actions';
-import { getAllPosts, getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
-import '../common/tap';
-import { RESET_ERROR_MESSAGE, SET_TAGS } from '../constants';
+import { getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
+import { RESET_ERROR_MESSAGE } from '../constants';
 import PostList from '../components/PostList';
 import * as api from '../api';
 
 export class PostListContainer extends React.Component {
-
-  constructor() {
-    super();
-    this.state = {
-      isEditingTags: false,
-    };
-    this.setSelectedCell = this.setSelectedCell.bind(this);
-  }
-
   componentWillMount() {
     this.props.fetchPosts();
-    // fetch global list of tags
-    this.props.fetchSuggestedTags();
     // clear any previously selected post
     localStorage.removeItem('selectedPostId');
   }
@@ -35,10 +23,6 @@ export class PostListContainer extends React.Component {
       // re-fetch in case an update was happening in the background
       this.props.fetchPosts();
     }
-  }
-
-  setSelectedCell(isEditingTags) {
-    this.setState(() => ({ isEditingTags }));
   }
 
   render() {
@@ -51,6 +35,7 @@ export class PostListContainer extends React.Component {
       resetErrorMessage,
       handlePostSelected,
       deletePost,
+      selectPost,
     } = this.props;
 
     if (isFetchingPosts || isUpdatingPost) {
@@ -64,6 +49,7 @@ export class PostListContainer extends React.Component {
           addPost={addPost}
           handlePostSelected={handlePostSelected}
           deletePost={deletePost}
+          selectPost={selectPost}
         />
 
         <Dialog
@@ -86,7 +72,7 @@ PostListContainer.propTypes = {
   addPost: PropTypes.func.isRequired,
   resetErrorMessage: PropTypes.func.isRequired,
   fetchPosts: PropTypes.func.isRequired,
-  fetchSuggestedTags: PropTypes.func.isRequired,
+  selectPost: PropTypes.func.isRequired,
   handlePostSelected: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,
 };
@@ -99,12 +85,7 @@ PostListContainer.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const posts = _.sortBy(
-    _.filter(getAllPosts(state), post =>
-      !_.some(post.tags, tag => tag.name === 'journal'),
-    ),
-    post => post.title,
-  );
+  const posts = state.posts.posts.selected.toArray();
   return {
     posts,
     errorMessage: getPostErrorMessage(state),
@@ -137,21 +118,16 @@ export const mapDispatchToProps = dispatch => ({
     dispatch(routerActions.push(`/posts/${post.id}`));
     localStorage.setItem('selectedPostId', post.id);
   },
-  fetchSuggestedTags() {
-    api.fetchTags()
-      .then(
-        (resp) => {
-          dispatch({
-            type: SET_TAGS,
-            tags: resp.data.data.map(tag => tag.name),
-          });
-        },
-        (error) => {
-          // TODO ignore error?
-          console.warn(error);
-        },
-      );
-  },
+  selectPost(post) {
+    api.fetchBlocks(post.id)
+      .then((resp) => {
+        const postWithBlocks = {
+          ...post,
+          blocks: resp.data.data,
+        };
+        dispatch(actions.selectPost(postWithBlocks));
+      });
+  }
 });
 
 export default withRouter(connect(
