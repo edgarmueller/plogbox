@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ContentAdd from 'material-ui-icons/Add';
-import ContentDelete from 'material-ui-icons/Delete';
-import ContentCreate from 'material-ui-icons/Create';
-import { AppBar, Button, Card, CardContent, IconButton, Toolbar, withStyles } from 'material-ui';
-import Table, { TableBody, TableHead, TableRow, TableCell } from 'material-ui/Table';
-import ButtonBar from '../containers/ButtonBarContainer';
-import Tags from '../containers/TagsContainer';
-import { appBar, card, cardContent, header } from '../common/styles'
+import { Button, List, ListItem, withStyles } from 'material-ui';
+import * as _ from 'lodash';
+import { appBar, card, cardContent, header } from '../common/styles';
 
 const styles = () => ({
   appBar,
   card,
   cardContent,
   header,
+  listItem: {
+    fontSize: '1.5em',
+    color: '#fff',
+    backgroundColor: '#002B36',
+  },
   floatingButtonStyle: {
     float: 'right',
-    color: '#333435',
+    color: '#002B36',
     backgroundColor: '#fff',
     marginBottom: '1em',
     marginTop: '1.5em',
@@ -24,112 +25,98 @@ const styles = () => ({
   flex: {
     flex: 1,
   },
+  root: {
+    backgroundColor: '#002B36',
+  },
 });
 
-const formatDate = (timestap) => {
-  const t = new Date(timestap);
-  return t.toDateString();
+// const formatDate = (timestap) => {
+//   const t = new Date(timestap);
+//   const dateSegments = t.toDateString().split(' ');
+//   return {
+//     weekDay: dateSegments[0],
+//     month: dateSegments[1],
+//     day: dateSegments[2],
+//     year: dateSegments[3],
+//   };
+// };
+
+const EmptyList = ({ classes }) => (
+  <div className={classes.emptyList}>
+    No posts created yet!
+  </div>
+);
+
+EmptyList.propTypes = {
+  classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
 };
 
-export class PostList extends React.Component {
+const emptyListStyles = {
+  emptyList: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      post: undefined,
-    };
-    this.setHighlightedPost = this.setHighlightedPost.bind(this);
-  }
+const NoPosts = withStyles(emptyListStyles)(EmptyList);
 
-  setHighlightedPost(post) {
-    this.setState(() => ({ post }));
-  }
+export const PostList =
+  ({
+    posts,
+    addPost,
+    classes,
+    selectPost
+  }) => {
+    if (_.isEmpty(posts)) {
+      return (
+        <NoPosts />
+      );
+    }
 
-  render() {
-    const {
-      posts,
-      addPost,
-      handlePostSelected,
-      deletePost,
-      classes,
-    } = this.props;
-
-    // TODO: fix key
     return (
-      <div>
-        <AppBar className={classes.appBar} position="static">
-          <Toolbar className={classes.header}>
-              SELECT A POST
-            <ButtonBar />
-          </Toolbar>
-        </AppBar>
-        <Card className={classes.card}>
-          <CardContent className={classes.cardContent}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Edit or Delete</TableCell>
-                  <TableCell>Tags</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {
-                  posts.map(post => (
-                    <TableRow key={`${post.id}-${new Date()}`}>
-                      <TableCell>{post.title}</TableCell>
-                      <TableCell>{formatDate(post.date)}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => handlePostSelected(post)}
-                          color="default"
-                        >
-                          <ContentCreate />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => deletePost(post)}
-                          color="default"
-                        >
-                          <ContentDelete />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell onClick={() => this.setHighlightedPost(post)}>
-                        <Tags
-                          post={post}
-                          isEditing={
-                            this.state.post !== undefined && this.state.post.id === post.id
-                          }
-                          done={() => this.setHighlightedPost(undefined)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-
-            <Button
-              variant="fab"
-              className={classes.floatingButtonStyle}
-              onClick={addPost}
-              color="primary"
-            >
-              <ContentAdd />
-            </Button>
-          </CardContent>
-        </Card>
+      <div className={classes.root}>
+        <List>
+          {
+            posts.map(post => (
+              <ListItem
+                button
+                key={`${post.id}-${new Date()}`}
+                onClick={() => selectPost(post)}
+                className={classes.listItem}
+              >
+                {post.title}
+                {/* <ListItemIcon> */}
+                {/* <IconButton */}
+                {/* onClick={() => deletePost(post)} */}
+                {/* color="default" */}
+                {/* > */}
+                {/* <ContentDelete /> */}
+                {/* </IconButton> */}
+                {/* </ListItemIcon> */}
+              </ListItem>
+            ))
+          }
+        </List>
+        <Button
+          variant="fab"
+          className={classes.floatingButtonStyle}
+          onClick={addPost}
+          color="primary"
+        >
+          <ContentAdd />
+        </Button>
       </div>
     );
-  }
-}
+  };
 
 PostList.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.object),
   addPost: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired,
-  handlePostSelected: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
+  // deletePost: PropTypes.func.isRequired,
+  // handlePostSelected: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  selectPost: PropTypes.func.isRequired
 };
 
 PostList.defaultProps = {
