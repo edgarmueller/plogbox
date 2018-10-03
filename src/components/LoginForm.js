@@ -36,7 +36,6 @@ export class LoginForm extends React.Component {
   state = {
     user: undefined,
     password: undefined,
-    success: undefined,
     error: undefined,
   };
 
@@ -44,29 +43,30 @@ export class LoginForm extends React.Component {
     this.setState({
       user: event.target.value,
     });
-  }
+  };
 
   handleUpdatePassword = (event) => {
     this.setState({
       password: event.target.value,
     });
-  }
+  };
 
   handleSubmit = (ev) => {
-    console.log('call me!!', this.props.loginUser);
     ev.preventDefault();
-    this.props.loginUser(this.state.user, this.state.password)
-      .then(error => {
-          if (error) {
-            console.log("LOGIN ERROR!", error.response.data);
-            this.setState({
-              success: false,
-              error: error.response.data.messages.join('')
-            })
-          }
+    this.props
+      .loginUser(this.state.user, this.state.password)
+      .catch((error) => {
+        if (error && error.response) {
+          this.setState({
+            error: error.response.data.messages.join('')
+          });
+        } else {
+          this.setState({
+            error: 'Server not reachable',
+          });
         }
-      );
-  }
+      });
+  };
 
   render() {
     const { classes } = this.props;

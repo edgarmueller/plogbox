@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui';
 import { routerActions } from 'react-router-redux';
 import * as actions from '../actions/index';
 import '../common/tap';
@@ -10,40 +11,47 @@ import { getStatusText } from '../reducers/auth';
 import LoginForm from '../components/LoginForm';
 import CenteredWhiteDiv from '../components/CenteredWhiteDiv';
 
-class LoginPage extends React.Component {
+const styles = {
+  heading: {
+    paddingTop: '1em',
+    paddingBottom: '1em',
+  },
+};
 
-  render() {
-    const { isAuthenticated, isAuthenticating, location } = this.props;
-    let redirectUrl;
-    if (location) {
-      const search = location.search;
-      const params = new URLSearchParams(search);
-      redirectUrl = params.get('redirect');
-    }
-
-    if (isAuthenticated) {
-      return (<Redirect to={`${_.isEmpty(redirectUrl) ? '/posts' : redirectUrl}`} />);
-    }
-
-    return (
-      <CenteredWhiteDiv>
-        <h2 style={{ paddingTop: '1em' }}>Welcome to _plog</h2>
-        <LoginForm
-          loginUser={this.props.loginUser}
-        />
-        {
-          isAuthenticating &&
-          (<p style={{ paddingTop: '1em' }}>Logging you in...</p>)
-        }
-      </CenteredWhiteDiv>
-    );
+const LoginPage = ({
+  classes, isAuthenticated, isAuthenticating, location
+}) => {
+  let redirectUrl;
+  if (location) {
+    const { search } = location;
+    const params = new URLSearchParams(search);
+    redirectUrl = params.get('redirect');
   }
-}
+
+  if (isAuthenticated) {
+    return (<Redirect to={`${_.isEmpty(redirectUrl) ? '/posts' : redirectUrl}`} />);
+  }
+
+  return (
+    <CenteredWhiteDiv>
+      <div>
+        <h2 className={classes.heading}>Welcome to _plog</h2>
+      </div>
+      <LoginForm
+        loginUser={this.props.loginUser}
+      />
+      {
+        isAuthenticating &&
+        (<p style={{ paddingTop: '1em' }}>Logging you in...</p>)
+      }
+    </CenteredWhiteDiv>
+  );
+};
 
 LoginPage.propTypes = {
+  classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   isAuthenticated: PropTypes.bool.isRequired,
   isAuthenticating: PropTypes.bool.isRequired,
-  loginUser: PropTypes.func.isRequired,
   location: PropTypes.shape({}).isRequired,
 };
 
@@ -67,4 +75,5 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LoginPage);
+)(withStyles(styles)(LoginPage));
+
