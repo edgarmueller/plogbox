@@ -7,6 +7,7 @@ import {
   getPostErrorMessage,
 } from '../reducers';
 import withDragDropContext from '../common/withDragDropContext';
+import EditComponent from '../components/EditComponent';
 
 function guid() {
   function s4() {
@@ -14,15 +15,15 @@ function guid() {
       .toString(16)
       .substring(1);
   }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-    s4() + '-' + s4() + s4() + s4();
+  return `${s4() + s4()}-${s4()}-${s4()}-${
+    s4()}-${s4()}${s4()}${s4()}`;
 }
 
 // TODO: rename to EditPostContext?
 export class EditPostContainer extends React.Component {
-
   constructor(props) {
     super(props);
+    console.log('EditPostContaienr props', props);
     this.state = {
       post: props.post,
       showEditor: false,
@@ -35,25 +36,6 @@ export class EditPostContainer extends React.Component {
     this.handleClickOpenEditor = this.handleClickOpenEditor.bind(this);
     this.handleClickOpenRenderedView = this.handleClickOpenRenderedView.bind(this);
     this.handleClickOpenBoth = this.handleClickOpenBoth.bind(this);
-  }
-
-  getChildContext() {
-    return {
-      __editPost__: {
-        handleUpdatePost: this.handleUpdatePost,
-        handleSetBlocks: this.handleSetBlocks,
-        handleAddBlock: this.handleAddBlock,
-        handleClickOpenEditor: this.handleClickOpenEditor,
-        handleClickOpenRenderedView: this.handleClickOpenRenderedView,
-        handleClickOpenBoth: this.handleClickOpenBoth,
-        post: this.state.post,
-        showBoth: this.state.showBoth,
-        showRenderedView: this.state.showRenderedView,
-        showEditor: this.state.showEditor,
-        // TODO
-        isFetchingBlock: false,
-      },
-    };
   }
 
   componentDidUpdate(prevProps) {
@@ -114,7 +96,12 @@ export class EditPostContainer extends React.Component {
 
   render() {
     return (
-      <div>{this.props.children}</div>
+      <EditComponent
+        {...this.props}
+        {...this.state}
+        handleAddBlock={this.handleAddBlock}
+        handleSetBlocks={this.handleSetBlocks}
+      />
     );
   }
 }
@@ -128,11 +115,8 @@ EditPostContainer.defaultProps = {
   post: undefined,
 };
 
-EditPostContainer.childContextTypes = {
-  __editPost__: PropTypes.object.isRequired,
-};
-
 export const mapStateToProps = state => ({
+  post: state.posts.posts.selectedPost,
   userId: state.auth.userId,
   isFetchingBlock: getIsFetchingBlock(state),
   isUpdatingPost: getIsUpdatingPost(state),
