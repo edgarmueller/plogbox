@@ -8,7 +8,6 @@ import fileDownload from 'react-file-download';
 import Mousetrap from 'mousetrap';
 import * as action from '../actions/index';
 import EditPostButtonBar from '../components/EditPostButtonBar';
-import { withPost } from '../common/withPost';
 
 const styles = () => ({
   hidden: {
@@ -17,15 +16,9 @@ const styles = () => ({
 });
 
 export class EditPostButtonBarContainer extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-    };
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-  }
+  state = {
+    open: false,
+  };
 
   componentDidMount() {
     const { savePost } = this.props;
@@ -39,21 +32,21 @@ export class EditPostButtonBarContainer extends React.Component {
     }
   }
 
-  handleOpen() {
+  handleOpen = () => {
     this.setState({ open: true });
-  }
+  };
 
-  handleClose(event, reason) {
+  handleClose= (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
     this.setState({ open: false });
-  }
+  };
 
   render() {
     return (
-      <div>
+      <div style={{ backgroundColor: '#fff', padding: 10 }}>
         <EditPostButtonBar {...this.props} />
         <Snackbar
           anchorOrigin={{
@@ -95,10 +88,10 @@ export const mapDispatchToProps = (dispatch, ownProps) => ({
   savePost(selectedPost) {
     const post = _.cloneDeep(selectedPost);
     // update indices upon save
-    post.blocks = post.blocks.map((block, index) => {
-      block.index = index;
-      return block;
-    });
+    post.blocks = post.blocks.map((block, index) => ({
+      ...block,
+      index
+    }));
     return dispatch(action.updatePost(post));
   },
   exportPost(post) {
@@ -124,5 +117,5 @@ export default connect(
   mapDispatchToProps,
   null,
   { pure: false },
-)(withStyles(styles)(withPost(EditPostButtonBarContainer)));
+)(withStyles(styles)(EditPostButtonBarContainer));
 
