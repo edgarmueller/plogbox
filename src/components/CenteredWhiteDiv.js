@@ -6,13 +6,15 @@ import * as Props from '../common/CommonPropTypes';
 const styles = {
   whiteCard: {
     paddingBottom: '1.5em',
-    paddingLeft: '1em',
     backgroundColor: '#fff',
     borderBottomLeftRadius: '0.25em',
     borderBottomRightRadius: '0.25em',
     boxShadow: '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
     width: '40%',
     margin: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'column',
   },
 };
 
@@ -29,6 +31,6 @@ CenteredWhiteDiv.propTypes = {
 
 CenteredWhiteDiv.defaultProps = {
   children: Props.childrenDefault,
-}
+};
 
 export default withStyles(styles)(CenteredWhiteDiv);
