@@ -133,7 +133,16 @@ export const download = (postId, file) => {
   );
 };
 
-export const addTag = (postId, tag) => {
+export const createTag = (tag) => {
+  const url = `${BASE_URL}/tags`;
+  return Axios.put(
+    url,
+    { name: tag },
+    getHeaderToken(),
+  );
+};
+
+export const addTagToPost = (postId, tag) => {
   const url = `${BASE_URL}/tags/${postId}`;
   return Axios.post(
     url,
