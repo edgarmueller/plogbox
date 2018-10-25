@@ -8,9 +8,8 @@ import {
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_BLOCKS_SUCCESS,
-  USER_LOGIN_FAILURE,
-  USER_LOGIN_SUCCESS,
-  USER_LOGOUT_SUCCESS,
+  AUTH_SUCCESS,
+  AUTH_LOGOUT,
   DELETE_POST_FAILURE,
   UPDATE_POST_SUCCESS,
   UPDATE_POST_FAILURE,
@@ -19,7 +18,6 @@ import {
   DELETE_TAG_SUCCESS,
   DELETE_TAG_FAILURE,
   UPDATE_BLOCK_FAILURE,
-  USER_IS_LOGGING_IN,
   FETCH_BLOCKS_REQUEST,
   UPDATE_POST_REQUEST,
   FETCH_TAGS_REQUEST,
@@ -64,15 +62,15 @@ export function errorHandler(dispatch, error, type) {
     if (!_.isEmpty(localStorage.getItem('token'))) {
       // we had previously had a valid token
       dispatch({
-        type: USER_LOGOUT_SUCCESS,
+        type: AUTH_LOGOUT,
         statusText: 'Your token timed out. Please login again.',
       });
       localStorage.removeItem('token');
     } else {
-      dispatch({
-        type: USER_LOGIN_FAILURE,
-        statusText: 'Your username or password is wrong.',
-      });
+      // dispatch({
+      //   type: USER_LOGIN_FAILURE,
+      //   statusText: 'Your username or password is wrong.',
+      // });
     }
   } else {
     dispatch({
@@ -153,7 +151,7 @@ export const logoutUser = () => (dispatch) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     dispatch({
-      type: USER_LOGOUT_SUCCESS,
+      type: AUTH_LOGOUT,
     });
     dispatch(routerActions.push('login'));
   };
@@ -165,37 +163,52 @@ export const logoutUser = () => (dispatch) => {
   );
 };
 
-export const loginUser = (email, password) => (dispatch) => {
-  dispatch({
-    type: USER_IS_LOGGING_IN,
-  });
-  // TODO  rememberMe can not be configured
-  return api.loginUser(email, password, true)
-    .then(
-      (response) => {
-        const {
-          user,
-          userId,
-          token,
-        } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', user);
-        dispatch({
-          type: USER_LOGIN_SUCCESS,
-          token,
-          user,
-          userId,
-        });
-        return undefined;
-      },
-      (error) => {
-        dispatch({
-          type: USER_LOGIN_FAILURE,
-        });
-        return error;
-      },
-    );
-};
+export const authSuccess = (token, user) => ({
+  type: AUTH_SUCCESS,
+  token,
+  user
+});
+
+// export const loginUserWithToken = token => (dispatch) => {
+//   return dispatch({
+//     type: AUTH_SUCCESS,
+//     token,
+//     user: 'TODO user name',
+//     userId: 'TODO user id'
+//   });
+// };
+//
+// export const loginUser = (email, password) => (dispatch) => {
+//   dispatch({
+//     type: AUTH_IN_PROGRESS,
+//   });
+//   // TODO  rememberMe can not be configured
+//   return api.loginUser(email, password, true)
+//     .then(
+//       (response) => {
+//         const {
+//           user,
+//           userId,
+//           token,
+//         } = response.data;
+//         localStorage.setItem('token', token);
+//         localStorage.setItem('user', user);
+//         dispatch({
+//           type: AUTH_SUCCESS,
+//           token,
+//           user,
+//           userId,
+//         });
+//         return undefined;
+//       },
+//       (error) => {
+//         dispatch({
+//           type: AUTH_FAILURE,
+//         });
+//         return error;
+//       },
+//     );
+// };
 
 export const fetchPosts = () => (dispatch, getState) => {
   if (getIsFetchingPosts(getState())) {

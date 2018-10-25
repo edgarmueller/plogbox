@@ -1,6 +1,6 @@
 import {
-  USER_LOGIN_FAILURE,
-  USER_LOGOUT_SUCCESS,
+  AUTH_FAILURE,
+  AUTH_LOGOUT,
 } from '../constants';
 
 export const createFetchingProgressReducer =
@@ -8,8 +8,8 @@ export const createFetchingProgressReducer =
     switch (action.type) {
       case request:
         return true;
-      case USER_LOGOUT_SUCCESS:
-      case USER_LOGIN_FAILURE:
+      case AUTH_LOGOUT:
+      case AUTH_FAILURE:
       case success:
       case failure:
         return false;

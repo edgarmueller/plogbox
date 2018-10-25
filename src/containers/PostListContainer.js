@@ -13,7 +13,7 @@ import * as api from '../api';
 
 export class PostListContainer extends React.Component {
   componentWillMount() {
-    this.props.fetchPosts();
+    // this.props.fetchPosts();
     // clear any previously selected post
     localStorage.removeItem('selectedPostId');
   }
@@ -21,7 +21,7 @@ export class PostListContainer extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.isUpdatingPost && !this.props.isUpdatingPost) {
       // re-fetch in case an update was happening in the background
-      this.props.fetchPosts();
+      // this.props.fetchPosts();
     }
   }
 
@@ -71,7 +71,7 @@ PostListContainer.propTypes = {
   errorMessage: PropTypes.string,
   addPost: PropTypes.func.isRequired,
   resetErrorMessage: PropTypes.func.isRequired,
-  fetchPosts: PropTypes.func.isRequired,
+  // fetchPosts: PropTypes.func.isRequired,
   selectPost: PropTypes.func.isRequired,
   handlePostSelected: PropTypes.func.isRequired,
   deletePost: PropTypes.func.isRequired,

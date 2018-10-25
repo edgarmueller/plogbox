@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Radium from 'radium';
@@ -7,19 +8,21 @@ import { Avatar, Chip, withStyles } from 'material-ui';
 import SvgIconFace from 'material-ui-icons/Face';
 import LogoutIcon from 'material-ui-icons/ExitToApp';
 import { link } from '../common/styles';
+import { logout } from '../api/dropbox';
+import { AUTH_LOGOUT } from '../constants';
 
 const RadiumLink = Radium(Link);
 const styles = {
   link,
   center: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     flexDirection: 'row',
     alignItems: 'center',
   },
 };
 
-const UserIndicator = ({ classes, user }) => (
+const UserIndicator = ({ classes, user, logoutUser }) => (
   <div className={classes.center}>
     <div>
       <Chip
@@ -31,7 +34,9 @@ const UserIndicator = ({ classes, user }) => (
 
     <div>
       <RadiumLink
-        onClick={() => { console.log('TODO logout!'); }}
+        onClick={() => {
+            logoutUser();
+          }}
         to="/"
       >
         <Avatar>
@@ -44,11 +49,21 @@ const UserIndicator = ({ classes, user }) => (
 
 UserIndicator.propTypes = {
   user: PropTypes.string.isRequired,
+  logoutUser: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
 };
 
 const mapStateToProps = state => ({
-  user: state.auth.user,
+  user: _.get(state, 'auth.user.name.display_name'),
 });
 
-export default connect(mapStateToProps, null)(withStyles(styles)(UserIndicator));
+const mapDispatchToProps = dispatch => ({
+  logoutUser() {
+    logout();
+    dispatch({
+      type: AUTH_LOGOUT
+    });
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserIndicator));

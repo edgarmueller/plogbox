@@ -8,16 +8,16 @@ import { getAllPosts } from '../reducers';
 
 export class TagListContainer extends React.Component {
   componentWillMount() {
-    this.props.fetchTags();
+    // this.props.fetchTags();
   }
 
   render() {
-    const { addTag, selectPostsByTag, tags } = this.props;
+    const { selectPostsByTag, tags } = this.props;
 
     return (
       <TagList
         tags={tags}
-        addTag={addTag}
+        // addTag={addTag}
         onSelect={tag => selectPostsByTag(tag)}
       />
     );
@@ -25,8 +25,8 @@ export class TagListContainer extends React.Component {
 }
 
 TagListContainer.propTypes = {
-  addTag: PropTypes.func.isRequired,
-  fetchTags: PropTypes.func.isRequired,
+  // addTag: PropTypes.func.isRequired,
+  // fetchTags: PropTypes.func.isRequired,
   selectPostsByTag: PropTypes.func.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string)
 };

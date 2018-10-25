@@ -1,10 +1,13 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Drawer, withStyles } from 'material-ui';
 import Radium from 'radium';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import TagList from '../containers/TagListContainer';
 import UserIndicator from './UserIndicator';
+import DropboxSender from './DropboxSender';
 
 const RadiumLink = Radium(Link);
 const drawerWidth = 240;
@@ -30,28 +33,43 @@ const styles = theme => ({
   },
 });
 
-const Sidebar = ({ classes }) => (
+const Sidebar = ({ classes, user }) => (
   <Drawer
     variant="permanent"
     open
     classes={{
-      paper: classes.drawerPaper,
-    }}
+        paper: classes.drawerPaper,
+      }}
   >
     <RadiumLink className={classes.logo} to="/">
-      plog_
+        plog_
     </RadiumLink>
-    <UserIndicator />
-    <TagList />
+    {
+        user ?
+          (
+            <React.Fragment>
+              <UserIndicator />
+              <TagList />
+            </React.Fragment>
+          ) :
+            <DropboxSender
+              render={({ url }) => <a href={url}>Connect to Dropbox</a>}
+            />
+      }
   </Drawer>
 );
 
 Sidebar.propTypes = {
+  user: PropTypes.string,
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 Sidebar.defaultProps = {
-
+  user: undefined
 };
 
-export default withStyles(styles)(Sidebar);
+const mapStateToProps = state => ({
+  user: _.get(state, 'auth.user.name.display_name'),
+});
+
+export default withStyles(styles)(connect(mapStateToProps)(Sidebar));

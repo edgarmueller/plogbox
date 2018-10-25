@@ -1,8 +1,8 @@
 import {
-  USER_LOGIN_FAILURE,
-  USER_LOGIN_SUCCESS,
-  USER_LOGOUT_SUCCESS,
-  USER_IS_LOGGING_IN,
+  AUTH_FAILURE,
+  AUTH_SUCCESS,
+  AUTH_LOGOUT,
+  AUTH_IN_PROGRESS,
 } from '../constants';
 
 const INITIAL_STATE = {
@@ -15,12 +15,12 @@ const INITIAL_STATE = {
 
 export const auth = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case USER_IS_LOGGING_IN:
+    case AUTH_IN_PROGRESS:
       return {
         isAuthenticating: true,
         isAuthenticated: false,
       };
-    case USER_LOGIN_SUCCESS:
+    case AUTH_SUCCESS:
       return {
         isAuthenticating: false,
         isAuthenticated: action.token !== undefined,
@@ -28,7 +28,7 @@ export const auth = (state = INITIAL_STATE, action) => {
         user: action.user,
         userId: action.userId,
       };
-    case USER_LOGIN_FAILURE:
+    case AUTH_FAILURE:
       return {
         isAuthenticating: false,
         isAuthenticated: false,
@@ -36,7 +36,7 @@ export const auth = (state = INITIAL_STATE, action) => {
         user: null,
         userId: null,
       };
-    case USER_LOGOUT_SUCCESS:
+    case AUTH_LOGOUT:
       return {
         isAuthenticating: false,
         isAuthenticated: false,

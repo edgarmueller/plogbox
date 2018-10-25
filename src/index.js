@@ -1,50 +1,50 @@
 import React from 'react';
-import * as _ from 'lodash';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import dotenv from 'dotenv';
 
 import configureStore from './store/configureStore';
 import Root from './components/Root';
-import { USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE } from './constants';
-import { testToken } from './api/index';
 import registerServiceWorker from './registerServiceWorker';
-import { fetchPosts } from './actions';
+import { DROPBOX_TOKEN_NAME, getUser, testToken } from './api/dropbox';
+import { AUTH_FAILURE, AUTH_IN_PROGRESS, AUTH_SUCCESS } from './constants';
 
+dotenv.config();
 
 // ID of the DOM element to mount app on
 const DOM_APP_EL_ID = 'root';
 const store = configureStore();
 
 const loadTokenFromStorage = (dispatch) => {
-  const token = localStorage.getItem('token');
-  const user = localStorage.getItem(('user'));
+// eslint-disable-next-line no-console
+  console.log('Checking for existing token...');
+  dispatch({
+    type: AUTH_IN_PROGRESS
+  });
+
+  const token = localStorage.getItem(DROPBOX_TOKEN_NAME);
 
   if (token) {
     testToken(token)
-      .then(
-        (resp) => {
-          if (_.isEmpty(resp.data.data)) {
+      .then((isValid) => {
+        if (isValid) {
+          getUser().then(user =>
             dispatch({
-              type: USER_LOGIN_FAILURE,
-            });
-          } else {
-            dispatch({
-              type: USER_LOGIN_SUCCESS,
+              type: AUTH_SUCCESS,
               token,
               user,
-            });
-          }
-        },
-        () => {
+            }));
+        } else {
           dispatch({
-            type: USER_LOGIN_FAILURE,
-            statusText: 'You need to login',
+            type: AUTH_FAILURE
           });
-        },
-      );
+        }
+      });
+  } else {
+    dispatch({
+      type: AUTH_FAILURE
+    });
   }
-
-  return token;
 };
 
 // Render the router
@@ -59,17 +59,8 @@ const render = (Component) => {
 
 const init = (dispatch) => {
   registerServiceWorker();
-  const token = loadTokenFromStorage(dispatch);
-  if (token) {
-    dispatch(fetchPosts())
-      .then(
-        () => {
-          render(Root);
-        },
-      );
-  } else {
-    render(Root);
-  }
+  loadTokenFromStorage(dispatch);
+  render(Root);
 };
 
 init(store.dispatch);

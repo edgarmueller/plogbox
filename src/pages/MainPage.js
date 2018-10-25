@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 import { Grid, withStyles } from 'material-ui';
-import EditPostContainer from '../containers/EditPostContainer';
 import withDragDropContext from '../common/withDragDropContext';
-import PostListContainer from '../containers/PostListContainer';
 import Sidebar from '../components/Sidebar';
 
 const drawerWidth = 240;
@@ -29,25 +28,42 @@ const styles = theme => ({
   },
 });
 
-export const MainPage = ({ classes }) => (
-  <div className={classes.root}>
-    <Sidebar />
-    <main className={classes.content}>
-      <Grid container spacing={0} style={{ minHeight: '100%' }}>
-        <Grid item xs={3}>
-          <PostListContainer />
+export const MainPage = ({ classes, isAuthenticating }) => {
+  if (isAuthenticating) {
+    return (
+      <div className={classes.root}>
+        Loading...
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.root}>
+      <Sidebar />
+      <main className={classes.content}>
+        <Grid container spacing={0} style={{ minHeight: '100%' }}>
+          <Grid item xs={3}>
+            {/* <PostListContainer /> */}
+          </Grid>
+          <Grid item xs={9}>
+            {/* <EditPostContainer /> */}
+          </Grid>
         </Grid>
-        <Grid item xs={9}>
-          <EditPostContainer />
-        </Grid>
-      </Grid>
-    </main>
-  </div>
-);
+      </main>
+    </div>
+  );
+};
 
 MainPage.propTypes = {
+  isAuthenticating: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
+const mapStateToProps = state => ({
+  isAuthenticating: state.auth.isAuthenticating,
+});
 
-export default withRouter((withDragDropContext(withStyles(styles)(MainPage))));
+export default withRouter(withDragDropContext(withStyles(styles)(connect(
+  mapStateToProps,
+  null
+)(MainPage))));
