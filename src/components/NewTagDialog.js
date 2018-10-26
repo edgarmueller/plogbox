@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from 'material-ui';
-import * as api from '../api';
+import * as dropbox from "../api/dropbox";
 
 class NewTagDialog extends React.Component {
   state = {
@@ -11,7 +11,7 @@ class NewTagDialog extends React.Component {
   };
 
   createTag = (tag) => {
-    api.createTag(tag)
+    dropbox.createTag(tag)
       .then(
         () => {
           this.setState({
@@ -21,7 +21,7 @@ class NewTagDialog extends React.Component {
         },
         error => this.setState({
           success: false,
-          error: error.response.data.messages.join(' ')
+          error: `Couldn't create tag`
         }),
       );
   };
@@ -44,7 +44,7 @@ class NewTagDialog extends React.Component {
             autoFocus
             margin="dense"
             id="name"
-            label="Tag"
+            label="Tag name"
             fullWidth
             onChange={ev => this.setState({ tag: ev.target.value })}
             error={this.state.success === false}

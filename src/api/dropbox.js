@@ -40,12 +40,8 @@ export const testToken = () =>
       () => false
     );
 
-const dropbox = {
-  getAuthUrl,
-  fetchFiles,
-  saveToken,
-  getUser
-};
+export const createTag = tag => dbx.filesCreateFolderV2({ path: `/${tag}`, autorename: true });
 
-export default dropbox;
-
+export const fetchTags = () => dbx.filesListFolder({ path: '' })
+  .then(files =>
+    files.entries.filter(file => file['.tag'] === 'folder'));

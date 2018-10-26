@@ -28,6 +28,7 @@ import {
   SELECT_POST,
 } from '../constants';
 import * as api from '../api';
+import * as dropbox from '../api/dropbox';
 import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
 
 export function errorHandler(dispatch, error, type) {
@@ -294,17 +295,17 @@ export const fetchTags = () => (dispatch) => {
   dispatch({
     type: FETCH_TAGS_REQUEST,
   });
-  return api.fetchTags()
+  return dropbox.fetchTags()
     .then(
-      (resp) => {
+      (entries) => {
         dispatch({
           type: FETCH_TAGS_SUCCESS,
-          tags: resp.data.data.map(tag => tag.name),
+          tags: entries.map(entry => entry.name)
         });
       },
       error => dispatch({
         type: FETCH_TAGS_FAILURE,
-        error: error.response.data.messages.join(' '),
+        error: "An error occurred while fetching the tags"
       }),
     );
 };
