@@ -3,13 +3,14 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { Button, List, ListItem, withStyles } from 'material-ui';
 import AddIcon from 'material-ui-icons/Add';
+import { connect } from 'react-redux';
 import * as actions from '../actions';
 import NewTagDialog from './NewTagDialog';
-import {connect} from "react-redux";
 
 const styles = {
   fab: {
     float: 'right',
+    margin: 10
   },
 };
 

@@ -17,10 +17,7 @@ const styles = () => ({
   },
   floatingButtonStyle: {
     float: 'right',
-    color: '#002B36',
-    backgroundColor: '#fff',
-    marginBottom: '1em',
-    marginTop: '1.5em',
+    margin: 10
   },
   flex: {
     flex: 1,
@@ -103,7 +100,7 @@ export const PostList =
           variant="fab"
           className={classes.floatingButtonStyle}
           onClick={addPost}
-          color="primary"
+          color="secondary"
         >
           <ContentAdd />
         </Button>
