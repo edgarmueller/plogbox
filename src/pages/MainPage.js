@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Grid, withStyles } from 'material-ui';
 import withDragDropContext from '../common/withDragDropContext';
 import Sidebar from '../components/Sidebar';
+import PostListContainer from '../containers/PostListContainer';
+import EditPostContainer from '../containers/EditPostContainer';
 
 const drawerWidth = 240;
 
@@ -43,10 +45,10 @@ export const MainPage = ({ classes, isAuthenticating }) => {
       <main className={classes.content}>
         <Grid container spacing={0} style={{ minHeight: '100%' }}>
           <Grid item xs={3}>
-            {/* <PostListContainer /> */}
+            <PostListContainer />
           </Grid>
           <Grid item xs={9}>
-            {/* <EditPostContainer /> */}
+            <EditPostContainer />
           </Grid>
         </Grid>
       </main>

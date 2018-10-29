@@ -7,7 +7,8 @@ import {
   getPostErrorMessage,
 } from '../reducers';
 import withDragDropContext from '../common/withDragDropContext';
-import EditComponent from '../components/EditComponent';
+import { fetchFile } from '../api/dropbox';
+import Editor from '../components/Editor';
 
 function guid() {
   function s4() {
@@ -40,10 +41,17 @@ export class EditPostContainer extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.post !== this.props.post) {
-      // TODO: fix warning
-      this.setState({
-        post: this.props.post,
-      });
+      this.setState(
+        { isLoading: true },
+        () =>
+          fetchFile(this.props.post.path_lower)
+            .then((fileContent) => {
+              this.setState({
+                text: fileContent,
+                isLoading: false
+              });
+            })
+      );
     }
   }
 
@@ -95,12 +103,24 @@ export class EditPostContainer extends React.Component {
   }
 
   render() {
+    const { post } = this.props;
+    const {
+      isLoading, showBoth, showEditor, showRendererView, text
+    } = this.state;
+
+    if (isLoading) {
+      return (<div>Loading...</div>);
+    }
+
+
+    if (post === undefined) {
+      return (<div>No post available</div>);
+    }
+
     return (
-      <EditComponent
-        {...this.props}
-        {...this.state}
-        handleAddBlock={this.handleAddBlock}
-        handleSetBlocks={this.handleSetBlocks}
+      <Editor
+        post={post}
+        text={text}
       />
     );
   }

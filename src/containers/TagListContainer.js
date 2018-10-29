@@ -7,9 +7,6 @@ import * as api from '../api';
 import { getAllPosts } from '../reducers';
 
 export class TagListContainer extends React.Component {
-  componentWillMount() {
-    // this.props.fetchTags();
-  }
 
   render() {
     const { selectPostsByTag, tags } = this.props;
@@ -17,7 +14,6 @@ export class TagListContainer extends React.Component {
     return (
       <TagList
         tags={tags}
-        // addTag={addTag}
         onSelect={tag => selectPostsByTag(tag)}
       />
     );

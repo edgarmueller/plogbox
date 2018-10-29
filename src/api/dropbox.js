@@ -10,13 +10,13 @@ const dbx = new Dropbox({
 export const getAuthUrl = () =>
   dbx.getAuthenticationUrl('http://localhost:3000/auth');
 
-export const fetchFiles = () => {
-  dbx.filesListFolder({ path: '' })
-    // eslint-disable-next-line no-console
-    .then(response => console.log(response))
-    // eslint-disable-next-line no-console
-    .catch(error => console.log(error));
-};
+// export const fetchFiles = () => {
+//   dbx.filesListFolder({ path: '' })
+//     // eslint-disable-next-line no-console
+//     .then(response => console.log(response))
+//     // eslint-disable-next-line no-console
+//     .catch(error => console.log(error));
+// };
 
 export const logout = () => {
   dbx.authTokenRevoke();
@@ -45,3 +45,31 @@ export const createTag = tag => dbx.filesCreateFolderV2({ path: `/${tag}`, autor
 export const fetchTags = () => dbx.filesListFolder({ path: '' })
   .then(files =>
     files.entries.filter(file => file['.tag'] === 'folder'));
+
+export const fetchFiles = tagName => dbx.filesListFolder({ path: `/${tagName}` })
+  .then(files =>
+    files.entries.filter(file => file['.tag'] === 'file'));
+
+export const fetchFile = file => dbx.filesDownload({ path: file })
+  .then((resp) => {
+    const temporaryFileReader = new FileReader();
+    return new Promise((resolve, reject) => {
+      temporaryFileReader.onerror = () => {
+        temporaryFileReader.abort();
+        reject(new Error('Problem parsing input file.'));
+      };
+      temporaryFileReader.onload = () => {
+        resolve(temporaryFileReader.result);
+      };
+      temporaryFileReader.readAsText(resp.fileBlob);
+    });
+  });
+
+export const pushFile = (file, text) => dbx.filesUpload({
+  path: file,
+  contents: text,
+  mode: { '.tag': 'overwrite' },
+  autorename: false
+})
+  .then((data) => { console.log('UPLOADED!!!', data); })
+  .catch((error) => { console.error(error); });

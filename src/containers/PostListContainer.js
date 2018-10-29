@@ -7,9 +7,8 @@ import PropTypes from 'prop-types';
 import { Dialog, DialogTitle } from 'material-ui';
 import * as actions from '../actions';
 import { getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
-import { RESET_ERROR_MESSAGE } from '../constants';
+import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
 import PostList from '../components/PostList';
-import * as api from '../api';
 
 export class PostListContainer extends React.Component {
   componentWillMount() {
@@ -85,7 +84,7 @@ PostListContainer.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const posts = state.posts.posts.selected.toArray();
+  const posts = state.posts.posts.selected;
   return {
     posts,
     errorMessage: getPostErrorMessage(state),
@@ -119,14 +118,10 @@ export const mapDispatchToProps = dispatch => ({
     localStorage.setItem('selectedPostId', post.id);
   },
   selectPost(post) {
-    api.fetchBlocks(post.id)
-      .then((resp) => {
-        const postWithBlocks = {
-          ...post,
-          blocks: resp.data.data,
-        };
-        dispatch(actions.selectPost(postWithBlocks));
-      });
+    dispatch({
+      type: SELECT_POST,
+      post
+    });
   }
 });
 

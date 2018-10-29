@@ -68,6 +68,7 @@ export const PostList =
     classes,
     selectPost
   }) => {
+
     if (_.isEmpty(posts)) {
       return (
         <NoPosts />
@@ -85,7 +86,7 @@ export const PostList =
                 onClick={() => selectPost(post)}
                 className={classes.listItem}
               >
-                {post.title}
+                {post.name}
                 {/* <ListItemIcon> */}
                 {/* <IconButton */}
                 {/* onClick={() => deletePost(post)} */}

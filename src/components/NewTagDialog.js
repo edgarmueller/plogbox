@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from 'material-ui';
-import * as dropbox from "../api/dropbox";
+import { connect } from 'react-redux';
+import * as dropbox from '../api/dropbox';
+import * as actions from '../actions';
 
 class NewTagDialog extends React.Component {
   state = {
@@ -17,11 +19,13 @@ class NewTagDialog extends React.Component {
           this.setState({
             success: true
           });
+          // re-fetch tags
+          this.props.fetchTags();
           this.props.handleClose();
         },
-        error => this.setState({
+        () => this.setState({
           success: false,
-          error: `Couldn't create tag`
+          error: 'Couldn\'t create tag'
         }),
       );
   };
@@ -69,7 +73,14 @@ class NewTagDialog extends React.Component {
 
 NewTagDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  fetchTags: PropTypes.func.isRequired
 };
 
-export default NewTagDialog;
+const mapDispatchToProps = dispatch => ({
+  fetchTags() {
+    dispatch(actions.fetchTags());
+  }
+});
+
+export default connect(null, mapDispatchToProps)(NewTagDialog);

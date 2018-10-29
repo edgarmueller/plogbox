@@ -5,7 +5,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
 import BlockControl from './BlockControl';
 import ItemTypes from '../dnd/ItemTypes';
-import BlockEditor from './BlockEditor';
+import Editor from './Editor';
 import BlockControlWrapper from './BlockControlWrapper';
 import { uploadFile } from '../actions';
 import { Direction } from '../constants';
@@ -116,7 +116,7 @@ class BlockComponent extends React.Component {
           handleMoveBlock={this.handleMoveBlock}
           connectDragSource={connectDragSource}
         />
-        <BlockEditor
+        <Editor
           postId={postId}
           block={block}
           onDrop={this.onDrop}

@@ -91,10 +91,15 @@ export const selectPost = post => ({
   post,
 });
 
-export const selectPostsByTag = tag => ({
-  type: SELECT_POSTS_BY_TAG,
-  tag,
-});
+export const selectPostsByTag = tag => (dispatch) => {
+  dropbox.fetchFiles(tag)
+    .then((files) => {
+      dispatch({
+        type: SELECT_POSTS_BY_TAG,
+        posts: files,
+      });
+    });
+};
 
 export const createPost = post => dispatch =>
   api.createPost(post)

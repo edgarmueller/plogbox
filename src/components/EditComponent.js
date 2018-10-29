@@ -20,21 +20,19 @@ class EditComponent extends React.Component {
   render() {
     const {
       classes,
-      focusedBlockId,
-      handleSetBlocks,
-      handleAddBlock,
-      handleUpdateFocusedBlock,
-      handleFocusLoss,
-      isFetchingBlock,
-      post,
+      // focusedBlockId,
+      // handleSetBlocks,
+      // handleAddBlock,
+      // handleUpdateFocusedBlock,
+      // handleFocusLoss,
+      // isFetchingBlock,
+      text,
       showBoth,
       showEditor,
       showRenderedView,
     } = this.props;
 
-    console.log('post', this.props);
-
-    if (post === undefined) {
+    if (text === undefined) {
       return <div>Please select a post first</div>;
     }
 
@@ -45,11 +43,11 @@ class EditComponent extends React.Component {
           <div className={classes.whiteBackground}>
             <BlockEditors
               post={post}
-              handleSetBlocks={handleSetBlocks}
-              handleAddBlock={handleAddBlock}
-              onFocus={handleUpdateFocusedBlock}
-              onBlur={handleFocusLoss}
-              focusedBlockId={focusedBlockId}
+              // handleSetBlocks={handleSetBlocks}
+              // handleAddBlock={handleAddBlock}
+              // onFocus={handleUpdateFocusedBlock}
+              // onBlur={handleFocusLoss}
+              // focusedBlockId={focusedBlockId}
             />
           </div>
         </Collapse>
@@ -84,13 +82,13 @@ class EditComponent extends React.Component {
 
 EditComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  focusedBlockId: PropTypes.number.isRequired,
-  handleSetBlocks: PropTypes.func.isRequired,
-  handleAddBlock: PropTypes.func.isRequired,
-  handleUpdateFocusedBlock: PropTypes.func.isRequired,
-  handleFocusLoss: PropTypes.func.isRequired,
-  isFetchingBlock: PropTypes.bool.isRequired,
-  post: PropTypes.object.isRequired,
+  // focusedBlockId: PropTypes.number.isRequired,
+  // handleSetBlocks: PropTypes.func.isRequired,
+  // handleAddBlock: PropTypes.func.isRequired,
+  // handleUpdateFocusedBlock: PropTypes.func.isRequired,
+  // handleFocusLoss: PropTypes.func.isRequired,
+  // isLoading: PropTypes.bool.isRequired,
+  text: PropTypes.object.isRequired,
   showBoth: PropTypes.bool.isRequired,
   showEditor: PropTypes.bool.isRequired,
   showRenderedView: PropTypes.bool.isRequired,

@@ -103,15 +103,9 @@ export const postsReducer = (state = {
     }
 
     case SELECT_POSTS_BY_TAG: {
-      if (action.tag === '') {
-        return {
-          ...state,
-          selected: state.all.filter(p => p.tags.length === 0),
-        };
-      }
       return {
         ...state,
-        selected: state.all.filter(p => p.tags.indexOf(action.tag) !== -1),
+        selected: action.posts
       };
     }
 
