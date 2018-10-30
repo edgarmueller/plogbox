@@ -121,6 +121,7 @@
   },
   "dependencies": {
     "autosuggest-highlight": "^3.1.1",
+    "awesome-debounce-promise": "^1.0.0",
     "axios": "^0.18.0",
     "brace": "^0.11.1",
     "classnames": "^2.2.5",

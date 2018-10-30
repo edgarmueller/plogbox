@@ -5,7 +5,10 @@ import 'brace/mode/markdown';
 import 'brace/theme/solarized_dark';
 import 'brace/keybinding/emacs';
 import AceEditor from 'react-ace';
+import debouncedPromise from 'awesome-debounce-promise';
 import { pushFile } from '../api/dropbox';
+
+const saveFile = debouncedPromise(pushFile, 1000);
 
 const Editor = ({
   post, text
@@ -29,10 +32,7 @@ const Editor = ({
     <AceEditor
       mode="markdown"
       theme="solarized_dark"
-      onChange={(text) => {
-        // TODO
-        pushFile(post.path_lower, text);
-      }}
+      onChange={content => saveFile(post.path_lower, content)}
       name={post.path_lower}
       editorProps={{ $blockScrolling: true }}
       width="70%"
