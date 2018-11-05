@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as action from '../actions/index';
-import RenderedBlock from '../components/RenderedBlock';
+import RenderedView from '../components/RenderedBlock';
 
-export class RenderedBlockContainer extends React.Component {
+export class RenderedViewContainer extends React.Component {
 
   constructor(props) {
     super(props);
@@ -47,7 +47,7 @@ export class RenderedBlockContainer extends React.Component {
   render() {
     const { block, isFocused } = this.props;
 
-    return (<RenderedBlock
+    return (<RenderedView
       block={block}
       isDownloading={this.state.isDownloading}
       imagePath={this.state.imagePath}
@@ -56,7 +56,7 @@ export class RenderedBlockContainer extends React.Component {
   }
 }
 
-RenderedBlockContainer.propTypes = {
+RenderedViewContainer.propTypes = {
   postId: PropTypes.number.isRequired,
   block: PropTypes.shape({
     dialect: PropTypes.string.isRequired,
@@ -67,7 +67,7 @@ RenderedBlockContainer.propTypes = {
   isFocused: PropTypes.bool,
 };
 
-RenderedBlockContainer.defaultProps = {
+RenderedViewContainer.defaultProps = {
   isFocused: false,
 };
 
@@ -94,4 +94,4 @@ export const mapDispatchToProps = dispatch => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(RenderedBlockContainer);
+)(RenderedViewContainer);

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, withStyles } from 'material-ui';
 import BlockEditors from './BlockEditors';
-import RenderedPost from './RenderedPost';
+import RenderedView from './RenderedPost';
 import EditPostButtonBarContainer from '../containers/EditPostButtonBarContainer';
 
 
@@ -54,7 +54,7 @@ class EditComponent extends React.Component {
 
         <Collapse in={showRenderedView} unmountOnExit>
           <div style={{ margin: 'auto', width: '70%' }} className={classes.whiteBackground}>
-            <RenderedPost
+            <RenderedView
               post={post}
               blocks={post.blocks}
               isFetchingBlock={isFetchingBlock}

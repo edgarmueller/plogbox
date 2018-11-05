@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RenderedBlock from '../containers/RenderedBlockContainer';
+import RenderedViewContainer from '../containers/RenderedViewContainer';
 
-const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
+const RenderedViews = ({ post, isFetchingBlock, focusedBlockId }) => (
   <div>
     {
       post.blocks.map(block =>
         (
-          <RenderedBlock
+          <RenderedViewContainer
             key={block.id || block.tempid}
             postId={post.id}
             isFetchingBlock={isFetchingBlock}
@@ -23,7 +23,7 @@ const RenderedPost = ({ post, isFetchingBlock, focusedBlockId }) => (
   </div>
 );
 
-RenderedPost.propTypes = {
+RenderedViews.propTypes = {
   post: PropTypes.shape({
     id: PropTypes.number,
     blocks: PropTypes.arrayOf(
@@ -37,8 +37,8 @@ RenderedPost.propTypes = {
   focusedBlockId: PropTypes.string,
 };
 
-RenderedPost.defaultProps = {
+RenderedViews.defaultProps = {
   focusedBlockId: undefined,
 };
 
-export default RenderedPost;
+export default RenderedView;
