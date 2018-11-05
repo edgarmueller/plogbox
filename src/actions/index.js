@@ -24,7 +24,6 @@ import {
   FETCH_TAGS_SUCCESS,
   FETCH_TAGS_FAILURE,
   ADD_TAG_REQUEST,
-  SELECT_POSTS_BY_TAG,
   SELECT_POST,
 } from '../constants';
 import * as api from '../api';
@@ -92,10 +91,15 @@ export const selectPost = post => ({
 });
 
 export const selectPostsByTag = tag => (dispatch) => {
+
+  dispatch({
+    type: FETCH_POSTS_REQUEST
+  });
+
   dropbox.fetchFiles(tag)
     .then((files) => {
       dispatch({
-        type: SELECT_POSTS_BY_TAG,
+        type: FETCH_POSTS_SUCCESS,
         posts: files,
       });
     });

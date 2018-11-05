@@ -1,14 +1,21 @@
 import React from 'react';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as routerActions from 'react-router-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle } from 'material-ui';
+import { Dialog, DialogTitle, withStyles } from 'material-ui';
 import * as actions from '../actions';
-import { getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage } from '../reducers/index';
+import { getIsFetchingPosts, getIsUpdatingPost, getPostErrorMessage, getSelectedPosts } from '../reducers/index';
 import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
 import PostList from '../components/PostList';
+import { center } from '../common/styles';
+
+const styles = {
+  center
+};
+
+const Loading = withStyles(styles)(({ classes }) => (<p className={classes.center}>Loading posts...</p>));
 
 export class PostListContainer extends React.Component {
   componentWillMount() {
@@ -38,7 +45,15 @@ export class PostListContainer extends React.Component {
     } = this.props;
 
     if (isFetchingPosts || isUpdatingPost) {
-      return (<p style={{ paddingTop: '1em' }}>Loading posts...</p>);
+      return <Loading />;
+    }
+
+    if (_.isEmpty(posts)) {
+      return (
+        <div style={{ position: 'relative', top: '50%', left: '50%' }}>
+          No posts available
+        </div>
+      );
     }
 
     return (
@@ -84,7 +99,7 @@ PostListContainer.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const posts = state.posts.posts.selected;
+  const posts = getSelectedPosts(state);
   return {
     posts,
     errorMessage: getPostErrorMessage(state),

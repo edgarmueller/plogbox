@@ -11,7 +11,6 @@ import {
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
   SELECT_POST,
-  SELECT_POSTS_BY_TAG,
   UPDATE_POST_FAILURE,
   UPDATE_POST_REQUEST,
   UPDATE_POST_SUCCESS,
@@ -21,16 +20,10 @@ import {
 export const postsReducer = (state = {
   all: Immutable.List(),
   // TODO these should be derived
-  selected: Immutable.List(),
+  selected: [],
   selectedPost: undefined,
 }, action) => {
   switch (action.type) {
-    case FETCH_POSTS_SUCCESS:
-      return {
-        ...state,
-        all: Immutable.List(action.posts),
-      };
-
     case CREATE_POST_SUCCESS:
       return {
         ...state,
@@ -102,7 +95,7 @@ export const postsReducer = (state = {
       };
     }
 
-    case SELECT_POSTS_BY_TAG: {
+    case FETCH_POSTS_SUCCESS: {
       return {
         ...state,
         selected: action.posts
@@ -135,7 +128,7 @@ export default combineReducers({
 export const isFetchingPosts = state => state.isFetching;
 export const isUpdating = state => state.isUpdating;
 export const getAllPosts = state => state.posts.all.toArray();
-export const getSelectedPosts = state => state.posts.selected.toArray();
+export const getSelectedPosts = state => state.posts.selected;
 export const getPostErrorMessage = state => state.errorMessage;
 export const findPostById = postId => state =>
   state.posts.all.find(post => Number(post.id) === Number(postId));
