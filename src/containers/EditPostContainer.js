@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui';
+import { IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
+import { Edit, Slideshow } from 'material-ui-icons';
 import {
   getIsFetchingBlock,
   getIsUpdatingPost,
@@ -33,20 +34,14 @@ const NoPosts = withStyles(styles)(({ classes }) => (
   </div>
 ));
 
-// TODO: rename to EditPostContext?
 export class EditPostContainer extends React.Component {
   constructor(props) {
     super(props);
-    console.log('EditPostContaienr props', props);
     this.state = {
       post: props.post,
-      showEditor: false,
       showRenderedView: false,
-      showBoth: true,
     };
-    this.handleSetBlocks = this.handleSetBlocks.bind(this);
     this.handleUpdatePost = this.handleUpdatePost.bind(this);
-    this.handleAddBlock = this.handleAddBlock.bind(this);
     this.handleClickOpenEditor = this.handleClickOpenEditor.bind(this);
     this.handleClickOpenRenderedView = this.handleClickOpenRenderedView.bind(this);
     this.handleClickOpenBoth = this.handleClickOpenBoth.bind(this);
@@ -92,34 +87,13 @@ export class EditPostContainer extends React.Component {
     });
   }
 
-  handleSetBlocks(blocks) {
-    this.setState({
-      post: {
-        ...this.state.post,
-        blocks,
-      },
-    });
-  }
-
   handleUpdatePost(post) {
     this.setState({ post });
   }
 
-  handleAddBlock() {
-    const { post } = this.props;
-    this.handleSetBlocks(this.state.post.blocks.slice().concat({
-      dialect: 'markdown',
-      text: '',
-      index: post.blocks.length,
-      tempid: guid(),
-    }));
-  }
-
   render() {
     const { classes, post } = this.props;
-    const {
-      isLoading, showBoth, showEditor, showRendererView, text
-    } = this.state;
+    const { isLoading, showRenderedView, text } = this.state;
 
     if (isLoading) {
       return (<div>Loading...</div>);
@@ -129,18 +103,40 @@ export class EditPostContainer extends React.Component {
       return <NoPosts />;
     }
 
-    if (showEditor) {
+    const ToolBar = () => (
+      <Toolbar style={{ paddingLeft: 0 }}>
+        <MenuItem onClick={() => this.setState({ showRenderedView: false })}>
+          <IconButton>
+            <Edit />
+          </IconButton>
+        </MenuItem>
+        <MenuItem onClick={() => this.setState({ showRenderedView: true })}>
+          <IconButton>
+            <Slideshow />
+          </IconButton>
+        </MenuItem>
+      </Toolbar>
+    );
+
+    if (showRenderedView) {
       return (
+        <React.Fragment>
+          <ToolBar />
+          <RenderedView
+            text={text}
+          />
+        </React.Fragment>
+      );
+    }
+    return (
+      <React.Fragment>
+        <ToolBar />
         <Editor
           post={post}
           text={text}
         />
-      );
-    } else if (showRendererView) {
-      return (
-        <RenderedView />
-      );
-    }
+      </React.Fragment>
+    );
   }
 }
 
