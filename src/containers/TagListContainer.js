@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import TagList from '../components/TagList';
 import * as actions from '../actions';
 import * as api from '../api';
-import { getAllPosts } from '../reducers';
 
 export class TagListContainer extends React.Component {
 
@@ -21,8 +20,6 @@ export class TagListContainer extends React.Component {
 }
 
 TagListContainer.propTypes = {
-  // addTag: PropTypes.func.isRequired,
-  // fetchTags: PropTypes.func.isRequired,
   selectPostsByTag: PropTypes.func.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string)
 };
@@ -32,7 +29,6 @@ TagListContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  posts: getAllPosts(state),
   tags: state.tags.tags,
 });
 

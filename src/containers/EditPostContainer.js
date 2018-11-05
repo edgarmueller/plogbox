@@ -7,22 +7,13 @@ import {
   getIsFetchingBlock,
   getIsUpdatingPost,
   getPostErrorMessage,
+  getSelectedPost,
 } from '../reducers';
 import withDragDropContext from '../common/withDragDropContext';
 import { fetchFile } from '../api/dropbox';
 import Editor from '../components/Editor';
 import RenderedView from '../components/RenderedView';
 import { center } from '../common/styles';
-
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-  return `${s4() + s4()}-${s4()}-${s4()}-${
-    s4()}-${s4()}${s4()}${s4()}`;
-}
 
 const styles = {
   center
@@ -48,7 +39,7 @@ export class EditPostContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.post !== this.props.post) {
+    if (prevProps.post !== this.props.post && this.props.post !== undefined) {
       this.setState(
         { isLoading: true },
         () =>
@@ -92,7 +83,7 @@ export class EditPostContainer extends React.Component {
   }
 
   render() {
-    const { classes, post } = this.props;
+    const { post } = this.props;
     const { isLoading, showRenderedView, text } = this.state;
 
     if (isLoading) {
@@ -150,7 +141,7 @@ EditPostContainer.defaultProps = {
 };
 
 export const mapStateToProps = state => ({
-  post: state.posts.posts.selectedPost,
+  post: getSelectedPost(state),
   userId: state.auth.userId,
   isFetchingBlock: getIsFetchingBlock(state),
   isUpdatingPost: getIsUpdatingPost(state),

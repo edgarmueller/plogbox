@@ -19,74 +19,73 @@ import {
 
 export const postsReducer = (state = {
   all: Immutable.List(),
-  // TODO these should be derived
   selected: [],
   selectedPost: undefined,
 }, action) => {
   switch (action.type) {
-    case CREATE_POST_SUCCESS:
-      return {
-        ...state,
-        all: state.all.push(action.post),
-      };
+    // case CREATE_POST_SUCCESS:
+    //   return {
+    //     ...state,
+    //     all: state.all.push(action.post),
+    //   };
+    //
+    // case DELETE_POST_SUCCESS: {
+    //   const index = state.all.indexOf(action.post);
+    //   if (index === -1) {
+    //     return state;
+    //   }
+    //   return {
+    //     ...state,
+    //     all: state.all.delete(index),
+    //   };
+    // }
 
-    case DELETE_POST_SUCCESS: {
-      const index = state.all.indexOf(action.post);
-      if (index === -1) {
-        return state;
-      }
-      return {
-        ...state,
-        all: state.all.delete(index),
-      };
-    }
+    // case UPDATE_POST_TITLE: {
+    //   const clonedEditPost = _.clone(state.selectedPost);
+    //   clonedEditPost.title = action.title;
+    //   return {
+    //     ...state,
+    //     selectedPost: clonedEditPost,
+    //   };
+    // }
+    //
+    // // TODO: add test for duplicate tag
+    // case ADD_TAG_SUCCESS:
+    //   return {
+    //     ...state,
+    //     all: state.all.map((post) => {
+    //       if (post.id === action.postId) {
+    //         const clone = _.clone(post);
+    //         if (clone.tags === undefined) {
+    //           clone.tags = [];
+    //         }
+    //         clone.tags.push(action.tag);
+    //         return clone;
+    //       }
+    //       return post;
+    //     }),
+    //   };
 
-    case UPDATE_POST_TITLE: {
-      const clonedEditPost = _.clone(state.selectedPost);
-      clonedEditPost.title = action.title;
-      return {
-        ...state,
-        selectedPost: clonedEditPost,
-      };
-    }
+    // case UPDATE_POST_SUCCESS:
+    //   const idx = state.all.findIndex(p => p === action.post.id);
+    //   return {
+    //     ...state,
+    //     all: state.all.update(idx, () => action.post),
+    //   };
 
-    // TODO: add test for duplicate tag
-    case ADD_TAG_SUCCESS:
-      return {
-        ...state,
-        all: state.all.map((post) => {
-          if (post.id === action.postId) {
-            const clone = _.clone(post);
-            if (clone.tags === undefined) {
-              clone.tags = [];
-            }
-            clone.tags.push(action.tag);
-            return clone;
-          }
-          return post;
-        }),
-      };
-
-    case UPDATE_POST_SUCCESS:
-      const idx = state.all.findIndex(p => p === action.post.id);
-      return {
-        ...state,
-        all: state.all.update(idx, () => action.post),
-      };
-
-    case DELETE_TAG_SUCCESS: {
-      const postIdx = state.all.findIndex(p => p.id === action.postId);
-      const tags = state.all.get(postIdx).tags;
-      return {
-        ...state,
-        all: state.all.update(postIdx, (post) => {
-          const clone = _.clone(post);
-          _.remove(tags, tag => tag.id === action.tagId);
-          clone.tags = tags;
-          return clone;
-        }),
-      };
-    }
+    // case DELETE_TAG_SUCCESS: {
+    //   const postIdx = state.all.findIndex(p => p.id === action.postId);
+    //   const tags = state.all.get(postIdx).tags;
+    //   return {
+    //     ...state,
+    //     all: state.all.update(postIdx, (post) => {
+    //       const clone = _.clone(post);
+    //       _.remove(tags, tag => tag.id === action.tagId);
+    //       clone.tags = tags;
+    //       return clone;
+    //     }),
+    //   };
+    // }
 
     case SELECT_POST: {
       return {
@@ -95,10 +94,18 @@ export const postsReducer = (state = {
       };
     }
 
+    case FETCH_POSTS_REQUEST: {
+      return {
+        ...state,
+        selectedPost: undefined,
+      };
+    }
+
     case FETCH_POSTS_SUCCESS: {
       return {
         ...state,
-        selected: action.posts
+        selected: action.posts,
+        selectedPost: undefined
       };
     }
 
@@ -127,8 +134,8 @@ export default combineReducers({
 
 export const isFetchingPosts = state => state.isFetching;
 export const isUpdating = state => state.isUpdating;
-export const getAllPosts = state => state.posts.all.toArray();
 export const getSelectedPosts = state => state.posts.selected;
+export const getSelectedPost = state => state.posts.selectedPost;
 export const getPostErrorMessage = state => state.errorMessage;
 export const findPostById = postId => state =>
   state.posts.all.find(post => Number(post.id) === Number(postId));
