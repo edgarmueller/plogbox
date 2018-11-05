@@ -1,5 +1,11 @@
 import red from 'material-ui/colors/red';
 
+export const center = {
+  position: 'relative',
+  top: '50%',
+  left: '50%'
+};
+
 export const button = {
   textDecoration: 'none',
   color: '#333435',

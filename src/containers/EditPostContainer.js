@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withStyles } from 'material-ui';
 import {
   getIsFetchingBlock,
   getIsUpdatingPost,
@@ -9,6 +10,8 @@ import {
 import withDragDropContext from '../common/withDragDropContext';
 import { fetchFile } from '../api/dropbox';
 import Editor from '../components/Editor';
+import RenderedView from '../components/RenderedView';
+import { center } from '../common/styles';
 
 function guid() {
   function s4() {
@@ -19,6 +22,16 @@ function guid() {
   return `${s4() + s4()}-${s4()}-${s4()}-${
     s4()}-${s4()}${s4()}${s4()}`;
 }
+
+const styles = {
+  center
+};
+
+const NoPosts = withStyles(styles)(({ classes }) => (
+  <div className={classes.center}>
+    No post available
+  </div>
+));
 
 // TODO: rename to EditPostContext?
 export class EditPostContainer extends React.Component {
@@ -103,7 +116,7 @@ export class EditPostContainer extends React.Component {
   }
 
   render() {
-    const { post } = this.props;
+    const { classes, post } = this.props;
     const {
       isLoading, showBoth, showEditor, showRendererView, text
     } = this.state;
@@ -112,17 +125,22 @@ export class EditPostContainer extends React.Component {
       return (<div>Loading...</div>);
     }
 
-
     if (post === undefined) {
-      return (<div>No post available</div>);
+      return <NoPosts />;
     }
 
-    return (
-      <Editor
-        post={post}
-        text={text}
-      />
-    );
+    if (showEditor) {
+      return (
+        <Editor
+          post={post}
+          text={text}
+        />
+      );
+    } else if (showRendererView) {
+      return (
+        <RenderedView />
+      );
+    }
   }
 }
 
