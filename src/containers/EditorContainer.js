@@ -28,7 +28,7 @@ const NoPosts = withStyles(styles)(({ classes }) => (
   </div>
 ));
 
-export class EditPostContainer extends React.Component {
+export class EditorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -148,11 +148,11 @@ export class EditPostContainer extends React.Component {
 }
 
 
-EditPostContainer.propTypes = {
+EditorContainer.propTypes = {
   post: PropTypes.object,
 };
 
-EditPostContainer.defaultProps = {
+EditorContainer.defaultProps = {
   post: undefined,
 };
 
@@ -167,4 +167,4 @@ export const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   null,
-)(withDragDropContext(EditPostContainer));
+)(withDragDropContext(EditorContainer));

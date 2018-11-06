@@ -6,7 +6,7 @@ import { Grid, withStyles } from 'material-ui';
 import withDragDropContext from '../common/withDragDropContext';
 import Sidebar from '../components/Sidebar';
 import PostListContainer from '../containers/PostListContainer';
-import EditPostContainer from '../containers/EditPostContainer';
+import EditorContainer from '../containers/EditorContainer';
 
 const drawerWidth = 240;
 
@@ -48,7 +48,7 @@ export const MainPage = ({ classes, isAuthenticating }) => {
             <PostListContainer />
           </Grid>
           <Grid item xs={9}>
-            <EditPostContainer />
+            <EditorContainer />
           </Grid>
         </Grid>
       </main>
