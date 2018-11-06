@@ -33,6 +33,7 @@ class TagList extends React.Component {
               <div>No tags found</div>
               : tags.map(tag => (
                 <ListItem
+                  key={tag}
                   button
                   onClick={() => onSelect(tag)}
                 >
