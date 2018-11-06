@@ -5,13 +5,9 @@ import 'brace/mode/markdown';
 import 'brace/theme/solarized_dark';
 import 'brace/keybinding/emacs';
 import AceEditor from 'react-ace';
-import debouncedPromise from 'awesome-debounce-promise';
-import { pushFile } from '../api/dropbox';
-
-const saveFile = debouncedPromise(pushFile, 1000);
 
 const Editor = ({
-  post, text
+  post, onChange, text
 }) => {
   // if (block.dialect === 'image') {
   //   return (
@@ -32,7 +28,9 @@ const Editor = ({
     <AceEditor
       mode="markdown"
       theme="solarized_dark"
-      onChange={content => saveFile(post.path_lower, content)}
+      onChange={(content) => {
+        onChange(content);
+      }}
       name={post.path_lower}
       editorProps={{ $blockScrolling: true }}
       width="70%"
@@ -50,10 +48,12 @@ Editor.propTypes = {
   post: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   text: PropTypes.string,
+  onChange: PropTypes.func
 };
 
 Editor.defaultProps = {
-  text: ''
+  text: '',
+  onChange: () => {}
 };
 
 export default Editor;

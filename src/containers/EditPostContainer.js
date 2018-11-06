@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
 import { Edit, Slideshow } from 'material-ui-icons';
+import debouncedPromise from 'awesome-debounce-promise';
 import {
   getIsFetchingBlock,
   getIsUpdatingPost,
@@ -10,10 +11,12 @@ import {
   getSelectedPost,
 } from '../reducers';
 import withDragDropContext from '../common/withDragDropContext';
-import { fetchFile } from '../api/dropbox';
+import { fetchFile, pushFile } from '../api/dropbox';
 import Editor from '../components/Editor';
 import RenderedView from '../components/RenderedView';
 import { center } from '../common/styles';
+
+const saveFile = debouncedPromise(pushFile, 1000);
 
 const styles = {
   center
@@ -31,6 +34,7 @@ export class EditPostContainer extends React.Component {
     this.state = {
       post: props.post,
       showRenderedView: false,
+      isSaving: false
     };
     this.handleUpdatePost = this.handleUpdatePost.bind(this);
     this.handleClickOpenEditor = this.handleClickOpenEditor.bind(this);
@@ -94,7 +98,7 @@ export class EditPostContainer extends React.Component {
       return <NoPosts />;
     }
 
-    const ToolBar = () => (
+    const ToolBar = ({ isSaving }) => (
       <Toolbar style={{ paddingLeft: 0 }}>
         <MenuItem onClick={() => this.setState({ showRenderedView: false })}>
           <IconButton>
@@ -106,6 +110,9 @@ export class EditPostContainer extends React.Component {
             <Slideshow />
           </IconButton>
         </MenuItem>
+        {
+          isSaving ? 'Saving...' : null
+        }
       </Toolbar>
     );
 
@@ -121,10 +128,19 @@ export class EditPostContainer extends React.Component {
     }
     return (
       <React.Fragment>
-        <ToolBar />
+        <ToolBar isSaving={this.state.isSaving} />
         <Editor
           post={post}
           text={text}
+          onChange={(changedText) => {
+            this.setState(
+              { isSaving: true },
+              () =>
+                saveFile(post.path_lower, changedText)
+                  .then(() => this.setState({ isSaving: false }))
+            );
+            this.setState({ text: changedText });
+          }}
         />
       </React.Fragment>
     );
