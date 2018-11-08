@@ -4,6 +4,7 @@ import ContentAdd from 'material-ui-icons/Add';
 import { Button, List, ListItem, withStyles } from 'material-ui';
 import * as _ from 'lodash';
 import { appBar, card, cardContent, header } from '../common/styles';
+import InputDialog from './InputDialog';
 
 const styles = () => ({
   appBar,
@@ -58,13 +59,22 @@ const emptyListStyles = {
 
 const NoPosts = withStyles(emptyListStyles)(EmptyList);
 
-export const PostList =
-  ({
-    posts,
-    addPost,
-    classes,
-    selectPost
-  }) => {
+export class PostList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false
+    };
+  }
+
+  render() {
+    const {
+      tag,
+      posts,
+      addPost,
+      classes,
+      selectPost
+    } = this.props;
 
     if (_.isEmpty(posts)) {
       return (
@@ -99,16 +109,29 @@ export const PostList =
         <Button
           variant="fab"
           className={classes.floatingButtonStyle}
-          onClick={addPost}
+          onClick={() => this.setState({ open: true })}
           color="secondary"
         >
           <ContentAdd />
         </Button>
+        <InputDialog
+          open={this.state.open}
+          handleClose={() => this.setState({ open: false })}
+          title="Create new post"
+          contentText="Please enter a new for the new post"
+          label="Post name"
+          confirmButtonText="Create post"
+          onConfirm={(postName) => {
+            addPost(tag, postName);
+          }}
+        />
       </div>
     );
-  };
+  }
+}
 
 PostList.propTypes = {
+  tag: PropTypes.string.isRequired,
   posts: PropTypes.arrayOf(PropTypes.object),
   addPost: PropTypes.func.isRequired,
   // deletePost: PropTypes.func.isRequired,

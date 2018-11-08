@@ -101,25 +101,26 @@ export const selectPostsByTag = tag => (dispatch) => {
       dispatch({
         type: FETCH_POSTS_SUCCESS,
         posts: files,
+        tag
       });
     });
 };
 
-export const createPost = post => dispatch =>
-  api.createPost(post)
-    .then(
-      (resp) => {
-        const createdPost = resp.data.data;
-        dispatch({
-          type: CREATE_POST_SUCCESS,
-          post: createdPost,
-        });
-        return createdPost;
-      },
-      (error) => {
-        errorHandler(dispatch, error, CREATE_POST_FAILURE);
-      },
-    );
+// export const createPost = tag => post => dispatch =>
+//   dropbox.createPost(tag, post)
+//     .then(
+//       (file) => {
+//         const createdPost = resp.data.data;
+//         dispatch({
+//           type: CREATE_POST_SUCCESS,
+//           post: createdPost,
+//         });
+//         return createdPost;
+//       },
+//       (error) => {
+//         errorHandler(dispatch, error, CREATE_POST_FAILURE);
+//       },
+//     );
 
 // TODO: selectedPost must contain blocks
 export const updatePost = selectedPost => (dispatch, getState) => {

@@ -25,6 +25,7 @@ export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts
 export const getIsUpdatingPost = state => fromPosts.isUpdating(state.posts);
 export const getSelectedPosts = state => fromPosts.getSelectedPosts(state.posts);
 export const getSelectedPost = state => fromPosts.getSelectedPost(state.posts);
+export const getCurrentTag = state => fromPosts.getCurrentTag(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
 
 export const getIsFetchingBlock = state => fromBlocks.isFetchingBlock(state.blocks);

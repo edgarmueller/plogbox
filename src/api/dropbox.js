@@ -40,6 +40,20 @@ export const testToken = () =>
       () => false
     );
 
+export const createPost = (tag, fileName) =>
+  dbx.fileRequestsCreate({
+    title: fileName,
+    destination: `/${tag}`,
+    open: false
+  });
+
+// export const createPost = (tag, fileName, file) =>
+//   dbx.filesUpload()
+//     title: fileName,
+//     destination: `/${tag}`,
+//     open: false
+//   });
+
 export const createTag = tag => dbx.filesCreateFolderV2({ path: `/${tag}`, autorename: true });
 
 export const fetchTags = () => dbx.filesListFolder({ path: '' })

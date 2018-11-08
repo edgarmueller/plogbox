@@ -15,6 +15,7 @@ export const postsReducer = (state = {
   all: Immutable.List(),
   selected: [],
   selectedPost: undefined,
+  tag: undefined
 }, action) => {
   switch (action.type) {
 
@@ -36,7 +37,8 @@ export const postsReducer = (state = {
       return {
         ...state,
         selected: action.posts,
-        selectedPost: undefined
+        selectedPost: undefined,
+        tag: action.tag
       };
     }
 
@@ -67,6 +69,7 @@ export const isFetchingPosts = state => state.isFetching;
 export const isUpdating = state => state.isUpdating;
 export const getSelectedPosts = state => state.posts.selected;
 export const getSelectedPost = state => state.posts.selectedPost;
+export const getCurrentTag = state => state.posts.tag;
 export const getPostErrorMessage = state => state.errorMessage;
 export const findPostById = postId => state =>
   state.posts.all.find(post => Number(post.id) === Number(postId));
