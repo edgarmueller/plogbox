@@ -16,10 +16,12 @@ const styles = () => ({
     bottom: 0,
     overflow: 'auto',
     padding: '10px 10px 10px 30px',
-    color: '#444',
     fontFamily: "'Eczar', serif",
-    fontSize: '16px',
-    lineHeight: '1.5em'
+    fontSize: '1.25em',
+    lineHeight: '1.5em',
+    backgroundColor: '#FEFAD7',
+    color: '#4c4a37',
+    border: '1px solid #002733'
   }
 });
 

@@ -7,7 +7,7 @@ import 'brace/keybinding/emacs';
 import AceEditor from 'react-ace';
 
 const Editor = ({
-  post, onChange, text
+  post, onChange, text, width
 }) => {
   // if (block.dialect === 'image') {
   //   return (
@@ -33,7 +33,7 @@ const Editor = ({
       }}
       name={post.path_lower}
       editorProps={{ $blockScrolling: true }}
-      width="70%"
+      width={width}
       value={text}
       minLines={2}
       maxLines={Infinity}

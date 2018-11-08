@@ -134,18 +134,21 @@ export class EditorContainer extends React.Component {
       return (
         <React.Fragment>
           <ToolBar isSaving={this.state.isSaving} />
-          <Grid container>
-            <Grid item xs={6}>
-              <Editor
-                post={post}
-                text={text}
-                onChange={this.handleOnChange(post)}
-              />
+          <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Editor
+                  post={post}
+                  text={text}
+                  width={'100%'}
+                  onChange={this.handleOnChange(post)}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <RenderedView text={text} />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <RenderedView text={text} />
-            </Grid>
-          </Grid>
+          </div>
         </React.Fragment>
       );
     }
@@ -153,11 +156,14 @@ export class EditorContainer extends React.Component {
     return (
       <React.Fragment>
         <ToolBar isSaving={this.state.isSaving} />
-        <Editor
-          post={post}
-          text={text}
-          onChange={this.handleOnChange(post)}
-        />
+        <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
+          <Editor
+            post={post}
+            text={text}
+            width={'75%'}
+            onChange={this.handleOnChange(post)}
+          />
+        </div>
       </React.Fragment>
     );
   }
