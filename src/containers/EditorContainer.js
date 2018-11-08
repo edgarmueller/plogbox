@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
-import { Edit, Slideshow } from 'material-ui-icons';
+import { Grid, IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
+import { Edit, Slideshow, ViewColumn as VerticalSplit } from 'material-ui-icons';
 import debouncedPromise from 'awesome-debounce-promise';
 import {
   getIsUpdatingPost,
@@ -31,14 +31,9 @@ export class EditorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      post: props.post,
       showRenderedView: false,
       isSaving: false
     };
-    this.handleUpdatePost = this.handleUpdatePost.bind(this);
-    this.handleClickOpenEditor = this.handleClickOpenEditor.bind(this);
-    this.handleClickOpenRenderedView = this.handleClickOpenRenderedView.bind(this);
-    this.handleClickOpenBoth = this.handleClickOpenBoth.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -57,37 +52,45 @@ export class EditorContainer extends React.Component {
     }
   }
 
-  handleClickOpenEditor() {
+  handleClickShowEditorView = () => {
     this.setState({
-      showEditor: true,
-      showRenderedView: false,
       showBoth: false,
+      showRenderedView: false,
     });
   }
 
-  handleClickOpenRenderedView() {
+  handleClickShowRenderedView = () => {
     this.setState({
-      showEditor: false,
+      showBoth: false,
       showRenderedView: true,
-      showBoth: false,
     });
   }
 
-  handleClickOpenBoth() {
+  handleClickShowBoth = () => {
     this.setState({
-      showEditor: false,
-      showRenderedView: false,
       showBoth: true,
+      showRenderedView: false,
     });
   }
 
-  handleUpdatePost(post) {
-    this.setState({ post });
+  handleOnChange = (post) => (changedText) => {
+    this.setState(
+      { isSaving: true },
+      () =>
+        saveFile(post.path_lower, changedText)
+          .then(() => this.setState({ isSaving: false }))
+    );
+    this.setState({ text: changedText });
   }
 
   render() {
     const { post } = this.props;
-    const { isLoading, showRenderedView, text } = this.state;
+    const {
+      isLoading,
+      showRenderedView,
+      showBoth,
+      text
+    } = this.state;
 
     if (isLoading) {
       return (<div>Loading...</div>);
@@ -99,14 +102,19 @@ export class EditorContainer extends React.Component {
 
     const ToolBar = ({ isSaving }) => (
       <Toolbar style={{ paddingLeft: 0 }}>
-        <MenuItem onClick={() => this.setState({ showRenderedView: false })}>
+        <MenuItem onClick={this.handleClickShowEditorView}>
           <IconButton>
             <Edit />
           </IconButton>
         </MenuItem>
-        <MenuItem onClick={() => this.setState({ showRenderedView: true })}>
+        <MenuItem onClick={this.handleClickShowRenderedView}>
           <IconButton>
             <Slideshow />
+          </IconButton>
+        </MenuItem>
+        <MenuItem onClick={this.handleClickShowBoth}>
+          <IconButton>
+            <VerticalSplit />
           </IconButton>
         </MenuItem>
         {
@@ -119,27 +127,36 @@ export class EditorContainer extends React.Component {
       return (
         <React.Fragment>
           <ToolBar />
-          <RenderedView
-            text={text}
-          />
+          <RenderedView text={text} />
+        </React.Fragment>
+      );
+    } else if (showBoth) {
+      return (
+        <React.Fragment>
+          <ToolBar isSaving={this.state.isSaving} />
+          <Grid container>
+            <Grid item xs={6}>
+              <Editor
+                post={post}
+                text={text}
+                onChange={this.handleOnChange(post)}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <RenderedView text={text} />
+            </Grid>
+          </Grid>
         </React.Fragment>
       );
     }
+
     return (
       <React.Fragment>
         <ToolBar isSaving={this.state.isSaving} />
         <Editor
           post={post}
           text={text}
-          onChange={(changedText) => {
-            this.setState(
-              { isSaving: true },
-              () =>
-                saveFile(post.path_lower, changedText)
-                  .then(() => this.setState({ isSaving: false }))
-            );
-            this.setState({ text: changedText });
-          }}
+          onChange={this.handleOnChange(post)}
         />
       </React.Fragment>
     );
