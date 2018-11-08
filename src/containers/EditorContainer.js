@@ -5,7 +5,6 @@ import { IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
 import { Edit, Slideshow } from 'material-ui-icons';
 import debouncedPromise from 'awesome-debounce-promise';
 import {
-  getIsFetchingBlock,
   getIsUpdatingPost,
   getPostErrorMessage,
   getSelectedPost,
@@ -159,7 +158,6 @@ EditorContainer.defaultProps = {
 export const mapStateToProps = state => ({
   post: getSelectedPost(state),
   userId: state.auth.userId,
-  isFetchingBlock: getIsFetchingBlock(state),
   isUpdatingPost: getIsUpdatingPost(state),
   errorMessage: getPostErrorMessage(state),
 });

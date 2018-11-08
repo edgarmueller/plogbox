@@ -1,8 +1,6 @@
 import * as _ from 'lodash';
 import { routerActions } from 'react-router-redux';
 import {
-  CREATE_POST_FAILURE,
-  CREATE_POST_SUCCESS,
   DELETE_POST_SUCCESS,
   FETCH_POSTS_SUCCESS,
   FETCH_POSTS_FAILURE,
@@ -105,22 +103,6 @@ export const selectPostsByTag = tag => (dispatch) => {
       });
     });
 };
-
-// export const createPost = tag => post => dispatch =>
-//   dropbox.createPost(tag, post)
-//     .then(
-//       (file) => {
-//         const createdPost = resp.data.data;
-//         dispatch({
-//           type: CREATE_POST_SUCCESS,
-//           post: createdPost,
-//         });
-//         return createdPost;
-//       },
-//       (error) => {
-//         errorHandler(dispatch, error, CREATE_POST_FAILURE);
-//       },
-//     );
 
 // TODO: selectedPost must contain blocks
 export const updatePost = selectedPost => (dispatch, getState) => {

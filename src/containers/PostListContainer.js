@@ -16,14 +16,21 @@ import {
 import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
 import PostList from '../components/PostList';
 import { center } from '../common/styles';
-import * as CommonPropTypes from '../common/CommonPropTypes';
 import { pushFile } from '../api/dropbox';
 
 const styles = {
   center
 };
 
-const Loading = withStyles(styles)(({ classes }) => (<p className={classes.center}>Loading posts...</p>));
+const NoPosts = withStyles(styles)(({ classes }) => (
+  <div className={classes.center}>
+    No posts available
+  </div>
+));
+
+const Loading = withStyles(styles)(({ classes }) => (
+  <p className={classes.center}>Loading posts...</p>
+));
 
 export class PostListContainer extends React.Component {
   componentWillMount() {
@@ -31,10 +38,8 @@ export class PostListContainer extends React.Component {
     localStorage.removeItem('selectedPostId');
   }
 
-
   render() {
     const {
-      classes,
       tag,
       posts,
       isFetchingPosts,
@@ -49,11 +54,7 @@ export class PostListContainer extends React.Component {
     }
 
     if (_.isEmpty(posts)) {
-      return (
-        <div className={classes.center}>
-          No posts available
-        </div>
-      );
+      return (<NoPosts />);
     }
 
     return (
@@ -72,8 +73,7 @@ export class PostListContainer extends React.Component {
 }
 
 PostListContainer.propTypes = {
-  classes: CommonPropTypes.classes.isRequired,
-  tag: PropTypes.string.isRequired,
+  tag: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object),
   isFetchingPosts: PropTypes.bool,
   addPost: PropTypes.func.isRequired,
@@ -83,6 +83,7 @@ PostListContainer.propTypes = {
 };
 
 PostListContainer.defaultProps = {
+  tag: undefined,
   posts: [],
   isFetchingPosts: false,
 };
