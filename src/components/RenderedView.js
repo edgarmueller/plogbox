@@ -15,13 +15,13 @@ const styles = () => ({
     left: '50%',
     bottom: 0,
     overflow: 'auto',
-    padding: '10px 10px 10px 30px',
+    padding: '10px 10px 10px 10px',
     fontFamily: "'Eczar', serif",
     fontSize: '1.25em',
     lineHeight: '1.5em',
     backgroundColor: '#FEFAD7',
     color: '#4c4a37',
-    border: '1px solid #002733'
+    border: '1px solid rgba(0, 0, 0, 0.12)'
   }
 });
 

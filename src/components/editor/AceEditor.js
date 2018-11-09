@@ -4,9 +4,9 @@ import 'brace';
 import 'brace/mode/markdown';
 import 'brace/theme/solarized_dark';
 import 'brace/keybinding/emacs';
-import AceEditor from 'react-ace';
+import ReactAceEditor from 'react-ace';
 
-const Editor = ({
+const AceEditor = ({
   post, onChange, text, width
 }) => {
   // if (block.dialect === 'image') {
@@ -25,7 +25,7 @@ const Editor = ({
   // }
 
   return (
-    <AceEditor
+    <ReactAceEditor
       mode="markdown"
       theme="solarized_dark"
       onChange={(content) => {
@@ -43,7 +43,7 @@ const Editor = ({
   );
 };
 
-Editor.propTypes = {
+AceEditor.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   post: PropTypes.object.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
@@ -51,9 +51,9 @@ Editor.propTypes = {
   onChange: PropTypes.func
 };
 
-Editor.defaultProps = {
+AceEditor.defaultProps = {
   text: '',
   onChange: () => {}
 };
 
-export default Editor;
+export default AceEditor;

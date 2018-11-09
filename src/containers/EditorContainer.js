@@ -1,38 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, IconButton, MenuItem, Toolbar, withStyles } from 'material-ui';
-import { Edit, Slideshow, ViewColumn as VerticalSplit } from 'material-ui-icons';
 import debouncedPromise from 'awesome-debounce-promise';
-import {
-  getIsUpdatingPost,
-  getPostErrorMessage,
-  getSelectedPost,
-} from '../reducers';
+import { getIsUpdatingPost, getPostErrorMessage, getSelectedPost, } from '../reducers';
 import withDragDropContext from '../common/withDragDropContext';
 import { fetchFile, pushFile } from '../api/dropbox';
-import Editor from '../components/Editor';
-import RenderedView from '../components/RenderedView';
-import { center } from '../common/styles';
+import Editor from '../components/editor/Editor';
+import * as CommonPropTypes from '../common/CommonPropTypes';
 
 const saveFile = debouncedPromise(pushFile, 1000);
-
-const styles = {
-  center
-};
-
-const NoPosts = withStyles(styles)(({ classes }) => (
-  <div className={classes.center}>
-    No post available
-  </div>
-));
 
 export class EditorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showRenderedView: false,
-      isSaving: false
+      displayMode: 'editor',
+      isLoading: false,
+      isSaving: false,
+      text: ''
     };
   }
 
@@ -53,27 +37,18 @@ export class EditorContainer extends React.Component {
   }
 
   handleClickShowEditorView = () => {
-    this.setState({
-      showBoth: false,
-      showRenderedView: false,
-    });
+    this.setState({ displayMode: 'editor' });
   }
 
   handleClickShowRenderedView = () => {
-    this.setState({
-      showBoth: false,
-      showRenderedView: true,
-    });
+    this.setState({ displayMode: 'view' });
   }
 
   handleClickShowBoth = () => {
-    this.setState({
-      showBoth: true,
-      showRenderedView: false,
-    });
+    this.setState({ displayMode: 'both' });
   }
 
-  handleOnChange = (post) => (changedText) => {
+  handleOnChange = post => (changedText) => {
     this.setState(
       { isSaving: true },
       () =>
@@ -85,93 +60,29 @@ export class EditorContainer extends React.Component {
 
   render() {
     const { post } = this.props;
+
     const {
       isLoading,
-      showRenderedView,
-      showBoth,
+      isSaving,
+      displayMode,
       text
     } = this.state;
 
-    if (isLoading) {
-      return (<div>Loading...</div>);
-    }
-
-    if (post === undefined) {
-      return <NoPosts />;
-    }
-
-    const ToolBar = ({ isSaving }) => (
-      <Toolbar style={{ paddingLeft: 0 }}>
-        <MenuItem onClick={this.handleClickShowEditorView}>
-          <IconButton>
-            <Edit />
-          </IconButton>
-        </MenuItem>
-        <MenuItem onClick={this.handleClickShowRenderedView}>
-          <IconButton>
-            <Slideshow />
-          </IconButton>
-        </MenuItem>
-        <MenuItem onClick={this.handleClickShowBoth}>
-          <IconButton>
-            <VerticalSplit />
-          </IconButton>
-        </MenuItem>
-        {
-          isSaving ? 'Saving...' : null
-        }
-      </Toolbar>
-    );
-
-    if (showRenderedView) {
-      return (
-        <React.Fragment>
-          <ToolBar />
-          <RenderedView text={text} />
-        </React.Fragment>
-      );
-    } else if (showBoth) {
-      return (
-        <React.Fragment>
-          <ToolBar isSaving={this.state.isSaving} />
-          <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-            <Grid container>
-              <Grid item xs={6}>
-                <Editor
-                  post={post}
-                  text={text}
-                  width={'100%'}
-                  onChange={this.handleOnChange(post)}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <RenderedView text={text} />
-              </Grid>
-            </Grid>
-          </div>
-        </React.Fragment>
-      );
-    }
-
     return (
-      <React.Fragment>
-        <ToolBar isSaving={this.state.isSaving} />
-        <div style={{ paddingLeft: '2em', paddingRight: '2em' }}>
-          <Editor
-            post={post}
-            text={text}
-            width={'75%'}
-            onChange={this.handleOnChange(post)}
-          />
-        </div>
-      </React.Fragment>
+      <Editor
+        handleOnChange={this.handleOnChange}
+        post={post}
+        displayMode={displayMode}
+        isLoading={isLoading}
+        isSaving={isSaving}
+        text={text}
+      />
     );
   }
 }
 
-
 EditorContainer.propTypes = {
-  post: PropTypes.object,
+  post: CommonPropTypes.post,
 };
 
 EditorContainer.defaultProps = {
