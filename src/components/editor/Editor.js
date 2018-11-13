@@ -32,15 +32,15 @@ const EditorLayout = withStyles(styles)(({ classes, children }) => (
 ));
 
 
-const ToolBar = ({ isSaving }) => (
+const ToolBar = ({ isSaving, toolbarHandlers }) => (
   <div style={{ display: 'flex', flexDirection: 'column', padding: '1em' }}>
-    <IconButton onClick={this.handleClickShowEditorView}>
+    <IconButton onClick={toolbarHandlers.handleClickShowEditorView}>
       <Edit />
     </IconButton>
-    <IconButton onClick={this.handleClickShowRenderedView}>
+    <IconButton onClick={toolbarHandlers.handleClickShowRenderedView}>
       <Slideshow />
     </IconButton>
-    <IconButton onClick={this.handleClickShowBoth}>
+    <IconButton onClick={toolbarHandlers.handleClickShowBoth}>
       <VerticalSplit />
     </IconButton>
     {
@@ -50,7 +50,12 @@ const ToolBar = ({ isSaving }) => (
 );
 
 ToolBar.propTypes = {
-  isSaving: PropTypes.bool
+  isSaving: PropTypes.bool,
+  toolbarHandlers: PropTypes.shape({
+    handleClickShowBoth: PropTypes.func.isRequired,
+    handleClickShowRendererView: PropTypes.func.isRequired,
+    handleClickShowEditorView: PropTypes.func.isRequired
+  }).isRequired,
 };
 
 ToolBar.defaultProps = {
@@ -75,7 +80,7 @@ LoadingGuard.propTypes = {
 };
 
 const Editor = ({
-  classes, displayMode, handleOnChange, isLoading, isSaving, post, text
+  classes, displayMode, handleOnChange, isLoading, isSaving, post, text, toolbarHandlers
 }) => {
 
   if (post === undefined) {
@@ -85,7 +90,7 @@ const Editor = ({
   if (displayMode === 'view') {
     return (
       <EditorLayout>
-        <ToolBar />
+        <ToolBar toolbarHandlers={toolbarHandlers} />
         <div className={classes.singlePane}>
           <RenderedView text={text} />
         </div>
@@ -94,7 +99,10 @@ const Editor = ({
   } else if (displayMode === 'both') {
     return (
       <EditorLayout>
-        <ToolBar isSaving={isSaving} />
+        <ToolBar
+          toolbarHandlers={toolbarHandlers}
+          isSaving={isSaving}
+        />
         <div className={classes.bothPanes}>
           <Grid container>
             <Grid item xs={6}>
@@ -116,7 +124,10 @@ const Editor = ({
 
   return (
     <EditorLayout>
-      <ToolBar isSaving={isSaving} />
+      <ToolBar
+        toolbarHandlers={toolbarHandlers}
+        isSaving={isSaving}
+      />
       <div className={classes.singlePane}>
         <LoadingGuard isLoading={isLoading}>
           <AceEditor
@@ -132,6 +143,11 @@ const Editor = ({
 };
 
 Editor.propTypes = {
+  toolbarHandlers: PropTypes.shape({
+    handleClickShowBoth: PropTypes.func.isRequired,
+    handleClickShowRendererView: PropTypes.func.isRequired,
+    handleClickShowEditorView: PropTypes.func.isRequired
+  }).isRequired,
   classes: PropTypes.object.isRequired,
   displayMode: PropTypes.oneOf(['editor', 'view', 'both']).isRequired,
   handleOnChange: PropTypes.func.isRequired,

@@ -70,6 +70,11 @@ export class EditorContainer extends React.Component {
 
     return (
       <Editor
+        toolbarHandlers={{
+          handleClickShowBoth: this.handleClickShowBoth,
+          handleClickShowRenderedView: this.handleClickShowRenderedView,
+          handleClickShowEditorView: this.handleClickShowEditorView
+        }}
         handleOnChange={this.handleOnChange}
         post={post}
         displayMode={displayMode}
