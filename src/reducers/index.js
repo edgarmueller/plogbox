@@ -14,7 +14,6 @@ const app = combineReducers({
 
 export default app;
 
-export const findPostById = postId => state => fromPosts.findPostById(postId)(state.posts);
 export const getIsFetchingPosts = state => fromPosts.isFetchingPosts(state.posts);
 export const getIsUpdatingPost = state => fromPosts.isUpdating(state.posts);
 export const getSelectedPosts = state => fromPosts.getSelectedPosts(state.posts);

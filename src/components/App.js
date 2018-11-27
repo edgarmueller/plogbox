@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router';
-import { MuiThemeProvider } from 'material-ui';
-import { createMuiTheme } from 'material-ui/styles';
-import 'react-dates/initialize';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import NotFoundPage from '../pages/NotFoundPage';
 import DropboxReceiver from './DropboxReceiver';
 import MainPage from '../pages/MainPage';
@@ -22,7 +21,7 @@ const ConnectedSwitch = connect(state => ({
 
 export const App = () => (
   <MuiThemeProvider theme={theme}>
-    <div id="container">
+    {/*<div id="container">*/}
       <ConnectedSwitch>
         <Route
           exact
@@ -37,7 +36,7 @@ export const App = () => (
         <Route path="/" component={MainPage} />
         <Route path="*" component={NotFoundPage} />
       </ConnectedSwitch>
-    </div>
+    {/*</div>*/}
   </MuiThemeProvider>
 );
 

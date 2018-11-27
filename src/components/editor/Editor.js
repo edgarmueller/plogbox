@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, IconButton } from 'material-ui';
-import { withStyles } from 'material-ui/styles';
-import { Edit, Slideshow, ViewColumn as VerticalSplit } from 'material-ui-icons';
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Edit, Slideshow, ViewColumn as VerticalSplit } from '@material-ui/icons';
 import RenderedView from '../../components/RenderedView';
 import { center } from '../../common/styles';
 import AceEditor from './AceEditor';

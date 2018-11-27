@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import debouncedPromise from 'awesome-debounce-promise';
 import { getIsUpdatingPost, getPostErrorMessage, getSelectedPost, } from '../reducers';
-import withDragDropContext from '../common/withDragDropContext';
 import { fetchFile, pushFile } from '../api/dropbox';
 import Editor from '../components/editor/Editor';
 import * as CommonPropTypes from '../common/CommonPropTypes';
@@ -104,4 +103,4 @@ export const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   null,
-)(withDragDropContext(EditorContainer));
+)(EditorContainer);

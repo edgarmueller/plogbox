@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as routerActions from 'react-router-redux';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui';
+import withStyles from '@material-ui/core/styles/withStyles';
 import * as actions from '../actions';
 import {
   getCurrentTag,

@@ -1,4 +1,3 @@
-import * as Immutable from 'immutable';
 import { combineReducers } from 'redux';
 import { createFetchingProgressReducer } from './common';
 import {
@@ -12,7 +11,7 @@ import {
 } from '../constants';
 
 export const postsReducer = (state = {
-  all: Immutable.List(),
+  all: [],
   selected: [],
   selectedPost: undefined,
   tag: undefined
@@ -71,7 +70,5 @@ export const getSelectedPosts = state => state.posts.selected;
 export const getSelectedPost = state => state.posts.selectedPost;
 export const getCurrentTag = state => state.posts.tag;
 export const getPostErrorMessage = state => state.errorMessage;
-export const findPostById = postId => state =>
-  state.posts.all.find(post => Number(post.id) === Number(postId));
 export const findPostByTag = tag => state =>
   state.posts.all.find(post => post.tags.indexOf(tag) !== -1);

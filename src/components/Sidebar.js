@@ -1,7 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Drawer, withStyles } from 'material-ui';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Drawer from '@material-ui/core/Drawer';
 import Radium from 'radium';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';

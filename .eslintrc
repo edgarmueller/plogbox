@@ -1,17 +1,3 @@
 {
-  "extends": "airbnb",
-  "parser": "babel-eslint",
-  "rules": {
-    "func-names": ["error", "never"],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/no-multi-comp": [1, { "ignoreStateless": true }],
-    "linebreak-style": "off",
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "import/no-named-as-default": "off",
-    "comma-dangle": "off"
-  },
-  "env": {
-    "browser": true,
-    "jest": true
-  }
+  "extends": "react-app"
 }

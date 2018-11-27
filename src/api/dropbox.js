@@ -3,7 +3,7 @@ import { Dropbox } from 'dropbox';
 export const DROPBOX_TOKEN_NAME = 'plog.dropbox.token';
 
 const dbx = new Dropbox({
-  clientId: process.env.CLIENT_ID,
+  clientId: process.env.REACT_APP_CLIENT_ID,
   accessToken: localStorage.getItem(DROPBOX_TOKEN_NAME)
 });
 

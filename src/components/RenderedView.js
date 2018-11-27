@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui';
+import withStyles from '@material-ui/core/styles/withStyles';
 import newFileIcon from './newfile.svg';
 
 const md = require('markdown-it')();

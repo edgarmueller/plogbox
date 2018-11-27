@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import dotenv from 'dotenv';
-
 import configureStore from './store/configureStore';
 import Root from './components/Root';
 import registerServiceWorker from './registerServiceWorker';
 import { DROPBOX_TOKEN_NAME, getUser, testToken } from './api/dropbox';
 import { AUTH_FAILURE, AUTH_IN_PROGRESS, AUTH_SUCCESS } from './constants';
 
-dotenv.config();
+require('dotenv').config();
 
 // ID of the DOM element to mount app on
 const DOM_APP_EL_ID = 'root';
@@ -47,24 +44,14 @@ const loadTokenFromStorage = (dispatch) => {
   }
 };
 
-// Render the router
-const render = (Component) => {
-  ReactDOM.render(
-    <AppContainer>
-      <Component store={store} />
-    </AppContainer>,
-    document.getElementById(DOM_APP_EL_ID),
-  );
-};
-
 const init = (dispatch) => {
   registerServiceWorker();
   loadTokenFromStorage(dispatch);
-  render(Root);
 };
 
 init(store.dispatch);
 
-if (module.hot) {
-  module.hot.accept('./components/Root', () => render(Root));
-}
+ReactDOM.render(
+  <Root store={store}/>,
+  document.getElementById(DOM_APP_EL_ID)
+);

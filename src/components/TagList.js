@@ -1,8 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Button, List, ListItem, withStyles } from 'material-ui';
-import AddIcon from 'material-ui-icons/Add';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem'
+import withStyles from '@material-ui/core/styles/withStyles';
+import AddIcon from '@material-ui/icons/Add';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import NewTagDialog from './NewTagDialog';

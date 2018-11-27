@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Grid, withStyles } from 'material-ui';
-import withDragDropContext from '../common/withDragDropContext';
+import Grid from '@material-ui/core/Grid';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Sidebar from '../components/Sidebar';
 import PostListContainer from '../containers/PostListContainer';
 import EditorContainer from '../containers/EditorContainer';
@@ -65,7 +65,7 @@ const mapStateToProps = state => ({
   isAuthenticating: state.auth.isAuthenticating,
 });
 
-export default withRouter(withDragDropContext(withStyles(styles)(connect(
+export default withRouter(withStyles(styles)(connect(
   mapStateToProps,
   null
-)(MainPage))));
+)(MainPage)));

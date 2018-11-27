@@ -25,8 +25,8 @@ class DropboxReceiver extends React.Component {
     return (
       <OauthReceiver
         tokenUrl="https://api.dropbox.com/oauth2/token"
-        clientId={process.env.CLIENT_ID}
-        clientSecret={process.env.CLIENT_SECRET}
+        clientId={process.env.REACT_APP_CLIENT_ID}
+        clientSecret={process.env.REACT_APP_CLIENT_SECRET}
         redirectUri="http://localhost:3000/auth"
         onAuthSuccess={this.handleSuccess}
         onAuthError={this.handleError}

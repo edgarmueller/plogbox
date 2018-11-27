@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContentAdd from 'material-ui-icons/Add';
-import { Button, List, ListItem, withStyles } from 'material-ui';
+import ContentAdd from '@material-ui/icons/Add';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import withStyles from '@material-ui/core/styles/withStyles';
 import * as _ from 'lodash';
 import { appBar, card, cardContent, header } from '../common/styles';
 import InputDialog from './InputDialog';
@@ -27,17 +30,6 @@ const styles = () => ({
     backgroundColor: '#002B36',
   },
 });
-
-// const formatDate = (timestap) => {
-//   const t = new Date(timestap);
-//   const dateSegments = t.toDateString().split(' ');
-//   return {
-//     weekDay: dateSegments[0],
-//     month: dateSegments[1],
-//     day: dateSegments[2],
-//     year: dateSegments[3],
-//   };
-// };
 
 const EmptyList = ({ classes }) => (
   <div className={classes.emptyList}>
@@ -94,15 +86,7 @@ export class PostList extends React.Component {
                 className={classes.listItem}
               >
                 {post.name}
-                {/* <ListItemIcon> */}
-                {/* <IconButton */}
-                {/* onClick={() => deletePost(post)} */}
-                {/* color="default" */}
-                {/* > */}
-                {/* <ContentDelete /> */}
-                {/* </IconButton> */}
-                {/* </ListItemIcon> */}
-              </ListItem>
+                </ListItem>
             ))
           }
         </List>
