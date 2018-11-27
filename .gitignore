@@ -21,3 +21,7 @@ node_modules
 .idea
 
 .env
+.env.local
+.env.production
+
+.netlify
