@@ -20,14 +20,16 @@ const styles = () => ({
     backgroundColor: '#002B36',
   },
   floatingButtonStyle: {
-    float: 'right',
-    margin: 10
+    margin: 10,
   },
   flex: {
     flex: 1,
   },
   root: {
     backgroundColor: '#002B36',
+    minHeight: '100%',
+    display: 'flex',
+    flexDirection: 'column'
   },
 });
 
@@ -46,6 +48,9 @@ const emptyListStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#fff',
+    padding: '0.5em',
+    flexGrow: 1
   },
 };
 
@@ -68,36 +73,39 @@ export class PostList extends React.Component {
       selectPost
     } = this.props;
 
-    if (_.isEmpty(posts)) {
-      return (
-        <NoPosts />
-      );
-    }
-
     return (
       <div className={classes.root}>
-        <List>
-          {
-            posts.map(post => (
-              <ListItem
-                button
-                key={`${post.id}-${new Date()}`}
-                onClick={() => selectPost(post)}
-                className={classes.listItem}
-              >
-                {post.name}
-                </ListItem>
-            ))
-          }
-        </List>
-        <Button
-          variant="fab"
-          className={classes.floatingButtonStyle}
-          onClick={() => this.setState({ open: true })}
-          color="secondary"
-        >
-          <ContentAdd />
-        </Button>
+        {
+          _.isEmpty(posts) ?
+            <NoPosts/> :
+            <List>
+              {
+                posts.map(post => (
+                  <ListItem
+                    button
+                    key={`${post.id}-${new Date()}`}
+                    onClick={() => selectPost(post)}
+                    className={classes.listItem}
+                  >
+                    {post.name}
+                  </ListItem>
+                ))
+              }
+            </List>
+        }
+        <div style={{
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}>
+          <Button
+            variant="fab"
+            className={classes.floatingButtonStyle}
+            onClick={() => this.setState({ open: true })}
+            color="secondary"
+          >
+            <ContentAdd />
+          </Button>
+        </div>
         <InputDialog
           open={this.state.open}
           handleClose={() => this.setState({ open: false })}

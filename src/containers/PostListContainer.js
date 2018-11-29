@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as routerActions from 'react-router-redux';
 import { withRouter } from 'react-router';
@@ -21,12 +20,6 @@ import { pushFile } from '../api/dropbox';
 const styles = {
   center
 };
-
-const NoPosts = withStyles(styles)(({ classes }) => (
-  <div className={classes.center}>
-    No posts available
-  </div>
-));
 
 const Loading = withStyles(styles)(({ classes }) => (
   <p className={classes.center}>Loading posts...</p>
@@ -53,21 +46,15 @@ export class PostListContainer extends React.Component {
       return <Loading />;
     }
 
-    if (_.isEmpty(posts)) {
-      return (<NoPosts />);
-    }
-
     return (
-      <div>
-        <PostList
-          tag={tag}
-          posts={posts}
-          addPost={addPost}
-          handlePostSelected={handlePostSelected}
-          deletePost={deletePost}
-          selectPost={selectPost}
-        />
-      </div>
+      <PostList
+        tag={tag}
+        posts={posts}
+        addPost={addPost}
+        handlePostSelected={handlePostSelected}
+        deletePost={deletePost}
+        selectPost={selectPost}
+      />
     );
   }
 }
