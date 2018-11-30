@@ -7,11 +7,10 @@
     "postinstall": "npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "test-only": "cross-env NODE_ENV=test jest --no-cache test/components/Editor.spec.js",
-    "test-with-coverage": "cross-env NODE_ENV=test jest --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js",
-    "test-with-coveralls": "cross-env NODE_ENV=test jest --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js && cat ./coverage/lcov.info | coveralls",
+    "test-with-coverage": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js",
+    "test-with-coveralls": "react-scripts test --env=jsdom --coverage --collectCoverageFrom=src/**/*.js --collectCoverageFrom=!src/registerServiceWorker.js && cat ./coverage/lcov.info | coveralls",
     "report": "nyc report --reporter=html",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rimraf build",
@@ -28,21 +27,6 @@
   },
   "homepage": "http://plog-frontend.herokuapp.com/",
   "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "./node_modules/babel-jest"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-      "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js"
-    },
-    "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
       "!src/registerServiceWorker.js",
