@@ -1,40 +1,41 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { Edit, Slideshow, ViewColumn as VerticalSplit } from '@material-ui/icons';
-import RenderedView from '../../components/RenderedView';
-import { center } from '../../common/styles';
-import AceEditor from './AceEditor';
+import React from "react";
+import PropTypes from "prop-types";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import withStyles from "@material-ui/core/styles/withStyles";
+import {
+  Edit,
+  Slideshow,
+  ViewColumn as VerticalSplit
+} from "@material-ui/icons";
+import RenderedView from "../../components/RenderedView";
+import { center } from "../../common/styles";
+import AceEditor from "./AceEditor";
 import NoPost from "./NoPost";
 
 const styles = {
   center,
   editorLayout: {
-    backgroundColor: '#e6e6e657',
-    height: '100%',
-    borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
-    display: 'flex'
+    backgroundColor: "#e6e6e657",
+    height: "100%",
+    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+    display: "flex"
   },
   singlePane: {
-    width: '75%'
+    width: "85%"
   },
   bothPanes: {
-    paddingRight: '2em',
+    paddingRight: "2em",
     flexGrow: 1
   }
 };
 
 const EditorLayout = withStyles(styles)(({ classes, children }) => (
-  <div className={classes.editorLayout}>
-    {children}
-  </div>
+  <div className={classes.editorLayout}>{children}</div>
 ));
 
-
 const ToolBar = ({ isSaving, toolbarHandlers }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', padding: '1em' }}>
+  <div style={{ display: "flex", flexDirection: "column", padding: "1em" }}>
     <IconButton onClick={toolbarHandlers.handleClickShowEditorView}>
       <Edit />
     </IconButton>
@@ -44,9 +45,7 @@ const ToolBar = ({ isSaving, toolbarHandlers }) => (
     <IconButton onClick={toolbarHandlers.handleClickShowBoth}>
       <VerticalSplit />
     </IconButton>
-    {
-      isSaving ? 'Saving...' : null
-    }
+    {isSaving ? "Saving..." : null}
   </div>
 );
 
@@ -56,7 +55,7 @@ ToolBar.propTypes = {
     handleClickShowBoth: PropTypes.func.isRequired,
     handleClickShowRendererView: PropTypes.func.isRequired,
     handleClickShowEditorView: PropTypes.func.isRequired
-  }).isRequired,
+  }).isRequired
 };
 
 ToolBar.defaultProps = {
@@ -65,14 +64,10 @@ ToolBar.defaultProps = {
 
 const LoadingGuard = ({ children, isLoading }) => {
   if (isLoading) {
-    return (<div>Loading</div>);
+    return <div>Loading</div>;
   }
 
-  return (
-    <React.Fragment>
-      {children}
-    </React.Fragment>
-  );
+  return <React.Fragment>{children}</React.Fragment>;
 };
 
 LoadingGuard.propTypes = {
@@ -81,14 +76,20 @@ LoadingGuard.propTypes = {
 };
 
 const Editor = ({
-  classes, displayMode, handleOnChange, isLoading, isSaving, post, text, toolbarHandlers
+  classes,
+  displayMode,
+  handleOnChange,
+  isLoading,
+  isSaving,
+  post,
+  text,
+  toolbarHandlers
 }) => {
-
   if (post === undefined) {
-    return (<NoPost />);
+    return <NoPost />;
   }
 
-  if (displayMode === 'view') {
+  if (displayMode === "view") {
     return (
       <EditorLayout>
         <ToolBar toolbarHandlers={toolbarHandlers} />
@@ -97,13 +98,10 @@ const Editor = ({
         </div>
       </EditorLayout>
     );
-  } else if (displayMode === 'both') {
+  } else if (displayMode === "both") {
     return (
       <EditorLayout>
-        <ToolBar
-          toolbarHandlers={toolbarHandlers}
-          isSaving={isSaving}
-        />
+        <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
         <div className={classes.bothPanes}>
           <Grid container>
             <Grid item xs={6}>
@@ -125,10 +123,7 @@ const Editor = ({
 
   return (
     <EditorLayout>
-      <ToolBar
-        toolbarHandlers={toolbarHandlers}
-        isSaving={isSaving}
-      />
+      <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
       <div className={classes.singlePane}>
         <LoadingGuard isLoading={isLoading}>
           <AceEditor
@@ -150,13 +145,12 @@ Editor.propTypes = {
     handleClickShowEditorView: PropTypes.func.isRequired
   }).isRequired,
   classes: PropTypes.object.isRequired,
-  displayMode: PropTypes.oneOf(['editor', 'view', 'both']).isRequired,
+  displayMode: PropTypes.oneOf(["editor", "view", "both"]).isRequired,
   handleOnChange: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   post: PropTypes.object,
   text: PropTypes.string.isRequired
 };
-
 
 export default withStyles(styles)(Editor);
