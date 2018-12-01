@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import newFileIcon from "./newfile.svg"; // https://highlightjs.org/
-import "highlight.js/styles/github.css";
+import "highlightjs/styles/github.css";
 const hljs = require("highlightjs");
 
 const md = require("markdown-it")({
