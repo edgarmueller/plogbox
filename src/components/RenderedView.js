@@ -49,7 +49,7 @@ const styles = () => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "column",
+    flexDirection: "row",
     height: "100%"
   },
   icon: {

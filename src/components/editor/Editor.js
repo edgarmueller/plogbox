@@ -3,11 +3,7 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {
-  Edit,
-  Slideshow,
-  ViewColumn as VerticalSplit
-} from "@material-ui/icons";
+import { Edit, Slideshow } from "@material-ui/icons";
 import RenderedView from "../../components/RenderedView";
 import { center } from "../../common/styles";
 import AceEditor from "./AceEditor";
@@ -16,13 +12,13 @@ import NoPost from "./NoPost";
 const styles = {
   center,
   editorLayout: {
-    backgroundColor: "#e6e6e657",
+    backgroundColor: "#e6e6e6",
     height: "100%",
-    borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-    display: "flex"
+    display: "flex",
+    flexDirection: "row"
   },
   singlePane: {
-    width: "85%"
+    width: "90%"
   },
   bothPanes: {
     paddingRight: "2em",
@@ -35,16 +31,25 @@ const EditorLayout = withStyles(styles)(({ classes, children }) => (
 ));
 
 const ToolBar = ({ isSaving, toolbarHandlers }) => (
-  <div style={{ display: "flex", flexDirection: "column", padding: "1em" }}>
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      padding: "5px",
+      backgroundColor: "#e6e6e6"
+    }}
+  >
     <IconButton onClick={toolbarHandlers.handleClickShowEditorView}>
       <Edit />
     </IconButton>
     <IconButton onClick={toolbarHandlers.handleClickShowRenderedView}>
       <Slideshow />
     </IconButton>
+    {/*
     <IconButton onClick={toolbarHandlers.handleClickShowBoth}>
       <VerticalSplit />
     </IconButton>
+    */}
     {isSaving ? "Saving..." : null}
   </div>
 );
@@ -92,16 +97,15 @@ const Editor = ({
   if (displayMode === "view") {
     return (
       <EditorLayout>
-        <ToolBar toolbarHandlers={toolbarHandlers} />
         <div className={classes.singlePane}>
           <RenderedView text={text} />
         </div>
+        <ToolBar toolbarHandlers={toolbarHandlers} />
       </EditorLayout>
     );
   } else if (displayMode === "both") {
     return (
       <EditorLayout>
-        <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
         <div className={classes.bothPanes}>
           <Grid container>
             <Grid item xs={6}>
@@ -117,13 +121,13 @@ const Editor = ({
             </Grid>
           </Grid>
         </div>
+        <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
       </EditorLayout>
     );
   }
 
   return (
     <EditorLayout>
-      <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
       <div className={classes.singlePane}>
         <LoadingGuard isLoading={isLoading}>
           <AceEditor
@@ -134,6 +138,7 @@ const Editor = ({
           />
         </LoadingGuard>
       </div>
+      <ToolBar toolbarHandlers={toolbarHandlers} isSaving={isSaving} />
     </EditorLayout>
   );
 };
