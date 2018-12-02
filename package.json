@@ -76,7 +76,7 @@
     "axios": "^0.18.0",
     "brace": "^0.11.1",
     "dropbox": "^4.0.9",
-    "highlightjs": "9.12.0",
+    "highlight.js": "^9.13.1",
     "history": "^4.7.2",
     "jwt-decode": "^2.1.0",
     "katex": "^0.9.0-alpha2",

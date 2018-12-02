@@ -3,9 +3,10 @@ import _ from "lodash";
 import ReactMarkdown from "react-markdown";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import newFileIcon from "./newfile.svg"; // https://highlightjs.org/
-import "highlightjs/styles/github.css";
-const hljs = require("highlightjs");
+import newFileIcon from "./newfile.svg";
+import "highlight.js/styles/github.css";
+import "highlight.js/lib/languages/scala";
+const hljs = require("highlight.js");
 
 const md = require("markdown-it")({
   highlight: function(str, lang) {
