@@ -4,7 +4,7 @@ import {
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
-  SELECT_POST,
+  SELECT_POST, UNSELECT_POSTS,
   UPDATE_POST_FAILURE,
   UPDATE_POST_REQUEST,
   UPDATE_POST_SUCCESS,
@@ -39,6 +39,14 @@ export const postsReducer = (state = {
         selectedPost: undefined,
         tag: action.tag
       };
+    }
+
+    case UNSELECT_POSTS: {
+      return {
+        ...state,
+        selected: undefined,
+        selectedPost: undefined
+      }
     }
 
     default:

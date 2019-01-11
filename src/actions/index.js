@@ -22,7 +22,7 @@ import {
   FETCH_TAGS_SUCCESS,
   FETCH_TAGS_FAILURE,
   ADD_TAG_REQUEST,
-  SELECT_POST,
+  SELECT_POST, UNSELECT_POSTS,
 } from '../constants';
 import * as api from '../api';
 import * as dropbox from '../api/dropbox';
@@ -86,6 +86,10 @@ export const initPosts = posts => ({
 export const selectPost = post => ({
   type: SELECT_POST,
   post,
+});
+
+export const unselectPosts = () => ({
+  type: UNSELECT_POSTS
 });
 
 export const selectPostsByTag = tag => (dispatch) => {
