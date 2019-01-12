@@ -56,6 +56,8 @@ export const createPost = (tag, fileName) =>
 
 export const createTag = tag => dbx.filesCreateFolderV2({ path: `/${tag}`, autorename: true });
 
+export const deleteTag = tag => dbx.filesDeleteV2({ path: `/${tag}`});
+
 export const fetchTags = () => dbx.filesListFolder({ path: '' })
   .then(files =>
     files.entries.filter(file => file['.tag'] === 'folder'));

@@ -9,6 +9,11 @@ import AddIcon from '@material-ui/icons/Add';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import NewTagDialog from './NewTagDialog';
+import DeleteTagDialog from './DeleteTagDialog';
+import ListItemText from "@material-ui/core/ListItemText/ListItemText";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const styles = {
   fab: {
@@ -17,9 +22,33 @@ const styles = {
   },
 };
 
+class Hovered extends React.Component {
+  state = {
+    isHovered: false
+  }
+
+  onMouseEnter = () => {
+    this.setState({ isHovered: true })
+  }
+
+  onMouseLeave = () => {
+    this.setState({ isHovered: false })
+  }
+
+  render() {
+    const { children } = this.props;
+    return (
+      <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+        {children(this.state.isHovered)}
+      </div>
+    )
+  }
+}
+
 class TagList extends React.Component {
   state = {
-    open: false,
+    openNewTagDialog: false,
+    openDeleteTagDialog: false
   };
 
   componentDidMount() {
@@ -35,25 +64,48 @@ class TagList extends React.Component {
             _.isEmpty(tags) ?
               <div>No tags found</div>
               : tags.map(tag => (
-                <ListItem
-                  key={tag}
-                  button
-                  onClick={() => onSelect(tag)}
-                >
-                  {tag}
-                </ListItem>
+                <Hovered>
+                  {
+                    isHovered => {
+                      return (
+                        <ListItem
+                          key={tag}
+                          button
+                          onClick={() => onSelect(tag)}
+                        >
+                          <ListItemText primary={tag}/>
+                          <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
+                            <IconButton aria-label="Delete" onClick={() => {
+                              this.setState({
+                                openDeleteTagDialog: true,
+                                tagToDelete: tag
+                              })
+                            }}>
+                              <DeleteIcon/>
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      )
+                    }
+                  }
+                </Hovered>
               ))
           }
         </List>
         <NewTagDialog
-          open={this.state.open}
-          handleClose={() => this.setState({ open: false })}
+          open={this.state.openNewTagDialog}
+          handleClose={() => this.setState({ openNewTagDialog: false })}
+        />
+        <DeleteTagDialog
+          open={this.state.openDeleteTagDialog}
+          tag={this.state.tagToDelete}
+          handleClose={() => this.setState({ openDeleteTagDialog: false })}
         />
         <Button
           variant="fab"
           color="primary"
           className={classes.fab}
-          onClick={() => this.setState({ open: true })}
+          onClick={() => this.setState({ openNewTagDialog: true })}
         >
           <AddIcon />
         </Button>
