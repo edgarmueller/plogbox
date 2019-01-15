@@ -6,6 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import newFileIcon from "./newfile.svg";
 import "highlight.js/styles/github.css";
 import "highlight.js/lib/languages/scala";
+import "highlight.js/lib/languages/java";
 const hljs = require("highlight.js");
 
 const md = require("markdown-it")({
@@ -32,6 +33,8 @@ md.use(mk);
 const styles = () => ({
   view: {
     top: "57px",
+    lineHeight: '1.5em',
+    fontSize: '1.15em',
     right: 0,
     left: "50%",
     bottom: 0,
@@ -40,13 +43,7 @@ const styles = () => ({
     paddingBottom: "30px",
     paddingTop: "10px",
     paddingRight: "30px",
-    fontFamily: "'Eczar', serif",
-    fontSize: "1.25em",
-    lineHeight: "1.5em",
-    color: "#4c4a37",
-    backgroundColor: "#fff",
-    border: "1px solid rgba(0, 0, 0, 0.12)",
-    height: "100%"
+    color: '#444'
   },
   center: {
     display: "flex",
@@ -71,6 +68,8 @@ const RenderedView = ({ classes, text }) => {
       </div>
     );
   }
+
+  console.log(md.render(text));
 
   return (
     <div className={classes.view}>
