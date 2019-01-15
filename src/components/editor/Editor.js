@@ -58,7 +58,7 @@ ToolBar.propTypes = {
   isSaving: PropTypes.bool,
   toolbarHandlers: PropTypes.shape({
     handleClickShowBoth: PropTypes.func.isRequired,
-    handleClickShowRendererView: PropTypes.func.isRequired,
+    handleClickShowRenderedView: PropTypes.func.isRequired,
     handleClickShowEditorView: PropTypes.func.isRequired
   }).isRequired
 };
@@ -146,7 +146,7 @@ const Editor = ({
 Editor.propTypes = {
   toolbarHandlers: PropTypes.shape({
     handleClickShowBoth: PropTypes.func.isRequired,
-    handleClickShowRendererView: PropTypes.func.isRequired,
+    handleClickShowRenderedView: PropTypes.func.isRequired,
     handleClickShowEditorView: PropTypes.func.isRequired
   }).isRequired,
   classes: PropTypes.object.isRequired,

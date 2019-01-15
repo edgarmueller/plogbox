@@ -21,7 +21,6 @@ class DeleteTagDialog extends React.Component {
 
   render() {
     const { currentTag, deleteTag, open, handleClose, fetchTags } = this.props;
-    console.log('current tag', currentTag);
 
     return (
       <Dialog
@@ -50,7 +49,7 @@ class DeleteTagDialog extends React.Component {
                   },
                   () => this.setState({
                     success: false,
-                    error: `Couldn't delete tag`
+                    error: `Could not delete tag`
                   })
                 );
 
@@ -73,9 +72,9 @@ DeleteTagDialog.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  // posts: getSelectedPosts(state),
+  // for un-selecting current tag
   currentTag: getCurrentTag(state)
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   fetchTags() {

@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem'
 import withStyles from '@material-ui/core/styles/withStyles';
 import AddIcon from '@material-ui/icons/Add';
+import CreateIcon from '@material-ui/icons/Create';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import NewTagDialog from './NewTagDialog';
@@ -14,6 +15,8 @@ import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
+import RenameTagDialog from "./RenameTagDialog";
+import Fab from "@material-ui/core/Fab/Fab";
 
 const styles = {
   fab: {
@@ -24,8 +27,11 @@ const styles = {
 
 class Hovered extends React.Component {
   state = {
-    isHovered: false
-  }
+    isHovered: false,
+    openDeleteTagDialog: false,
+    openRenameTagDialog: false,
+    openNewTagDialog: false
+  };
 
   onMouseEnter = () => {
     this.setState({ isHovered: true })
@@ -64,7 +70,7 @@ class TagList extends React.Component {
             _.isEmpty(tags) ?
               <div>No tags found</div>
               : tags.map(tag => (
-                <Hovered>
+                <Hovered key={tag}>
                   {
                     isHovered => {
                       return (
@@ -75,6 +81,14 @@ class TagList extends React.Component {
                         >
                           <ListItemText primary={tag}/>
                           <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
+                            <IconButton aria-label="Rename" onClick={() => {
+                              this.setState({
+                                openRenameTagDialog: true,
+                                tagToRename: tag
+                              })
+                            }}>
+                              <CreateIcon/>
+                            </IconButton>
                             <IconButton aria-label="Delete" onClick={() => {
                               this.setState({
                                 openDeleteTagDialog: true,
@@ -96,19 +110,29 @@ class TagList extends React.Component {
           open={this.state.openNewTagDialog}
           handleClose={() => this.setState({ openNewTagDialog: false })}
         />
-        <DeleteTagDialog
-          open={this.state.openDeleteTagDialog}
-          tag={this.state.tagToDelete}
-          handleClose={() => this.setState({ openDeleteTagDialog: false })}
-        />
-        <Button
-          variant="fab"
+        {
+          this.state.tagToDelete &&
+          <DeleteTagDialog
+            open={this.state.openDeleteTagDialog}
+            tag={this.state.tagToDelete}
+            handleClose={() => this.setState({openDeleteTagDialog: false})}
+          />
+        }
+        {
+          this.state.tagToRename &&
+          <RenameTagDialog
+            open={this.state.openRenameTagDialog}
+            tag={this.state.tagToRename}
+            handleClose={() => this.setState({openRenameTagDialog: false})}
+          />
+        }
+        <Fab
           color="primary"
           className={classes.fab}
           onClick={() => this.setState({ openNewTagDialog: true })}
         >
           <AddIcon />
-        </Button>
+        </Fab>
       </div>
     );
   }

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ContentAdd from '@material-ui/icons/Add';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import withStyles from '@material-ui/core/styles/withStyles';
 import * as _ from 'lodash';
 import { appBar, card, cardContent, header } from '../common/styles';
 import InputDialog from './InputDialog';
+import Fab from "@material-ui/core/Fab/Fab";
 
 const styles = () => ({
   appBar,
@@ -97,14 +97,13 @@ export class PostList extends React.Component {
           display: 'flex',
           justifyContent: 'flex-end'
         }}>
-          <Button
-            variant="fab"
+          <Fab
             className={classes.floatingButtonStyle}
             onClick={() => this.setState({ open: true })}
             color="secondary"
           >
             <ContentAdd />
-          </Button>
+          </Fab>
         </div>
         <InputDialog
           open={this.state.open}
@@ -123,7 +122,7 @@ export class PostList extends React.Component {
 }
 
 PostList.propTypes = {
-  tag: PropTypes.string.isRequired,
+  tag: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object),
   addPost: PropTypes.func.isRequired,
   // deletePost: PropTypes.func.isRequired,

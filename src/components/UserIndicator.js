@@ -29,9 +29,8 @@ const UserIndicator = ({ classes, user, logoutUser }) => (
     <div>
       <Chip
         label={`${user}`}
-      >
-        <Avatar color="#444" icon={<SvgIconFace />} />
-      </Chip>
+        avatar={<Avatar color="#444" icon={<SvgIconFace />} />}
+      />
     </div>
 
     <div>
