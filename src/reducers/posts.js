@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { createFetchingProgressReducer } from './common';
 import {
+  DELETE_POST_SUCCESS,
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
@@ -11,7 +12,6 @@ import {
 } from '../constants';
 
 export const postsReducer = (state = {
-  all: [],
   selected: [],
   selectedPost: undefined,
   tag: undefined
@@ -38,6 +38,14 @@ export const postsReducer = (state = {
         selected: action.posts,
         selectedPost: undefined,
         tag: action.tag
+      };
+    }
+
+    case DELETE_POST_SUCCESS: {
+      return {
+        ...state,
+        selected: state.selected.filter(post => post.id !== action.post.id),
+        selectedPost: state.selectedPost !== undefined && action.post.id === state.selectedPost.id ? undefined : state.selectedPost
       };
     }
 
@@ -78,5 +86,3 @@ export const getSelectedPosts = state => state.posts.selected;
 export const getSelectedPost = state => state.posts.selectedPost;
 export const getCurrentTag = state => state.posts.tag;
 export const getPostErrorMessage = state => state.errorMessage;
-export const findPostByTag = tag => state =>
-  state.posts.all.find(post => post.tags.indexOf(tag) !== -1);

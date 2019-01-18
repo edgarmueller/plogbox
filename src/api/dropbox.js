@@ -87,6 +87,8 @@ export const fetchFile = file => dbx.filesDownload({ path: file })
     });
   });
 
+export const deleteFile = file => dbx.filesDeleteV2({ path: file })
+
 export const pushFile = (file, text) => dbx.filesUpload({
   path: file,
   contents: text,

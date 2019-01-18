@@ -8,6 +8,11 @@ import * as _ from 'lodash';
 import { appBar, card, cardContent, header } from '../common/styles';
 import InputDialog from './InputDialog';
 import Fab from "@material-ui/core/Fab/Fab";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteFileDialog from "./DeleteFileDialog";
+import Hovered from "./Hovered";
 
 const styles = () => ({
   appBar,
@@ -60,7 +65,9 @@ export class PostList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      openDeleteFileDialog: false,
+      fileToDelete: undefined
     };
   }
 
@@ -70,7 +77,7 @@ export class PostList extends React.Component {
       posts,
       addPost,
       classes,
-      selectPost
+      selectPost,
     } = this.props;
 
     return (
@@ -81,14 +88,29 @@ export class PostList extends React.Component {
             <List>
               {
                 posts.map(post => (
-                  <ListItem
-                    button
-                    key={`${post.id}-${new Date()}`}
-                    onClick={() => selectPost(post)}
-                    className={classes.listItem}
-                  >
-                    {post.name}
-                  </ListItem>
+                  <Hovered key={`${post.id}-${new Date()}`}>
+                    {
+                      isHovered => (
+                        <ListItem
+                          button
+                          onClick={() => selectPost(post)}
+                          className={classes.listItem}
+                        >
+                          {post.name}
+                          <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
+                            <IconButton aria-label="Delete" onClick={() =>
+                              this.setState({
+                                openDeleteFileDialog: true,
+                                fileToDelete: post
+                              })
+                            }>
+                              <DeleteIcon style={{color: 'white'}}/>
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      )
+                    }
+                  </Hovered>
                 ))
               }
             </List>
@@ -116,6 +138,14 @@ export class PostList extends React.Component {
             addPost(tag, postName);
           }}
         />
+        {
+          this.state.fileToDelete &&
+          <DeleteFileDialog
+            open={this.state.openDeleteFileDialog}
+            file={this.state.fileToDelete}
+            handleClose={() => this.setState({ openDeleteFileDialog: false })}
+          />
+        }
       </div>
     );
   }

@@ -15,7 +15,7 @@ import {
 import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
 import PostList from '../components/PostList';
 import { center } from '../common/styles';
-import { pushFile } from '../api/dropbox';
+import * as dropbox from '../api/dropbox';
 
 const styles = {
   center
@@ -38,7 +38,6 @@ export class PostListContainer extends React.Component {
       isFetchingPosts,
       addPost,
       handlePostSelected,
-      deletePost,
       selectPost,
     } = this.props;
 
@@ -52,7 +51,6 @@ export class PostListContainer extends React.Component {
         posts={posts}
         addPost={addPost}
         handlePostSelected={handlePostSelected}
-        deletePost={deletePost}
         selectPost={selectPost}
       />
     );
@@ -66,7 +64,7 @@ PostListContainer.propTypes = {
   addPost: PropTypes.func.isRequired,
   selectPost: PropTypes.func.isRequired,
   handlePostSelected: PropTypes.func.isRequired,
-  deletePost: PropTypes.func.isRequired,
+  // deletePost: PropTypes.func.isRequired,
 };
 
 PostListContainer.defaultProps = {
@@ -89,7 +87,7 @@ const mapStateToProps = (state) => {
 
 export const mapDispatchToProps = dispatch => ({
   addPost(tag, fileName) {
-    pushFile(`/${tag}/${fileName}`, '')
+    dropbox.pushFile(`/${tag}/${fileName}`, '')
       .then(() => dispatch(actions.selectPostsByTag(tag)));
   },
 
@@ -100,9 +98,6 @@ export const mapDispatchToProps = dispatch => ({
     dispatch({
       type: RESET_ERROR_MESSAGE,
     });
-  },
-  deletePost(post) {
-    return dispatch(actions.deletePost(post));
   },
   handlePostSelected(post) {
     dispatch(routerActions.push(`/posts/${post.id}`));

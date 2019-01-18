@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem'
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -17,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import RenameTagDialog from "./RenameTagDialog";
 import Fab from "@material-ui/core/Fab/Fab";
+import Hovered from "./Hovered";
 
 const styles = {
   fab: {
@@ -24,32 +24,6 @@ const styles = {
     margin: 10
   },
 };
-
-class Hovered extends React.Component {
-  state = {
-    isHovered: false,
-    openDeleteTagDialog: false,
-    openRenameTagDialog: false,
-    openNewTagDialog: false
-  };
-
-  onMouseEnter = () => {
-    this.setState({ isHovered: true })
-  }
-
-  onMouseLeave = () => {
-    this.setState({ isHovered: false })
-  }
-
-  render() {
-    const { children } = this.props;
-    return (
-      <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-        {children(this.state.isHovered)}
-      </div>
-    )
-  }
-}
 
 class TagList extends React.Component {
   state = {
