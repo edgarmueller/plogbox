@@ -11,7 +11,6 @@ import UserIndicator from "./UserIndicator";
 import DropboxSender from "./DropboxSender";
 
 const RadiumLink = Radium(Link);
-const drawerWidth = 240;
 const styles = theme => ({
   logo: {
     color: "#333435",
@@ -27,7 +26,6 @@ const styles = theme => ({
   },
   drawerPaper: {
     border: "none",
-    width: drawerWidth,
     [theme.breakpoints.up("md")]: {
       position: "relative"
     }

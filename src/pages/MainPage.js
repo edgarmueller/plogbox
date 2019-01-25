@@ -26,6 +26,9 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default
+  },
+  white: {
+    backgroundColor: 'white'
   }
 });
 
@@ -36,13 +39,15 @@ export const MainPage = ({ classes, isAuthenticating }) => {
 
   return (
     <div className={classes.root}>
-      <Sidebar />
       <main className={classes.content}>
         <Grid container spacing={0} style={{ minHeight: "100%" }}>
+          <Grid item xs={2} className={classes.white}>
+            <Sidebar />
+          </Grid>
           <Grid item xs={3}>
             <PostListContainer />
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={7}>
             <EditorContainer />
           </Grid>
         </Grid>

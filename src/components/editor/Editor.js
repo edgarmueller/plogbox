@@ -18,7 +18,7 @@ const styles = {
     flexDirection: "row"
   },
   singlePane: {
-    width: "90%"
+    flexGrow: 1
   },
   bothPanes: {
     paddingRight: "2em",

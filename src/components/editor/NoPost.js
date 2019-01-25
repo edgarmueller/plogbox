@@ -1,13 +1,17 @@
 import React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { center } from '../../common/styles';
 
 const styles = {
-  center
+  flex: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100%'
+  }
 };
 
 export default withStyles(styles)(({ classes }) => (
-  <div className={classes.center}>
+  <div className={classes.flex}>
     No post available
   </div>
 ));
