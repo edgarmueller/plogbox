@@ -43,7 +43,8 @@ const styles = () => ({
     paddingBottom: "30px",
     paddingTop: "10px",
     paddingRight: "30px",
-    color: '#444'
+    color: '#444',
+    backgroundColor: 'white',
   },
   center: {
     display: "flex",

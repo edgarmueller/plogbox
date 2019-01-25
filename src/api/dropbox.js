@@ -47,14 +47,8 @@ export const createPost = (tag, fileName) =>
     open: false
   });
 
-// export const createPost = (tag, fileName, file) =>
-//   dbx.filesUpload()
-//     title: fileName,
-//     destination: `/${tag}`,
-//     open: false
-//   });
-
-export const createTag = tag => dbx.filesCreateFolderV2({ path: `/${tag}`, autorename: true });
+export const createTag = tag =>
+  dbx.filesCreateFolderV2({ path: `/${tag}`, autorename: true });
 
 export const renameTag = (tag, newName) => dbx.filesMoveV2({
   from_path: `/${tag}`,

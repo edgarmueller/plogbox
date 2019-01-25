@@ -3,9 +3,6 @@ import React from 'react';
 class Hovered extends React.Component {
   state = {
     isHovered: false,
-    openDeleteTagDialog: false,
-    openRenameTagDialog: false,
-    openNewTagDialog: false
   };
 
   onMouseEnter = () => {
