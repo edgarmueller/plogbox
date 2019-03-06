@@ -3,27 +3,44 @@ import PropTypes from "prop-types";
 import "brace";
 import "brace/mode/markdown";
 import "brace/theme/solarized_dark";
-import "brace/keybinding/emacs";
+import "brace/keybinding/vim";
 import ReactAceEditor from "react-ace";
 
-const AceEditor = ({ post, onChange, text, width }) => (
-  <ReactAceEditor
-    mode="markdown"
-    theme="solarized_dark"
-    onChange={content => {
-      onChange(content);
-    }}
-    editorProps={{ $blockScrolling: Infinity }}
-    highlightActiveLine={true}
-    name={post.path_lower}
-    width={width}
-    value={text}
-    minLines={2}
-    maxLines={Infinity}
-    fontSize={16}
-    keyboardHandler="emacs"
-  />
-);
+class AceEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.editorRef = React.createRef();
+  }
+
+  componentDidMount() {
+    if (this.editorRef.current.editor) {
+      this.editorRef.current.editor.focus();
+    }
+  }
+
+  render() {
+    const {post, onChange, text, width} = this.props;
+    return (
+      <ReactAceEditor
+        ref = {this.editorRef}
+        mode="markdown"
+        theme="solarized_dark"
+        onChange={content => {
+          onChange(content);
+        }}
+        editorProps={{$blockScrolling: Infinity}}
+        highlightActiveLine={true}
+        name={post.path_lower}
+        width={width}
+        value={text}
+        maxLines={Infinity}
+        fontSize={16}
+        keyboardHandler="vim"
+        wrapEnabled
+      />
+    );
+  }
+}
 
 AceEditor.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
