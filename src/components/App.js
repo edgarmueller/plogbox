@@ -19,9 +19,9 @@ const ConnectedSwitch = connect(state => ({
   location: state.routing.location,
 }))(Switch);
 
+
 export const App = () => (
   <MuiThemeProvider theme={theme}>
-    {/*<div id="container">*/}
       <ConnectedSwitch>
         <Route
           exact
@@ -36,7 +36,6 @@ export const App = () => (
         <Route path="/" component={MainPage} />
         <Route path="*" component={NotFoundPage} />
       </ConnectedSwitch>
-    {/*</div>*/}
   </MuiThemeProvider>
 );
 

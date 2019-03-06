@@ -7,6 +7,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Sidebar from "../components/Sidebar";
 import PostListContainer from "../containers/PostListContainer";
 import EditorContainer from "../containers/EditorContainer";
+import {HotKeys} from "react-hotkeys";
 
 const drawerWidth = 240;
 
@@ -32,27 +33,36 @@ const styles = theme => ({
   }
 });
 
+
+const keyMap = {
+  SHOW_EDITOR: "ctrl+shift+a",
+  SHOW_RENDERED_VIEW: "ctrl+shift+s"
+};
+
+
 export const MainPage = ({ classes, isAuthenticating }) => {
   if (isAuthenticating) {
     return <div className={classes.root}>Loading...</div>;
   }
 
   return (
-    <div className={classes.root}>
-      <main className={classes.content}>
-        <Grid container spacing={0} style={{ minHeight: "100%" }}>
-          <Grid item xs={2} className={classes.white}>
-            <Sidebar />
+      <div className={classes.root}>
+        <main className={classes.content}>
+          <Grid container spacing={0} style={{ minHeight: "100%" }}>
+            <Grid item xs={2} className={classes.white}>
+              <Sidebar />
+            </Grid>
+            <Grid item xs={3}>
+              <PostListContainer />
+            </Grid>
+            <Grid item xs={7}>
+              <HotKeys keyMap={keyMap}>
+                <EditorContainer />
+              </HotKeys>
+            </Grid>
           </Grid>
-          <Grid item xs={3}>
-            <PostListContainer />
-          </Grid>
-          <Grid item xs={7}>
-            <EditorContainer />
-          </Grid>
-        </Grid>
-      </main>
-    </div>
+        </main>
+      </div>
   );
 };
 

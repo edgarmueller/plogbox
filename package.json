@@ -90,6 +90,7 @@
     "react": "^16.6.3",
     "react-ace": "^6.2.0",
     "react-dom": "^16.6.3",
+    "react-hotkeys": "^1.1.4",
     "react-markdown": "^3.3.0",
     "react-oauth-flow": "^1.2.0",
     "react-redux": "^5.0.5",
@@ -97,6 +98,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "^2.1.1",
+    "react-spinners": "^0.5.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.1.0"

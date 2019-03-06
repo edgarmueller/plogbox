@@ -7,23 +7,19 @@ import newFileIcon from "./newfile.svg";
 import "highlight.js/styles/github.css";
 import "highlight.js/lib/languages/scala";
 import "highlight.js/lib/languages/java";
+import "highlight.js/lib/languages/javascript";
 const hljs = require("highlight.js");
 
 const md = require("markdown-it")({
-  highlight: function(str, lang) {
+  breaks: true,
+  highlight: function (str, lang) {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return (
-          '<pre class="hljs"><code>' +
-          hljs.highlight(lang, str, true).value +
-          "</code></pre>"
-        );
+        return hljs.highlight(lang, str).value;
       } catch (__) {}
     }
 
-    return (
-      '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>"
-    );
+    return ''; // use external default escaping
   }
 });
 const mk = require("markdown-it-katex");
@@ -60,24 +56,32 @@ const styles = () => ({
   }
 });
 
-const RenderedView = ({ classes, text }) => {
-  if (_.isEmpty(text)) {
+class RenderedView extends React.Component {
+
+  componentDidMount() {
+    this.ref.focus()
+  }
+
+  render() {
+    const {classes, text} = this.props;
+    if (_.isEmpty(text)) {
+      return (
+        <div className={classes.center}>
+          <img src={newFileIcon} alt="logo" height="100"/>
+          <p className={classes.icon}>Empty post. Start working on it now :)</p>
+        </div>
+      );
+    }
+
     return (
-      <div className={classes.center}>
-        <img src={newFileIcon} alt="logo" height="100" />
-        <p className={classes.icon}>Empty post. Start working on it now :)</p>
+      <div className={classes.view} id='test' ref={el => this.ref = el} tabIndex="-1">
+        <ReactMarkdown
+          source={md.render(text)} escapeHtml={false}
+        />
       </div>
     );
   }
-
-  console.log(md.render(text));
-
-  return (
-    <div className={classes.view}>
-      <ReactMarkdown source={md.render(text)} escapeHtml={false} />
-    </div>
-  );
-};
+}
 
 RenderedView.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
