@@ -5,14 +5,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import withStyles from '@material-ui/core/styles/withStyles';
 import * as _ from 'lodash';
-import { appBar, card, cardContent, header } from '../common/styles';
-import InputDialog from './InputDialog';
 import Fab from "@material-ui/core/Fab/Fab";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteFileDialog from "./DeleteFileDialog";
-import Hovered from "./Hovered";
+import { appBar, card, cardContent, header } from '../../common/styles';
+import InputDialog from '../InputDialog';
+import bookImage from './book.svg';
+import DeletePostDialog from "./DeletePostDialog";
+import Hovered from "../Hovered";
 
 const styles = () => ({
   appBar,
@@ -38,25 +39,27 @@ const styles = () => ({
   },
 });
 
-const EmptyList = ({ classes }) => (
-  <div className={classes.emptyList}>
-    No posts created yet!
-  </div>
-);
-
-EmptyList.propTypes = {
-  classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
-};
 
 const emptyListStyles = {
   emptyList: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     color: '#fff',
     padding: '0.5em',
     flexGrow: 1
   },
+};
+const EmptyList = ({ classes }) => (
+  <div className={classes.emptyList}>
+    <img src={bookImage} height="100" />
+    No posts created yet!
+  </div>
+);
+
+EmptyList.propTypes = {
+  classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
 };
 
 const NoPosts = withStyles(emptyListStyles)(EmptyList);
@@ -66,8 +69,8 @@ export class PostList extends React.Component {
     super(props);
     this.state = {
       open: false,
-      openDeleteFileDialog: false,
-      fileToDelete: undefined
+      openDeletePostDialog: false,
+      postToDelete: undefined
     };
   }
 
@@ -100,8 +103,8 @@ export class PostList extends React.Component {
                           <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
                             <IconButton aria-label="Delete" onClick={() =>
                               this.setState({
-                                openDeleteFileDialog: true,
-                                fileToDelete: post
+                                openDeletePostDialog: true,
+                                postToDelete: post
                               })
                             }>
                               <DeleteIcon style={{color: 'white'}}/>
@@ -139,11 +142,11 @@ export class PostList extends React.Component {
           }}
         />
         {
-          this.state.fileToDelete &&
-          <DeleteFileDialog
-            open={this.state.openDeleteFileDialog}
-            file={this.state.fileToDelete}
-            handleClose={() => this.setState({ openDeleteFileDialog: false })}
+          this.state.postToDelete &&
+          <DeletePostDialog
+            open={this.state.openDeletePostDialog}
+            post={this.state.postToDelete}
+            handleClose={() => this.setState({ openDeletePostDialog: false })}
           />
         }
       </div>

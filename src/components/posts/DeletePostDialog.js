@@ -7,19 +7,19 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {connect} from 'react-redux';
-import * as dropbox from '../api/dropbox';
-import {DELETE_POST_SUCCESS} from "../constants";
-import {getCurrentTag} from "../reducers";
-import * as CommonPropTypes from '../common/CommonPropTypes'
+import * as dropbox from '../../api/dropbox';
+import {DELETE_POST_SUCCESS} from "../../constants";
+import {getCurrentTag} from "../../reducers";
+import * as CommonPropTypes from '../../common/CommonPropTypes'
 
-class DeleteFileDialog extends React.Component {
+class DeletePostDialog extends React.Component {
   state = {
     success: undefined,
     error: undefined,
   };
 
   render() {
-    const { currentTag, deletePost, open, handleClose, file } = this.props;
+    const { currentTag, deletePost, open, handleClose, post } = this.props;
 
     return (
       <Dialog
@@ -27,10 +27,10 @@ class DeleteFileDialog extends React.Component {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Delete file</DialogTitle>
+        <DialogTitle id="form-dialog-title">Delete post</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the tag?
+            Are you sure you want to delete this post?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -39,16 +39,15 @@ class DeleteFileDialog extends React.Component {
           </Button>
           <Button
             onClick={() => {
-              deletePost(currentTag, file)
+              deletePost(currentTag, post)
                 .then(
                   () => {
                     this.setState({ success: true });
-                    console.log('>>', handleClose)
                     handleClose();
                   },
                   () => this.setState({
                     success: false,
-                    error: `Could not delete file`
+                    error: `Could not delete post`
                   })
                 );
 
@@ -63,10 +62,10 @@ class DeleteFileDialog extends React.Component {
   }
 }
 
-DeleteFileDialog.propTypes = {
+DeletePostDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  file: CommonPropTypes.post
+  post: CommonPropTypes.post
 };
 
 const mapStateToProps = (state) => ({
@@ -75,34 +74,15 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  deletePost(tag, file) {
-    console.log('tag', tag);
-    console.log('file', file);
-    return dropbox.deleteFile(`/${tag}/${file.name}`)
+  deletePost(tag, post) {
+    return dropbox.deleteFile(`/${tag}/${post.name}`)
       .then(() => {
         dispatch({
           type: DELETE_POST_SUCCESS,
-          post: file
+          post
         });
       });
-  },
-  // deleteTag(tag, unselectPost) {
-  //   return dropbox.deleteTag(tag)
-  //     .then(
-  //       () => {
-  //         re-fetch tags
-          // if (unselectPost) {
-          //   dispatch({
-          //     type: SELECT_POST,
-          //     post: undefined
-          //   });
-          //   dispatch(unselectPosts())
-          // }
-          // return true;
-        // },
-        // () => false
-      // );
-  // }
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteFileDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(DeletePostDialog);

@@ -13,7 +13,7 @@ import {
   getSelectedPosts
 } from '../reducers/index';
 import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
-import PostList from '../components/PostList';
+import PostList from '../components/posts/PostList';
 import { center } from '../common/styles';
 import * as dropbox from '../api/dropbox';
 
