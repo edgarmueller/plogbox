@@ -12,6 +12,10 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 body {
     margin: 0;
     padding: 0;
