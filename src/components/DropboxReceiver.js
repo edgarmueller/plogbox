@@ -32,7 +32,12 @@ class DropboxReceiver extends React.Component {
         onAuthError={this.handleError}
         render={({ processing, error }) => (
           <div>
-            {processing && <p>Authorizing now...</p>}
+            {processing && <p style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translateX(-50%) translateY(-50%)'
+            }}>Authorizing now...</p>}
             {error && (
               <p className="error">An error occurred: {error.message}</p>
             )}

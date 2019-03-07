@@ -12,6 +12,12 @@ import {HotKeys} from "react-hotkeys";
 const drawerWidth = 240;
 
 const styles = theme => ({
+  loading: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(-50%)'
+  },
   root: {
     flexGrow: 1,
     zIndex: 1,
@@ -42,7 +48,7 @@ const keyMap = {
 
 export const MainPage = ({ classes, isAuthenticating }) => {
   if (isAuthenticating) {
-    return <div className={classes.root}>Loading...</div>;
+    return <div className={classes.loading}>Loading...</div>;
   }
 
   return (
