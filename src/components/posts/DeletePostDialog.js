@@ -54,7 +54,7 @@ class DeletePostDialog extends React.Component {
             }}
             color="primary"
           >
-            Delete tag
+            Delete post
           </Button>
         </DialogActions>
       </Dialog>

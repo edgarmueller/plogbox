@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContentAdd from '@material-ui/icons/Add';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -8,12 +7,15 @@ import * as _ from 'lodash';
 import Fab from "@material-ui/core/Fab/Fab";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton/IconButton";
+import ContentAdd from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CreateIcon from '@material-ui/icons/Create';
 import { appBar, card, cardContent, header } from '../../common/styles';
 import InputDialog from '../InputDialog';
 import bookImage from './book.svg';
 import DeletePostDialog from "./DeletePostDialog";
 import Hovered from "../Hovered";
+import RenamePostDialog from "./RenamePostDialog";
 
 const styles = () => ({
   appBar,
@@ -70,6 +72,7 @@ export class PostList extends React.Component {
     this.state = {
       open: false,
       openDeletePostDialog: false,
+      openRenamePostDialog: false,
       postToDelete: undefined
     };
   }
@@ -101,6 +104,14 @@ export class PostList extends React.Component {
                         >
                           {post.name}
                           <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
+                            <IconButton aria-label="Rename" onClick={() => {
+                              this.setState({
+                                openRenamePostDialog: true,
+                                postToRename: post
+                              })
+                            }}>
+                              <CreateIcon style={{ color: 'white' }}/>
+                            </IconButton>
                             <IconButton aria-label="Delete" onClick={() =>
                               this.setState({
                                 openDeletePostDialog: true,
@@ -149,6 +160,15 @@ export class PostList extends React.Component {
             handleClose={() => this.setState({ openDeletePostDialog: false })}
           />
         }
+        {
+          this.state.postToRename &&
+          <RenamePostDialog
+            tag={tag}
+            open={this.state.openRenamePostDialog}
+            post={this.state.postToRename}
+            handleClose={() => this.setState({openRenamePostDialog: false})}
+          />
+        }
       </div>
     );
   }
@@ -158,8 +178,6 @@ PostList.propTypes = {
   tag: PropTypes.string,
   posts: PropTypes.arrayOf(PropTypes.object),
   addPost: PropTypes.func.isRequired,
-  // deletePost: PropTypes.func.isRequired,
-  // handlePostSelected: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   selectPost: PropTypes.func.isRequired
 };

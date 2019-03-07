@@ -3,11 +3,11 @@ import _ from "lodash";
 import ReactMarkdown from "react-markdown";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import newFileIcon from "./newfile.svg";
 import "highlight.js/styles/github.css";
 import "highlight.js/lib/languages/scala";
 import "highlight.js/lib/languages/java";
 import "highlight.js/lib/languages/javascript";
+import penImage from "./editor/fountain_pen.svg";
 const hljs = require("highlight.js");
 
 const md = require("markdown-it")({
@@ -44,9 +44,9 @@ const styles = () => ({
   },
   center: {
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
     height: "100%"
   },
   icon: {
@@ -59,7 +59,9 @@ const styles = () => ({
 class RenderedView extends React.Component {
 
   componentDidMount() {
-    this.ref.focus()
+    if (this.ref) {
+      this.ref.focus()
+    }
   }
 
   render() {
@@ -67,7 +69,7 @@ class RenderedView extends React.Component {
     if (_.isEmpty(text)) {
       return (
         <div className={classes.center}>
-          <img src={newFileIcon} alt="logo" height="100"/>
+          <img src={penImage} alt="logo" height="100"/>
           <p className={classes.icon}>Empty post. Start working on it now :)</p>
         </div>
       );

@@ -8,38 +8,39 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import { connect } from 'react-redux';
-import * as dropbox from '../api/dropbox';
-import * as actions from '../actions';
+import * as dropbox from '../../api/dropbox';
+import * as actions from '../../actions';
 
-class RenameTagDialog extends React.Component {
+class RenamePostDialog extends React.Component {
+
   state = {
-    newTagName: '',
+    newPostName: '',
     success: undefined,
     error: undefined,
   };
 
-  renameTag = (tag, newTagName) => {
-    dropbox.renameTag(tag, newTagName)
+  renamePost = (post, newPostName) => {
+    dropbox.renamePost(post, newPostName)
       .then(
         () => {
           this.setState({
             success: true
           });
-          // re-fetch tags
-          this.props.fetchTags();
+          // re-fetch posts
+          this.props.fetchPosts(this.props.tag);
           this.props.handleClose();
         },
         error => {
           this.setState({
             success: false,
-            error: `Could not rename tag (reason: ${error.error.error_summary})`
+            error: `Could not rename post (reason: ${error.error.error_summary})`
           })
         }
       );
   };
 
   render() {
-    const { open, handleClose, tag } = this.props;
+    const { open, handleClose, post } = this.props;
 
     return (
       <Dialog
@@ -47,20 +48,21 @@ class RenameTagDialog extends React.Component {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Rename post</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Add a name for the new tag
+            Choose a new name for the post
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Tag name"
+            label="Post name"
             fullWidth
-            onChange={ev => this.setState({ newTagName: ev.target.value })}
+            onChange={ev => this.setState({ newPostName: ev.target.value })}
             error={this.state.success === false}
             helperText={this.state.success === false ? this.state.error : undefined}
+            defaultValue={post.name}
           />
         </DialogContent>
         <DialogActions>
@@ -68,10 +70,10 @@ class RenameTagDialog extends React.Component {
             Cancel
           </Button>
           <Button
-            onClick={() => this.renameTag(tag, this.state.newTagName)}
+            onClick={() => this.renamePost(post, this.state.newPostName)}
             color="primary"
           >
-            Rename tag
+            Rename post
           </Button>
         </DialogActions>
       </Dialog>
@@ -79,17 +81,18 @@ class RenameTagDialog extends React.Component {
   }
 }
 
-RenameTagDialog.propTypes = {
+RenamePostDialog.propTypes = {
   tag: PropTypes.string.isRequired,
+  post: PropTypes.object.isRequired,
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  fetchTags: PropTypes.func.isRequired
+  fetchPosts: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchTags() {
-    dispatch(actions.fetchTags());
+  fetchPosts(tag) {
+    dispatch(actions.selectPostsByTag(tag));
   }
 });
 
-export default connect(null, mapDispatchToProps)(RenameTagDialog);
+export default connect(null, mapDispatchToProps)(RenamePostDialog);
