@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TagList from '../components/TagList';
 import * as actions from '../actions';
-import * as api from '../api';
 
 export class TagListContainer extends React.Component {
 
@@ -37,17 +36,8 @@ const mapStateToProps = state => ({
 });
 
 export const mapDispatchToProps = dispatch => ({
-  createTag(tag) {
-    return api.createTag(tag);
-  },
-  removeTag(postId, tag) {
-    dispatch(actions.removeTag(postId, tag.id));
-  },
   fetchTags() {
     dispatch(actions.fetchTags());
-  },
-  fetchPosts() {
-    dispatch(actions.fetchPosts());
   },
   selectPostsByTag(tag) {
     dispatch(actions.selectPostsByTag(tag));

@@ -56,17 +56,26 @@ export const renameTag = (tag, newName) => dbx.filesMoveV2({
   autorename: true
 });
 
+export const renamePost = (post, newName) => {
+  return dbx.filesMoveV2({
+    from_path: `${post.path_lower}`,
+    to_path: `${post.path_lower.substring(0, post.path_lower.lastIndexOf("/"))}/${newName}`,
+    autorename: true
+  });
+}
+
+
 export const deleteTag = tag => dbx.filesDeleteV2({ path: `/${tag}`});
 
 export const fetchTags = () => dbx.filesListFolder({ path: '' })
   .then(files =>
     files.entries.filter(file => file['.tag'] === 'folder'));
 
-export const fetchFiles = tagName => dbx.filesListFolder({ path: `/${tagName}` })
+export const fetchPosts = tagName => dbx.filesListFolder({ path: `/${tagName}` })
   .then(files =>
     files.entries.filter(file => file['.tag'] === 'file'));
 
-export const fetchFile = file => dbx.filesDownload({ path: file })
+export const fetchPost = file => dbx.filesDownload({ path: file })
   .then((resp) => {
     const temporaryFileReader = new FileReader();
     return new Promise((resolve, reject) => {

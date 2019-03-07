@@ -40,9 +40,6 @@ export const FETCH_BLOCKS_REQUEST = 'FETCH_BLOCK_REQUEST';
 export const FETCH_BLOCKS_FAILURE = 'FETCH_BLOCKS_FAILURE';
 export const FETCH_BLOCKS_SUCCESS = 'FETCH_BLOCKS_SUCCESS';
 
-
-export const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://plog-backend.herokuapp.com' : 'http://localhost:9000';
-
 export const Direction = Object.freeze({
   UP: Symbol('up'),
   DOWN: Symbol('down'),

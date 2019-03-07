@@ -1,32 +1,18 @@
 import * as _ from 'lodash';
-import { routerActions } from 'react-router-redux';
 import {
-  DELETE_POST_SUCCESS,
-  FETCH_POSTS_SUCCESS,
+  AUTH_LOGOUT,
+  AUTH_SUCCESS,
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
-  FETCH_BLOCKS_SUCCESS,
-  AUTH_SUCCESS,
-  AUTH_LOGOUT,
-  DELETE_POST_FAILURE,
-  UPDATE_POST_SUCCESS,
-  UPDATE_POST_FAILURE,
-  ADD_TAG_SUCCESS,
-  ADD_TAG_FAILURE,
-  DELETE_TAG_SUCCESS,
-  DELETE_TAG_FAILURE,
-  UPDATE_BLOCK_FAILURE,
-  FETCH_BLOCKS_REQUEST,
-  UPDATE_POST_REQUEST,
+  FETCH_POSTS_SUCCESS,
+  FETCH_TAGS_FAILURE,
   FETCH_TAGS_REQUEST,
   FETCH_TAGS_SUCCESS,
-  FETCH_TAGS_FAILURE,
-  ADD_TAG_REQUEST,
-  SELECT_POST, UNSELECT_POSTS,
+  SELECT_POST,
+  UNSELECT_POSTS,
 } from '../constants';
-import * as api from '../api';
 import * as dropbox from '../api/dropbox';
-import { getIsFetchingPosts, getIsUpdatingPost } from '../reducers';
+import {getIsFetchingPosts} from '../reducers';
 
 export function errorHandler(dispatch, error, type) {
   if (error === undefined) {
@@ -93,12 +79,11 @@ export const unselectPosts = () => ({
 });
 
 export const selectPostsByTag = tag => (dispatch) => {
-
   dispatch({
     type: FETCH_POSTS_REQUEST
   });
 
-  dropbox.fetchFiles(tag)
+  dropbox.fetchPosts(tag)
     .then((files) => {
       dispatch({
         type: FETCH_POSTS_SUCCESS,
@@ -108,184 +93,11 @@ export const selectPostsByTag = tag => (dispatch) => {
     });
 };
 
-// TODO: selectedPost must contain blocks
-export const updatePost = selectedPost => (dispatch, getState) => {
-  if (getIsUpdatingPost(getState())) {
-    return Promise.resolve();
-  }
-
-  dispatch({
-    type: UPDATE_POST_REQUEST,
-  });
-
-  return api.updatePost(selectedPost)
-    .then(
-      (resp) => {
-        dispatch({
-          type: UPDATE_POST_SUCCESS,
-          post: resp.data.data,
-        });
-        return resp.data.data;
-      },
-      error => errorHandler(dispatch, error, UPDATE_POST_FAILURE),
-    );
-};
-
-export const deletePost = post => dispatch =>
-  api.deletePost(post.id).then(
-    dispatch({
-      type: DELETE_POST_SUCCESS,
-      post,
-    }),
-    error => errorHandler(dispatch, error, DELETE_POST_FAILURE),
-  );
-
-//
-// Auth actions --
-//
-export const logoutUser = () => (dispatch) => {
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    dispatch({
-      type: AUTH_LOGOUT,
-    });
-    dispatch(routerActions.push('login'));
-  };
-
-  // logout in any case
-  return api.logoutUser().then(
-    () => logout(),
-    () => logout(),
-  );
-};
-
 export const authSuccess = (token, user) => ({
   type: AUTH_SUCCESS,
   token,
   user
 });
-
-// export const loginUserWithToken = token => (dispatch) => {
-//   return dispatch({
-//     type: AUTH_SUCCESS,
-//     token,
-//     user: 'TODO user name',
-//     userId: 'TODO user id'
-//   });
-// };
-//
-// export const loginUser = (email, password) => (dispatch) => {
-//   dispatch({
-//     type: AUTH_IN_PROGRESS,
-//   });
-//   // TODO  rememberMe can not be configured
-//   return api.loginUser(email, password, true)
-//     .then(
-//       (response) => {
-//         const {
-//           user,
-//           userId,
-//           token,
-//         } = response.data;
-//         localStorage.setItem('token', token);
-//         localStorage.setItem('user', user);
-//         dispatch({
-//           type: AUTH_SUCCESS,
-//           token,
-//           user,
-//           userId,
-//         });
-//         return undefined;
-//       },
-//       (error) => {
-//         dispatch({
-//           type: AUTH_FAILURE,
-//         });
-//         return error;
-//       },
-//     );
-// };
-
-export const fetchPosts = () => (dispatch, getState) => {
-  if (getIsFetchingPosts(getState())) {
-    return Promise.resolve();
-  }
-
-  dispatch({
-    type: FETCH_POSTS_REQUEST,
-  });
-
-  return api
-    .fetchPosts()
-    .then(
-      resp => dispatch(initPosts(resp.data.data)),
-      error => errorHandler(dispatch, error, FETCH_POSTS_FAILURE),
-    );
-};
-
-export const addTagToPost = (postId, tag) => (dispatch) => {
-  dispatch({
-    type: ADD_TAG_REQUEST,
-  });
-  return api.addTagToPost(postId, tag)
-    .then(
-      // TODO: response unused
-      (resp) => {
-        dispatch({
-          type: ADD_TAG_SUCCESS,
-          postId,
-          tag: resp.data.data.tag,
-        });
-      },
-      (error) => {
-        errorHandler(dispatch, error, ADD_TAG_FAILURE);
-      },
-    );
-};
-
-export const removeTag = (postId, tagId) => dispatch =>
-  api.removeTag(postId, tagId)
-    .then(
-      () => {
-        dispatch({
-          type: DELETE_TAG_SUCCESS,
-          postId,
-          tagId,
-        });
-      },
-      (error) => {
-        errorHandler(dispatch, error, DELETE_TAG_FAILURE);
-      },
-    );
-
-export const downloadFile = (postId, fileId) => (dispatch) => {
-  dispatch({
-    type: FETCH_BLOCKS_REQUEST,
-  });
-  return api.download(postId, fileId)
-    .then(
-      resp => new Promise((resolve) => {
-        const reader = new FileReader();
-        const loadEnd = () => {
-          dispatch({
-            type: FETCH_BLOCKS_SUCCESS,
-          });
-          resolve(reader.result);
-        };
-        if (process.env.NODE_ENV === 'test') {
-          reader.on('loadend', loadEnd);
-        } else {
-          reader.onloadend = loadEnd;
-        }
-        reader.readAsDataURL(resp.data);
-      }),
-      error => errorHandler(dispatch, error, UPDATE_BLOCK_FAILURE),
-    );
-};
-
-export const uploadFile = (postId, file) => api.upload(postId, file);
-
 
 export const fetchTags = () => (dispatch) => {
   dispatch({

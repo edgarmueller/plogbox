@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import debouncedPromise from 'awesome-debounce-promise';
 import { getIsUpdatingPost, getPostErrorMessage, getSelectedPost, } from '../reducers';
-import { fetchFile, pushFile } from '../api/dropbox';
+import { fetchPost, pushFile } from '../api/dropbox';
 import Editor from '../components/editor/Editor';
 import * as CommonPropTypes from '../common/CommonPropTypes';
 
@@ -24,7 +24,7 @@ export class EditorContainer extends React.Component {
       this.setState(
         { isLoading: true },
         () =>
-          fetchFile(this.props.post.path_lower)
+          fetchPost(this.props.post.path_lower)
             .then((fileContent) => {
               this.setState({
                 text: fileContent,

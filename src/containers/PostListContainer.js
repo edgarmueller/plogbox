@@ -90,7 +90,6 @@ export const mapDispatchToProps = dispatch => ({
     dropbox.pushFile(`/${tag}/${fileName}`, '')
       .then(() => dispatch(actions.selectPostsByTag(tag)));
   },
-
   fetchPosts(tag) {
     actions.selectPostsByTag(tag);
   },
