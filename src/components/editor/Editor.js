@@ -2,12 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {HotKeys} from "react-hotkeys";
+import BounceLoader from 'react-spinners/BounceLoader'
 import RenderedView from "../../components/RenderedView";
 import { center } from "../../common/styles";
 import AceEditor from "./AceEditor";
 import NoPost from "./NoPost";
 import ToolBar from "./Toolbar";
-import {HotKeys} from "react-hotkeys";
 
 const styles = {
   center,
@@ -33,7 +34,16 @@ const EditorLayout = withStyles(styles)(({ classes, children }) => (
 
 const LoadingGuard = ({ children, isLoading }) => {
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+        <BounceLoader size={40}/>
+        <p>Loading</p>
+      </div>
+    );
   }
 
   return <React.Fragment>{children}</React.Fragment>;
