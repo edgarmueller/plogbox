@@ -1,9 +1,11 @@
-import { ADD_TAG_SUCCESS, FETCH_TAGS_SUCCESS, FETCH_TAGS_FAILURE } from '../constants/index';
+import {ADD_TAG_SUCCESS, FETCH_TAGS_SUCCESS, FETCH_TAGS_FAILURE, AUTH_LOGOUT} from '../constants/index';
 
-export const tags = (state = {
+const initState = {
   tags: [],
   error: undefined,
-}, action) => {
+}
+
+export const tags = (state = initState, action) => {
   switch (action.type) {
     case FETCH_TAGS_SUCCESS:
       return {
@@ -22,6 +24,8 @@ export const tags = (state = {
       }
       return copy;
     }
+    case AUTH_LOGOUT:
+      return initState;
     default:
       return state;
   }

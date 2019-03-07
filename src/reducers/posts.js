@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { createFetchingProgressReducer } from './common';
 import {
+  AUTH_LOGOUT,
   DELETE_POST_SUCCESS,
   FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
@@ -11,11 +12,13 @@ import {
   UPDATE_POST_SUCCESS,
 } from '../constants';
 
-export const postsReducer = (state = {
+const initState = {
   selected: [],
   selectedPost: undefined,
   tag: undefined
-}, action) => {
+};
+
+export const postsReducer = (state = initState, action) => {
   switch (action.type) {
 
     case SELECT_POST: {
@@ -56,6 +59,9 @@ export const postsReducer = (state = {
         selectedPost: undefined
       }
     }
+
+    case AUTH_LOGOUT:
+      return initState;
 
     default:
       return state;

@@ -7,17 +7,6 @@ const dbx = new Dropbox({
   accessToken: localStorage.getItem(DROPBOX_TOKEN_NAME)
 });
 
-export const getAuthUrl = () =>
-  dbx.getAuthenticationUrl('http://localhost:3000/auth');
-
-// export const fetchFiles = () => {
-//   dbx.filesListFolder({ path: '' })
-//     // eslint-disable-next-line no-console
-//     .then(response => console.log(response))
-//     // eslint-disable-next-line no-console
-//     .catch(error => console.log(error));
-// };
-
 export const logout = () => {
   dbx.authTokenRevoke();
   localStorage.removeItem(DROPBOX_TOKEN_NAME);
