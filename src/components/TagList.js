@@ -36,7 +36,7 @@ class TagList extends React.Component {
   }
 
   render() {
-    const { classes, onSelect, tags } = this.props;
+    const { classes, onSelect, tags, currentTag } = this.props;
     return (
       <div>
         <List>
@@ -52,6 +52,7 @@ class TagList extends React.Component {
                           key={tag}
                           button
                           onClick={() => onSelect(tag)}
+                          selected={currentTag === tag}
                         >
                           <ListItemText primary={tag}/>
                           <ListItemSecondaryAction style={{ visibility: isHovered ? 'inherit' : 'hidden' }}>
@@ -117,6 +118,7 @@ TagList.propTypes = {
   onSelect: PropTypes.func.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string),
   fetchTags: PropTypes.func.isRequired,
+  currentTag: PropTypes.string
 };
 
 TagList.defaultProps = {

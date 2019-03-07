@@ -8,10 +8,11 @@ import * as api from '../api';
 export class TagListContainer extends React.Component {
 
   render() {
-    const { selectPostsByTag, tags } = this.props;
+    const { currentTag, selectPostsByTag, tags } = this.props;
 
     return (
       <TagList
+        currentTag={currentTag}
         tags={tags}
         onSelect={tag => selectPostsByTag(tag)}
       />
@@ -20,6 +21,7 @@ export class TagListContainer extends React.Component {
 }
 
 TagListContainer.propTypes = {
+  currentTag: PropTypes.string,
   selectPostsByTag: PropTypes.func.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string)
 };
@@ -29,7 +31,9 @@ TagListContainer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  // TODO: use selectors
   tags: state.tags.tags,
+  currentTag: state.posts.posts.tag
 });
 
 export const mapDispatchToProps = dispatch => ({
