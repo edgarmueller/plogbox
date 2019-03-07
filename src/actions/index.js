@@ -2,17 +2,14 @@ import * as _ from 'lodash';
 import {
   AUTH_LOGOUT,
   AUTH_SUCCESS,
-  FETCH_POSTS_FAILURE,
   FETCH_POSTS_REQUEST,
   FETCH_POSTS_SUCCESS,
   FETCH_TAGS_FAILURE,
   FETCH_TAGS_REQUEST,
   FETCH_TAGS_SUCCESS,
-  SELECT_POST,
   UNSELECT_POSTS,
 } from '../constants';
 import * as dropbox from '../api/dropbox';
-import {getIsFetchingPosts} from '../reducers';
 
 export function errorHandler(dispatch, error, type) {
   if (error === undefined) {
@@ -63,16 +60,6 @@ export function errorHandler(dispatch, error, type) {
     });
   }
 }
-
-export const initPosts = posts => ({
-  type: FETCH_POSTS_SUCCESS,
-  posts,
-});
-
-export const selectPost = post => ({
-  type: SELECT_POST,
-  post,
-});
 
 export const unselectPosts = () => ({
   type: UNSELECT_POSTS

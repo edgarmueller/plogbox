@@ -55,7 +55,7 @@ const emptyListStyles = {
 };
 const EmptyList = ({ classes }) => (
   <div className={classes.emptyList}>
-    <img src={bookImage} height="100" />
+    <img src={bookImage} height="100" alt="No posts available" />
     No posts created yet!
   </div>
 );

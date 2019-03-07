@@ -22,5 +22,4 @@ export const getCurrentTag = state => fromPosts.getCurrentTag(state.posts);
 export const getPostErrorMessage = state => fromPosts.getPostErrorMessage(state.posts);
 
 // auth getters
-export const getIsAuthenticated = state => fromAuth.isAuthenticated(state.auth);
 export const getStatusText = state => fromAuth.getStatusText(state.auth);
