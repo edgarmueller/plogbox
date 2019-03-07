@@ -47,10 +47,10 @@ class RenameTagDialog extends React.Component {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Rename tag</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Add a name for the new tag
+            Choose a new name for the tag
           </DialogContentText>
           <TextField
             autoFocus
