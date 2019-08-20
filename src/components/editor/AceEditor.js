@@ -22,6 +22,7 @@ class AceEditor extends React.Component {
     const {post, onChange, text, width} = this.props;
     return (
       <ReactAceEditor
+        autoScrollEditorIntoView
         ref = {this.editorRef}
         mode="markdown"
         theme="solarized_dark"
@@ -33,7 +34,8 @@ class AceEditor extends React.Component {
         name={post.path_lower}
         width={width}
         value={text}
-        maxLines={Infinity}
+        minLines={20}
+        maxLines={70}
         fontSize={16}
         keyboardHandler="vim"
         wrapEnabled

@@ -14,9 +14,9 @@ const styles = {
   center,
   editorLayout: {
     backgroundColor: "#e6e6e6",
-    height: "100%",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    padding: "1rem"
   },
   singlePane: {
     flexGrow: 1
