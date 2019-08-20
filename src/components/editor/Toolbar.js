@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import IconButton from "@material-ui/core/IconButton";
 import { Edit, Slideshow, VerticalSplit } from "@material-ui/icons";
 import BounceLoader from 'react-spinners/BounceLoader'
+import { Tooltip } from '@material-ui/core';
 
 const ToolBar = ({ isSaving, toolbarHandlers }) => {
 
@@ -16,19 +17,23 @@ const ToolBar = ({ isSaving, toolbarHandlers }) => {
           backgroundColor: "#e6e6e6"
         }}
       >
+      <Tooltip title="Show Editor (Ctrl + Shift + Z)">
         <IconButton onClick={toolbarHandlers.handleClickShowEditorView}>
           <Edit />
         </IconButton>
+      </Tooltip>
+      <Tooltip title="Show Rendered Document (Ctrl + Shift + X)">
         <IconButton onClick={toolbarHandlers.handleClickShowRenderedView}>
           <Slideshow />
         </IconButton>
-        {
-          <IconButton onClick={toolbarHandlers.handleClickShowBoth}>
-            <VerticalSplit />
-          </IconButton>
-        }
-        {isSaving ? <BounceLoader size={40}/> : null}
-      </div>
+      </Tooltip>
+      {
+        <IconButton onClick={toolbarHandlers.handleClickShowBoth}>
+          <VerticalSplit />
+        </IconButton>
+      }
+      {isSaving ? <BounceLoader size={40} /> : null}
+    </div>
   );
 };
 

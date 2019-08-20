@@ -41,8 +41,8 @@ const styles = theme => ({
 
 
 const keyMap = {
-  SHOW_EDITOR: "ctrl+shift+a",
-  SHOW_RENDERED_VIEW: "ctrl+shift+s"
+  SHOW_EDITOR: "ctrl+shift+z",
+  SHOW_RENDERED_VIEW: "ctrl+shift+x"
 };
 
 
