@@ -80,7 +80,7 @@
     "history": "^4.7.2",
     "jwt-decode": "^2.1.0",
     "katex": "^0.9.0-alpha2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "markdown-it": "^8.4.0",
     "markdown-it-katex": "^2.0.3",
     "moment": "^2.20.1",
@@ -98,7 +98,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "^2.1.1",
-    "react-spinners": "^0.5.1",
+    "react-spinners": "^0.9.0",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.1.0"
