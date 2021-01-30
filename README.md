@@ -1,4 +1,4 @@
-plog
+# plogbox
 =============
 Simple Dropbox based note taking application with support for markup and inline latex.
 
@@ -6,6 +6,7 @@ Simple Dropbox based note taking application with support for markup and inline 
     <img src="/screenshots/screenshot.png?raw=true" />
 </p>
 
+## Setup
 
-**NOTE**: This is WIP side project of mine. Feel free to leave feedback & open issues!  
-
+Create an `.env.local` file and set the `REACT_APP_CLIENT_ID` 
+env var and `REACT_APP_REDIRECT_URI` (`https://<hostname>:<port>/auth`).

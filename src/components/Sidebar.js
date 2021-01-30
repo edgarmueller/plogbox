@@ -8,10 +8,10 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import TagList from "../containers/TagListContainer";
 import UserIndicator from "./UserIndicator";
-import DropboxSender from "./DropboxSender";
+import { dbx } from "../api/dropbox";
 
 const RadiumLink = Radium(Link);
-const styles = theme => ({
+const styles = (theme) => ({
   logo: {
     color: "#333435",
     borderRadius: "16px",
@@ -22,51 +22,54 @@ const styles = theme => ({
     fontSize: "1.8125em",
     fontWeight: "bold",
     textDecoration: "none",
-    fontFamily: "'Montserrat', sans-serif"
+    fontFamily: "'Montserrat', sans-serif",
   },
   drawerPaper: {
     border: "none",
     [theme.breakpoints.up("md")]: {
-      position: "relative"
-    }
-  }
+      position: "relative",
+    },
+  },
 });
 
-const Sidebar = ({ classes, user }) => (
-  <Drawer
-    variant="permanent"
-    open
-    classes={{
-      paper: classes.drawerPaper
-    }}
-  >
-    <RadiumLink className={classes.logo} to="/">
-      plog_
-    </RadiumLink>
-    {user ? (
-      <React.Fragment>
-        <UserIndicator />
-        <TagList />
-      </React.Fragment>
-    ) : (
-      <DropboxSender
-        render={({ url }) => <a href={url}>Connect to Dropbox</a>}
-      />
-    )}
-  </Drawer>
-);
+const Sidebar = ({ classes, user }) => {
+  const authUrl = dbx.auth.getAuthenticationUrl(
+    process.env.REACT_APP_REDIRECT_URI
+  );
+  return (
+    <Drawer
+      variant="permanent"
+      open
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <RadiumLink className={classes.logo} to="/">
+        plog_
+      </RadiumLink>
+      {dbx.auth.accessToken ? (
+        <React.Fragment>
+          <UserIndicator />
+          <TagList />
+        </React.Fragment>
+      ) : (
+        <a href={authUrl}>Connect to Dropbox</a>
+      )}
+    </Drawer>
+  );
+};
 
 Sidebar.propTypes = {
   user: PropTypes.string,
-  classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 Sidebar.defaultProps = {
-  user: undefined
+  user: undefined,
 };
 
-const mapStateToProps = state => ({
-  user: _.get(state, "auth.user.name.display_name")
+const mapStateToProps = (state) => ({
+  user: _.get(state, "auth.user.name.display_name"),
 });
 
 export default withStyles(styles)(connect(mapStateToProps)(Sidebar));

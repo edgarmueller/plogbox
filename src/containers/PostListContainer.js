@@ -1,34 +1,34 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import * as routerActions from 'react-router-redux';
-import { withRouter } from 'react-router';
-import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
-import * as actions from '../actions';
+import React from "react";
+import { connect } from "react-redux";
+import * as routerActions from "react-router-redux";
+import { withRouter } from "react-router";
+import PropTypes from "prop-types";
+import withStyles from "@material-ui/core/styles/withStyles";
+import * as actions from "../actions";
 import {
   getCurrentTag,
   getIsFetchingPosts,
   getIsUpdatingPost,
   getPostErrorMessage,
-  getSelectedPosts
-} from '../reducers/index';
-import { RESET_ERROR_MESSAGE, SELECT_POST } from '../constants';
-import PostList from '../components/posts/PostList';
-import { center } from '../common/styles';
-import * as dropbox from '../api/dropbox';
+  getSelectedPosts,
+} from "../reducers/index";
+import { RESET_ERROR_MESSAGE, SELECT_POST } from "../constants";
+import PostList from "../components/posts/PostList";
+import { center } from "../common/styles";
+import * as dropbox from "../api/dropbox";
 
 const styles = {
-  center
+  center,
 };
 
 const Loading = withStyles(styles)(({ classes }) => (
-  <p className={classes.center}>Loading posts...</p>
+  <p className={classes.center}>Loading notes...</p>
 ));
 
 export class PostListContainer extends React.Component {
   componentWillMount() {
     // clear any previously selected post
-    localStorage.removeItem('selectedPostId');
+    localStorage.removeItem("selectedPostId");
   }
 
   render() {
@@ -85,9 +85,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = (dispatch) => ({
   addPost(tag, fileName) {
-    dropbox.pushFile(`/${tag}/${fileName}`, '')
+    dropbox
+      .pushFile(`/${tag}/${fileName}`, "")
       .then(() => dispatch(actions.selectPostsByTag(tag)));
   },
   fetchPosts(tag) {
@@ -100,18 +101,19 @@ export const mapDispatchToProps = dispatch => ({
   },
   handlePostSelected(post) {
     dispatch(routerActions.push(`/posts/${post.id}`));
-    localStorage.setItem('selectedPostId', post.id);
+    localStorage.setItem("selectedPostId", post.id);
   },
   selectPost(post) {
     dispatch({
       type: SELECT_POST,
-      post
+      post,
     });
-  }
+  },
 });
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(PostListContainer));
-
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PostListContainer)
+);

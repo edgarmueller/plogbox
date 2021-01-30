@@ -1,26 +1,26 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Radium from 'radium';
-import { Link } from 'react-router-dom';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import SvgIconFace from '@material-ui/icons/Face';
-import LogoutIcon from '@material-ui/icons/ExitToApp';
-import { link } from '../common/styles';
-import { logout } from '../api/dropbox';
-import { AUTH_LOGOUT } from '../constants';
+import React from "react";
+import _ from "lodash";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Radium from "radium";
+import { Link } from "react-router-dom";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
+import SvgIconFace from "@material-ui/icons/Face";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
+import { link } from "../common/styles";
+import { logout } from "../api/dropbox";
+import { AUTH_LOGOUT } from "../constants";
 
 const RadiumLink = Radium(Link);
 const styles = {
   link,
   center: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    alignItems: "center",
   },
 };
 
@@ -29,15 +29,19 @@ const UserIndicator = ({ classes, user, logoutUser }) => (
     <div>
       <Chip
         label={`${user}`}
-        avatar={<Avatar color="#444" icon={<SvgIconFace />} />}
+        avatar={
+          <Avatar color="#444">
+            <SvgIconFace />
+          </Avatar>
+        }
       />
     </div>
 
     <div>
       <RadiumLink
         onClick={() => {
-            logoutUser();
-          }}
+          logoutUser();
+        }}
         to="/"
       >
         <Avatar>
@@ -51,20 +55,23 @@ const UserIndicator = ({ classes, user, logoutUser }) => (
 UserIndicator.propTypes = {
   user: PropTypes.string.isRequired,
   logoutUser: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-const mapStateToProps = state => ({
-  user: _.get(state, 'auth.user.name.display_name'),
+const mapStateToProps = (state) => ({
+  user: _.get(state, "auth.user.name.display_name"),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logoutUser() {
     logout();
     dispatch({
-      type: AUTH_LOGOUT
+      type: AUTH_LOGOUT,
     });
-  }
+  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserIndicator));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(UserIndicator));
